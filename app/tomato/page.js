@@ -1,9 +1,12 @@
 import styles from './page.module.css'
+import { kv } from '@vercel/kv';
 
-export default function Home() {
+export default async function Tomato() {
+    const visitorCount = await kv.incr("visitors")
+
   return (
     <main className="main tomato">
-        <div className={styles.test}>TOMATO</div>
+        <div className={styles.test}>TOMATO {visitorCount}</div>
     </main>
   )
 }
