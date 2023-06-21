@@ -2,8 +2,8 @@ import styles from './page.module.css'
 
 export default function Home() {
   return (
-    <main className={styles.test}>
-      TOMATO
+    <main className="main tomato">
+        <div className={styles.test}>TOMATO</div>
     </main>
   )
 }
