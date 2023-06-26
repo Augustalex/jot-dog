@@ -14,3 +14,7 @@ export async function getFile(file: NoteFile) {
     (await kv.get<string | null>(FILE_CONTENT_STORAGE_PREFIX + file.key)) ?? ""
   );
 }
+
+export async function deleteFileContent(file: NoteFile) {
+  return await kv.del(FILE_CONTENT_STORAGE_PREFIX + file.key);
+}

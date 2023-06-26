@@ -1,7 +1,8 @@
 "use server";
 
-import { kv } from "@vercel/kv";
+import {kv} from "@vercel/kv";
 import slugify from "slugify";
+import {deleteFileContent, getFile, saveFile} from "./file";
 
 const FILES_STORAGE_KEY = "files";
 
@@ -20,9 +21,16 @@ export async function renameFile(fileToRename: NoteFile, newName: string) {
 
   const file = files.find((f) => f.key === fileToRename.key);
   file.name = newName;
-  file.key = slugify(newName, { lower: true });
+  file.key = slugify(newName, {lower: true});
 
   await kv.set(FILES_STORAGE_KEY, files);
+
+  const content = await getFile(fileToRename);
+
+  await Promise.all([
+    deleteFileContent(fileToRename),
+    saveFile(file, content)
+  ])
 
   return file;
 }
@@ -41,9 +49,9 @@ export async function createFile(): Promise<NoteFile> {
       ? `${newNameTemplate} (${similarNamesCount})`
       : newNameTemplate;
 
-  const newKey = slugify(Date.now().toString(), { lower: true });
+  const newKey = slugify(Date.now().toString(), {lower: true});
 
-  const newFile: NoteFile = { name: newName, key: newKey };
+  const newFile: NoteFile = {name: newName, key: newKey};
   files.push(newFile);
 
   await kv.set(FILES_STORAGE_KEY, files);
@@ -55,7 +63,7 @@ export async function getOrCreateFile(fileKey: string) {
   const files = await getFiles();
   const file = files.find((file) => file.key === fileKey);
   if (!file) {
-    const newFile: NoteFile = { name: fileKey, key: fileKey };
+    const newFile: NoteFile = {name: fileKey, key: fileKey};
     files.push(newFile);
     await kv.set(FILES_STORAGE_KEY, files);
 
