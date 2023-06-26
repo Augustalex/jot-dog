@@ -9,6 +9,7 @@ import { ClientSwrConfig } from "./ClientSwrConfig";
 import { FILES_KEY } from "../db/hooks/useFiles";
 import { EDITOR_CONFIG_KEY } from "../db/hooks/useEditorConfig";
 import {NoteFile} from "../utils/file-utils";
+import {Shortcuts} from "./Shortcuts";
 
 export default async function NotesEntry({
   selectedFile: routeFile,
@@ -35,6 +36,7 @@ export default async function NotesEntry({
         <div className={styles.window}>
           <FileBar selectedFile={selectedFile} />
           <Editor editorConfig={editorConfig} />
+          <Shortcuts editorConfig={editorConfig} />
         </div>
       </main>
     </ClientSwrConfig>

@@ -38,6 +38,10 @@
     background: var(--color-tertiary);
 }
 
+.tabSelected .tabText {
+    cursor: text;
+}
+
 .tabDeleteButton {
     display: inline-block;
     line-height: 0;

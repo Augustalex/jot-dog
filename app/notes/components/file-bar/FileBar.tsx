@@ -2,23 +2,23 @@
 
 import React, {useCallback} from "react";
 import styles from "./file-bar.module.css";
-import { deleteFile, renameFile } from "../../db/files";
-import { Tab } from "../../../design/Tab";
-import { IconButton } from "../../../design/IconButton";
-import { useRouter } from "next/navigation";
-import { FILES_KEY, useFiles } from "../../db/hooks/useFiles";
-import { mutate } from "swr";
-import { useLocalEditorState } from "../../hooks/useLocalEditorState";
+import {deleteFile, renameFile} from "../../db/files";
+import {Tab} from "../../../design/Tab";
+import {IconButton} from "../../../design/IconButton";
+import {useRouter} from "next/navigation";
+import {FILES_KEY, useFiles} from "../../db/hooks/useFiles";
+import {mutate} from "swr";
+import {useLocalEditorState} from "../../hooks/useLocalEditorState";
 import {NoteFile} from "../../utils/file-utils";
 
-export function FileBar({ selectedFile }: { selectedFile: NoteFile }) {
-  return <FileBarUI selectedFile={selectedFile} />;
+export function FileBar({selectedFile}: { selectedFile: NoteFile }) {
+  return <FileBarUI selectedFile={selectedFile}/>;
 }
 
-export function FileBarUI({ selectedFile }: { selectedFile: NoteFile }) {
+export function FileBarUI({selectedFile}: { selectedFile: NoteFile }) {
   const {data: files, optimisticCreateFile} = useFiles();
   const router = useRouter();
-  const { save, isSaved, fontSize, setFontSize } =
+  const {save, isSaved, fontSize, setFontSize} =
     useLocalEditorState(selectedFile);
 
   const onClickCreate = useCallback(async () => {
@@ -28,12 +28,6 @@ export function FileBarUI({ selectedFile }: { selectedFile: NoteFile }) {
 
   return (
     <div className={styles.bar}>
-      <IconButton
-        className={[styles.fileTab, styles.fileTabIcon].join(" ")}
-        onClick={onClickRename}
-      >
-        ✎
-      </IconButton>
       <IconButton
         className={[
           styles.fileTab,
@@ -53,7 +47,7 @@ export function FileBarUI({ selectedFile }: { selectedFile: NoteFile }) {
         onChange={onFontSizeChange}
         className={[styles.fileTab, styles.fileTabNumberInput].join(" ")}
       />
-      <div className={styles.fileTabDelimiter} />
+      <div className={styles.fileTabDelimiter}/>
       {files.map((file) => (
         <Tab
           key={file.key}
@@ -63,7 +57,9 @@ export function FileBarUI({ selectedFile }: { selectedFile: NoteFile }) {
           ].join(" ")}
           selected={selectedFile.key === file.key}
           href={"/notes/" + file.key}
-          onClose={(e) => onCloseTab(e, file)}
+          onClick={selectedFile.key === file.key ? onClickRename : () => {
+          }}
+          onClose={() => onCloseTab(file)}
         >
           {file.name}
         </Tab>
@@ -80,7 +76,7 @@ export function FileBarUI({ selectedFile }: { selectedFile: NoteFile }) {
   }
 
   async function onClickRename() {
-    const newName = prompt('Rename "' + selectedFile.name + '" to: ');
+    const newName = prompt('Rename "' + selectedFile.name + '" to: ', selectedFile.name);
     if (newName !== null) {
       const newFile = await renameFile(selectedFile, newName);
 
@@ -94,9 +90,7 @@ export function FileBarUI({ selectedFile }: { selectedFile: NoteFile }) {
     }
   }
 
-  async function onCloseTab(e: React.MouseEvent, file: NoteFile) {
-    e.preventDefault();
-
+  async function onCloseTab(file: NoteFile) {
     await deleteFile(file.key);
 
     const currentIndex = files.findIndex((f) => f.key === file.key);
