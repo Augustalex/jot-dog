@@ -1,0 +1,53 @@
+
+.bar {
+    display: flex;
+    width: 100%;
+    height: var(--s11);
+    padding: var(--s1)
+}
+
+.fileTab {
+    margin-right: var(--s2);
+    color: var(--color-text)
+}
+
+.fileTabIcon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--color-text);
+    font-size: var(--s4);
+    line-height: 0;
+}
+
+.fileTabIconLarge {
+    font-size: var(--s5);
+}
+
+.fileTabDisabled {
+    color: var(--color-secondary);
+}
+
+.newFile {
+    width: 50px;
+    height: 50px;
+    display: inline-block;
+}
+
+.fileTabDelimiter {
+    width: 1px;
+    height: 100%;
+    background: var(--color-stroke);
+    margin-right: var(--s2);
+}
+
+.fileTabSelected {
+    margin-bottom: calc(var(--s1) * -1);
+    padding-bottom: calc(var(--s3) + 2px);
+    border-bottom: none;
+    cursor: default;
+}
+
+.fileTabSelected:hover,.fileTabSelected:active, .fileTabSelected:focus-visible {
+    background: var(--color-tertiary);
+}

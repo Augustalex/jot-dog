@@ -1,0 +1,64 @@
+
+.button {
+    background: var(--color-main);
+    border: 1px solid var(--color-stroke);
+    padding: var(--s2) var(--s2);
+}
+
+.button:hover {
+    background: var(--color-highlight);
+}
+
+.button:active {
+    /*background: var(--color-secondary);*/
+    background: var(--color-tertiary);
+}
+
+.button:focus-visible {
+    background: var(--color-highlight);
+}
+
+.inlineButton {
+    border-radius: var(--s2);
+}
+
+.tab {
+    max-width: var(--d7);
+    background: var(--color-main);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.tabText {
+    padding-right: var(--s2)
+}
+
+.tabSelected {
+    background: var(--color-tertiary);
+}
+
+.tabDeleteButton {
+    display: inline-block;
+    line-height: 0;
+    vertical-align: center;
+    text-align: center;
+
+    background: var(--color-main);
+    border: 1px solid var(--color-stroke);
+
+    aspect-ratio: 1;
+    height: var(--s4);
+    font-size: var(--s3);
+}
+
+.tabDeleteButton:hover {
+    background: var(--color-secondary);
+}
+
+.iconButton {
+    aspect-ratio: 1;
+    height: 100%;
+    background: var(--color-main);
+    border: 1px solid var(--color-stroke);
+}
