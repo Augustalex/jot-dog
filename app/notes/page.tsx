@@ -1,9 +1,10 @@
 import React from "react";
 import NotesEntry from "./components/NotesEntry";
-import { createFile } from "./db/files";
+import {createFile, getFiles} from "./db/files";
 
 export default async function Notes() {
-  const newFile = await createFile();
+  const files = await getFiles();
+  const file = files.length === 0 ? await createFile() : files[files.length - 1];
 
-  return <NotesEntry selectedFile={newFile} />;
+  return <NotesEntry selectedFile={file} />;
 }
