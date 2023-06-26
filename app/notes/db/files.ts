@@ -3,13 +3,9 @@
 import {kv} from "@vercel/kv";
 import slugify from "slugify";
 import {deleteFileContent, getFile, saveFile} from "./file";
+import {generateFileDetails, NoteFile} from "../utils/file-utils";
 
 const FILES_STORAGE_KEY = "files";
-
-export interface NoteFile {
-  name: string;
-  key: string;
-}
 
 export async function getFiles(): Promise<NoteFile[]> {
   const filesRaw = await kv.get<NoteFile[] | null>(FILES_STORAGE_KEY);
@@ -36,27 +32,18 @@ export async function renameFile(fileToRename: NoteFile, newName: string) {
 }
 
 export async function createFile(): Promise<NoteFile> {
-  const isoDate = new Date().toISOString();
-  const dateString = isoDate.substring(0, isoDate.indexOf("T"));
-
   const files = await getFiles();
-  const newNameTemplate = `Note ${dateString}`;
-  const similarNamesCount = files.filter((f) =>
-    f.name.startsWith(newNameTemplate)
-  ).length;
-  const newName =
-    similarNamesCount > 0
-      ? `${newNameTemplate} (${similarNamesCount})`
-      : newNameTemplate;
+  const newFile = generateFileDetails(files);
 
-  const newKey = slugify(Date.now().toString(), {lower: true});
-
-  const newFile: NoteFile = {name: newName, key: newKey};
-  files.push(newFile);
+  return await forceCreateFile(newFile, files);
+}
+export async function forceCreateFile(file: NoteFile, files: NoteFile[] = null) {
+  files = files ?? await getFiles();
+  files.push(file);
 
   await kv.set(FILES_STORAGE_KEY, files);
 
-  return newFile;
+  return file;
 }
 
 export async function getOrCreateFile(fileKey: string) {

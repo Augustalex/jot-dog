@@ -1,7 +1,7 @@
 "use server";
 
-import { NoteFile } from "./files";
 import { kv } from "@vercel/kv";
+import {NoteFile} from "../utils/file-utils";
 
 const CONFIG_STORAGE_KEY = "editor_config";
 

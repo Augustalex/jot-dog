@@ -1,24 +1,30 @@
 "use client";
 
-import React from "react";
+import React, {useCallback} from "react";
 import styles from "./file-bar.module.css";
-import { createFile, deleteFile, NoteFile, renameFile } from "../../db/files";
+import { deleteFile, renameFile } from "../../db/files";
 import { Tab } from "../../../design/Tab";
 import { IconButton } from "../../../design/IconButton";
 import { useRouter } from "next/navigation";
 import { FILES_KEY, useFiles } from "../../db/hooks/useFiles";
 import { mutate } from "swr";
-import { useLocalEditorState } from "../hooks/useLocalEditorState";
+import { useLocalEditorState } from "../../hooks/useLocalEditorState";
+import {NoteFile} from "../../utils/file-utils";
 
 export function FileBar({ selectedFile }: { selectedFile: NoteFile }) {
   return <FileBarUI selectedFile={selectedFile} />;
 }
 
 export function FileBarUI({ selectedFile }: { selectedFile: NoteFile }) {
-  const files = useFiles().data;
+  const {data: files, optimisticCreateFile} = useFiles();
   const router = useRouter();
   const { save, isSaved, fontSize, setFontSize } =
     useLocalEditorState(selectedFile);
+
+  const onClickCreate = useCallback(async () => {
+    const newFile = await optimisticCreateFile();
+    router.push("/notes/" + newFile.key);
+  }, [optimisticCreateFile, router]);
 
   return (
     <div className={styles.bar}>
@@ -84,14 +90,8 @@ export function FileBarUI({ selectedFile }: { selectedFile: NoteFile }) {
 
       await mutate(FILES_KEY, newFiles);
 
-      await router.push("/notes/" + newFile.key, { shallow: true });
+      router.push("/notes/" + newFile.key);
     }
-  }
-
-  async function onClickCreate() {
-    const newFile = await createFile();
-    await mutate(FILES_KEY, [...files, newFile]);
-    await router.push("/notes/" + newFile.key, { shallow: true });
   }
 
   async function onCloseTab(e: React.MouseEvent, file: NoteFile) {
@@ -106,17 +106,13 @@ export function FileBarUI({ selectedFile }: { selectedFile: NoteFile }) {
 
     if (selectedFile.key === file.key) {
       if (newFiles[currentIndex]) {
-        await router.push("/notes/" + newFiles[currentIndex].key, {
-          shallow: true,
-        });
+        router.push("/notes/" + newFiles[currentIndex].key);
       } else if (newFiles.length === 0) {
-        await router.push("/notes/scratch", { shallow: true });
+        router.push("/notes/scratch");
       } else if (newFiles.length === 1) {
-        await router.push("/notes/" + newFiles[0].key, { shallow: true });
+        router.push("/notes/" + newFiles[0].key);
       } else {
-        await router.push("/notes/" + newFiles[newFiles.length - 1].key, {
-          shallow: true,
-        });
+        router.push("/notes/" + newFiles[newFiles.length - 1].key);
       }
     }
   }

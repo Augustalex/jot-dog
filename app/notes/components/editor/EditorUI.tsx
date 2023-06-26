@@ -6,7 +6,7 @@ import CodeMirror from "@uiw/react-codemirror";
 import { markdown } from "@codemirror/lang-markdown";
 import { useSelectedContent } from "../../db/hooks/useSelectedContent";
 import { EditorConfig } from "../../db/editor";
-import { useLocalEditorState } from "../hooks/useLocalEditorState";
+import { useLocalEditorState } from "../../hooks/useLocalEditorState";
 import { EditorView } from "@codemirror/view";
 
 let myTheme = EditorView.theme(

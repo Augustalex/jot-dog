@@ -2,11 +2,11 @@
 
 import React, { useCallback } from "react";
 import debounce from "lodash/debounce";
-import { saveFile } from "../../db/file";
+import { saveFile } from "../db/file";
 import { mutate } from "swr";
-import { getContentKey } from "../../db/hooks/useSelectedContent";
-import { NoteFile } from "../../db/files";
+import { getContentKey } from "../db/hooks/useSelectedContent";
 import { create } from "zustand";
+import {NoteFile} from "../utils/file-utils";
 
 const SAVE_DEBOUNCE_TIME = 20 * 1000;
 export const debouncedSaveFile = debounce(saveFile, SAVE_DEBOUNCE_TIME);
@@ -19,6 +19,7 @@ interface LocalEditorStore {
   fontSize: number;
 
   setFontSize(fontSize: number): void;
+
 }
 
 const useLocalEditorStore = create<LocalEditorStore>((set) => ({
