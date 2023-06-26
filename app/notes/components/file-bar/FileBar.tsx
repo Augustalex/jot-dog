@@ -8,7 +8,7 @@ import { IconButton } from "../../../design/IconButton";
 import { useRouter } from "next/navigation";
 import { FILES_KEY, useFiles } from "../../db/hooks/useFiles";
 import { mutate } from "swr";
-import { useLocalEditorState } from "../hooks/useLocalEditorState";
+import { useLocalEditorState, ViewMode } from "../hooks/useLocalEditorState";
 
 export function FileBar({ selectedFile }: { selectedFile: NoteFile }) {
   return <FileBarUI selectedFile={selectedFile} />;
@@ -17,11 +17,36 @@ export function FileBar({ selectedFile }: { selectedFile: NoteFile }) {
 export function FileBarUI({ selectedFile }: { selectedFile: NoteFile }) {
   const files = useFiles().data;
   const router = useRouter();
-  const { save, isSaved, fontSize, setFontSize } =
-    useLocalEditorState(selectedFile);
+  const {
+    save,
+    isSaved,
+    fontSize,
+    setFontSize,
+    present,
+    exitPresentation,
+    viewMode,
+  } = useLocalEditorState(selectedFile);
 
   return (
     <div className={styles.bar}>
+      {viewMode === ViewMode.Presenting && (
+        <IconButton
+          className={[
+            styles.fileTab,
+            styles.fileTabIcon,
+            styles.fileTabStopIcon,
+          ].join(" ")}
+          onClick={onClickExitPresentation}
+        />
+      )}
+      {viewMode === ViewMode.Editor && (
+        <IconButton
+          className={[styles.fileTab, styles.fileTabIcon].join(" ")}
+          onClick={onClickPresent}
+        >
+          ▶
+        </IconButton>
+      )}
       <IconButton
         className={[styles.fileTab, styles.fileTabIcon].join(" ")}
         onClick={onClickRename}
@@ -65,6 +90,14 @@ export function FileBarUI({ selectedFile }: { selectedFile: NoteFile }) {
       <IconButton onClick={onClickCreate}>+</IconButton>
     </div>
   );
+
+  function onClickExitPresentation() {
+    exitPresentation();
+  }
+
+  function onClickPresent() {
+    present();
+  }
 
   function onFontSizeChange(e: React.ChangeEvent<HTMLInputElement>) {
     const newValue = e.target.value;

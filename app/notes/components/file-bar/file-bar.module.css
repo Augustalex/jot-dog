@@ -20,6 +20,13 @@
     line-height: 0;
 }
 
+.fileTabStopIcon::after {
+    content: " ";
+    width: var(--s4);
+    height: var(--s4);
+    background: var(--color-text);
+}
+
 .fileTabIconLarge {
     font-size: var(--s5);
 }

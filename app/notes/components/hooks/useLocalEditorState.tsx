@@ -11,6 +11,11 @@ import { create } from "zustand";
 const SAVE_DEBOUNCE_TIME = 20 * 1000;
 export const debouncedSaveFile = debounce(saveFile, SAVE_DEBOUNCE_TIME);
 
+export enum ViewMode {
+  Editor = "editor",
+  Presenting = "presenting",
+}
+
 interface LocalEditorStore {
   unsavedContent: string | null;
 
@@ -19,6 +24,12 @@ interface LocalEditorStore {
   fontSize: number;
 
   setFontSize(fontSize: number): void;
+
+  viewMode: ViewMode;
+
+  present(): void;
+
+  exitPresentation(): void;
 }
 
 const useLocalEditorStore = create<LocalEditorStore>((set) => ({
@@ -27,11 +38,22 @@ const useLocalEditorStore = create<LocalEditorStore>((set) => ({
     set((state) => ({ ...state, unsavedContent })),
   fontSize: 16,
   setFontSize: (fontSize: number) => set((state) => ({ ...state, fontSize })),
+  viewMode: ViewMode.Editor,
+  present: () => set((state) => ({ ...state, viewMode: ViewMode.Presenting })),
+  exitPresentation: () =>
+    set((state) => ({ ...state, viewMode: ViewMode.Editor })),
 }));
 
 export function useLocalEditorState(selectedFile: NoteFile) {
-  const { unsavedContent, setUnsavedContent, fontSize, setFontSize } =
-    useLocalEditorStore();
+  const {
+    unsavedContent,
+    setUnsavedContent,
+    fontSize,
+    setFontSize,
+    viewMode,
+    present,
+    exitPresentation,
+  } = useLocalEditorStore();
 
   const save = React.useCallback(async () => {
     await saveFile(selectedFile, unsavedContent);
@@ -59,5 +81,8 @@ export function useLocalEditorState(selectedFile: NoteFile) {
     isSaved: unsavedContent === null,
     fontSize,
     setFontSize,
+    viewMode,
+    present,
+    exitPresentation,
   };
 }
