@@ -51,3 +51,8 @@
 .fileTabSelected:hover,.fileTabSelected:active, .fileTabSelected:focus-visible {
     background: var(--color-tertiary);
 }
+
+.fileTabNumberInput {
+    width: var(--s14);
+    padding: var(--s2);
+}

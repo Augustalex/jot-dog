@@ -13,10 +13,12 @@ export const debouncedSaveFile = debounce(saveFile, SAVE_DEBOUNCE_TIME);
 
 interface LocalEditorStore {
   unsavedContent: string | null;
+
   setUnsavedContent(unsavedContent: string | null): void;
+
   fontSize: number;
-  increaseFontSize(): void;
-  decreaseFontSize(): void;
+
+  setFontSize(fontSize: number): void;
 }
 
 const useLocalEditorStore = create<LocalEditorStore>((set) => ({
@@ -24,20 +26,12 @@ const useLocalEditorStore = create<LocalEditorStore>((set) => ({
   setUnsavedContent: (unsavedContent: string | null) =>
     set((state) => ({ ...state, unsavedContent })),
   fontSize: 16,
-  increaseFontSize: () =>
-    set((state) => ({ ...state, fontSize: Math.min(128, state.fontSize + 4) })),
-  decreaseFontSize: () =>
-    set((state) => ({ ...state, fontSize: Math.max(12, state.fontSize - 4) })),
+  setFontSize: (fontSize: number) => set((state) => ({ ...state, fontSize })),
 }));
 
 export function useLocalEditorState(selectedFile: NoteFile) {
-  const {
-    unsavedContent,
-    setUnsavedContent,
-    fontSize,
-    decreaseFontSize,
-    increaseFontSize,
-  } = useLocalEditorStore();
+  const { unsavedContent, setUnsavedContent, fontSize, setFontSize } =
+    useLocalEditorStore();
 
   const save = React.useCallback(async () => {
     await saveFile(selectedFile, unsavedContent);
@@ -64,7 +58,6 @@ export function useLocalEditorState(selectedFile: NoteFile) {
     save,
     isSaved: unsavedContent === null,
     fontSize,
-    decreaseFontSize,
-    increaseFontSize,
+    setFontSize,
   };
 }

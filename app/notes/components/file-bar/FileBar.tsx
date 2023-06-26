@@ -17,7 +17,7 @@ export function FileBar({ selectedFile }: { selectedFile: NoteFile }) {
 export function FileBarUI({ selectedFile }: { selectedFile: NoteFile }) {
   const files = useFiles().data;
   const router = useRouter();
-  const { save, isSaved, increaseFontSize, decreaseFontSize } =
+  const { save, isSaved, fontSize, setFontSize } =
     useLocalEditorState(selectedFile);
 
   return (
@@ -41,26 +41,12 @@ export function FileBarUI({ selectedFile }: { selectedFile: NoteFile }) {
       >
         🖪
       </IconButton>
-      <IconButton
-        className={[
-          styles.fileTab,
-          styles.fileTabIcon,
-          styles.fileTabIconLarge,
-        ].join(" ")}
-        onClick={decreaseFontSize}
-      >
-        -
-      </IconButton>
-      <IconButton
-        className={[
-          styles.fileTab,
-          styles.fileTabIcon,
-          styles.fileTabIconLarge,
-        ].join(" ")}
-        onClick={increaseFontSize}
-      >
-        +
-      </IconButton>
+      <input
+        type="number"
+        defaultValue={fontSize}
+        onChange={onFontSizeChange}
+        className={[styles.fileTab, styles.fileTabNumberInput].join(" ")}
+      />
       <div className={styles.fileTabDelimiter} />
       {files.map((file) => (
         <Tab
@@ -79,6 +65,13 @@ export function FileBarUI({ selectedFile }: { selectedFile: NoteFile }) {
       <IconButton onClick={onClickCreate}>+</IconButton>
     </div>
   );
+
+  function onFontSizeChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const newValue = e.target.value;
+    if (isNumeric(newValue)) {
+      setFontSize(parseInt(newValue, 10));
+    }
+  }
 
   async function onClickRename() {
     const newName = prompt('Rename "' + selectedFile.name + '" to: ');
@@ -127,4 +120,12 @@ export function FileBarUI({ selectedFile }: { selectedFile: NoteFile }) {
       }
     }
   }
+}
+
+function isNumeric(str: string) {
+  if (typeof str != "string") return false; // we only process strings!
+  return (
+    !isNaN(Number(str)) && // use type coercion to parse the _entirety_ of the string (`parseFloat` alone does not do this)...
+    !isNaN(parseFloat(str))
+  ); // ...and ensure strings of whitespace fail
 }
