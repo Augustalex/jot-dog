@@ -1,10 +1,28 @@
 import React from "react";
 import NotesEntry from "../components/NotesEntry";
-import {getFiles, getOrCreateFile} from "../db/files";
+import { getOrCreateFile } from "../db/files";
+import { cookies } from "next/headers";
+import { getFile } from "../db/file";
 
-export default async function Notes({ params }: { params: { key: string } }) {
-  const files = await getFiles();
-  const file = await getOrCreateFile(params.key, files);
+const localIdIfNew = `${Math.round(Math.random() * 9999)}-${Math.round(
+  Math.random() * 9999
+)}`;
 
-  return <NotesEntry files={files} selectedFile={file} />;
+export default async function Notes({
+  params,
+}: {
+  params: {
+    key: string;
+  };
+}) {
+  const file = await getOrCreateFile(params.key);
+  const content = await getFile(file);
+
+  return (
+    <NotesEntry
+      file={file}
+      content={content}
+      localId={cookies().get("local-id")?.value ?? localIdIfNew}
+    />
+  );
 }

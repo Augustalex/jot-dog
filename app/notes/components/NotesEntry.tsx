@@ -2,41 +2,28 @@
 
 import React from "react";
 import styles from "./notes-entry.module.css";
-import { FileBar } from "./file-bar/FileBar";
 import { Editor } from "./editor/Editor";
 import { ClientSwrConfig } from "./ClientSwrConfig";
-import { FILES_KEY } from "../db/hooks/useFiles";
-import { EDITOR_CONFIG_KEY } from "../db/hooks/useEditorConfig";
-import {NoteFile} from "../utils/file-utils";
-import {Shortcuts} from "./Shortcuts";
+import { NoteFile } from "../utils/file-utils";
+import { Shortcuts } from "./Shortcuts";
+import { Cursors } from "./cursors/Cursors";
 
 export default function NotesEntry({
-  files,
-  selectedFile: routeFile,
+  file,
+  content,
+  localId,
 }: {
-  files: NoteFile[];
-  selectedFile?: NoteFile;
+  file: NoteFile;
+  content: string;
+  localId: string;
 }) {
-  const selectedFile = routeFile ?? {
-    name: "scratch",
-    key: "scratch",
-  };
-  const editorConfig = {
-    selectedFile,
-  };
-
   return (
-    <ClientSwrConfig
-      fallback={{
-        [EDITOR_CONFIG_KEY]: editorConfig,
-        [FILES_KEY]: files,
-      }}
-    >
+    <ClientSwrConfig fallback={{}}>
       <main className="main tomato">
         <div className={styles.window}>
-          <FileBar selectedFile={selectedFile} />
-          <Editor editorConfig={editorConfig} />
-          <Shortcuts editorConfig={editorConfig} />
+          <Editor file={file} content={content} localId={localId} />
+          <Cursors localId={localId} />
+          <Shortcuts file={file} />
         </div>
       </main>
     </ClientSwrConfig>

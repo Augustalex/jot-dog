@@ -1,9 +1,9 @@
 "use server";
 
-import {kv} from "@vercel/kv";
+import { kv } from "@vercel/kv";
 import slugify from "slugify";
-import {deleteFileContent, getFile, saveFile} from "./file";
-import {generateFileDetails, NoteFile} from "../utils/file-utils";
+import { deleteFileContent, getFile, saveFile } from "./file";
+import { generateFileDetails, NoteFile } from "../utils/file-utils";
 
 const FILES_STORAGE_KEY = "files";
 
@@ -17,28 +17,29 @@ export async function renameFile(fileToRename: NoteFile, newName: string) {
 
   const file = files.find((f) => f.key === fileToRename.key);
   file.name = newName;
-  file.key = slugify(newName, {lower: true});
+  file.key = slugify(newName, { lower: true });
 
   await kv.set(FILES_STORAGE_KEY, files);
 
   const content = await getFile(fileToRename);
 
-  await Promise.all([
-    deleteFileContent(fileToRename),
-    saveFile(file, content)
-  ])
+  await Promise.all([deleteFileContent(fileToRename), saveFile(file, content)]);
 
   return file;
 }
 
 export async function createFile(files: NoteFile[] = null): Promise<NoteFile> {
-  files = files || await getFiles();
+  files = files || (await getFiles());
   const newFile = generateFileDetails(files);
 
   return await forceCreateFile(newFile, files);
 }
-export async function forceCreateFile(file: NoteFile, files: NoteFile[] = null) {
-  files = files ?? await getFiles();
+
+export async function forceCreateFile(
+  file: NoteFile,
+  files: NoteFile[] = null
+) {
+  files = files ?? (await getFiles());
   files.push(file);
 
   await kv.set(FILES_STORAGE_KEY, files);
@@ -46,11 +47,17 @@ export async function forceCreateFile(file: NoteFile, files: NoteFile[] = null) 
   return file;
 }
 
-export async function getOrCreateFile(fileKey: string, files: NoteFile[] = null) {
-  files = files || await getFiles();
+export async function getOrCreateFile(
+  fileKey: string,
+  files: NoteFile[] = null
+) {
+  files = files || (await getFiles());
   const file = files.find((file) => file.key === fileKey);
   if (!file) {
-    const newFile: NoteFile = {name: fileKey, key: fileKey};
+    const newFile: NoteFile = {
+      name: fileKey,
+      key: fileKey,
+    };
     files.push(newFile);
     await kv.set(FILES_STORAGE_KEY, files);
 

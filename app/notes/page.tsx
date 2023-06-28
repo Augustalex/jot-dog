@@ -1,10 +1,7 @@
-import React from "react";
-import NotesEntry from "./components/NotesEntry";
-import {createFile, getFiles} from "./db/files";
+import {createFile} from "./db/files";
+import {redirect} from "next/navigation";
 
 export default async function Notes() {
-  const files = await getFiles();
-  const file = files.length === 0 ? await createFile(files) : files[files.length - 1];
-
-  return <NotesEntry selectedFile={file} files={files}/>;
+  const file = await createFile();
+  return redirect('/notes/' + file.key);
 }
