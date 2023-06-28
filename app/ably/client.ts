@@ -18,6 +18,7 @@ export function getAblyClient(localId: string) {
       Cookie: `local-id=${localId}`,
     },
     transportParams: { heartbeatInterval: 10000 },
+    queryTime: true,
   });
 
   return ablyClient;
