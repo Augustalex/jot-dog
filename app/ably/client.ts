@@ -12,7 +12,7 @@ export function getAblyClient(localId: string) {
   }
 
   ablyClient = new Realtime({
-    authUrl: "http://localhost:3000/ably/auth",
+    authUrl: "https://www.agge.dev/ably/auth",
     closeOnUnload: true,
     authHeaders: {
       Cookie: `local-id=${localId}`,
