@@ -31,6 +31,5 @@
     text-wrap: nowrap;
     text-align: center;
     font-weight: bold;
-    letter-spacing: 110%;
     transition: transform 1.2s ease-in-out;
 }
