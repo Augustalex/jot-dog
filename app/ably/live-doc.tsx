@@ -1,4 +1,4 @@
-import useAblyClient from "./client";
+import { useAblyClient } from "./client";
 import React, { useEffect } from "react";
 import { Types } from "ably/promises";
 import throttle from "lodash/throttle";
@@ -77,7 +77,7 @@ function useLiveDoc(file: NoteFile, serverContent: string, localId: string) {
         },
       };
       updateDocSoon.current = {
-        run: throttle(updateDocNow.current.run, 700),
+        run: throttle(updateDocNow.current.run, 200),
       };
       setUpdateLocalDoc({
         run: (newLocalDoc: string) => {

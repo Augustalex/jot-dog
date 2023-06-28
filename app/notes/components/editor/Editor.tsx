@@ -48,7 +48,7 @@ export function Editor({
         fontSize: fontSize + "px",
       }}
     >
-      <div>
+      <div style={{ display: "none" }}>
         <span>You ({userName})</span>
         {onlineUsers.map((c) => {
           return <span key={c}>, {c}</span>;

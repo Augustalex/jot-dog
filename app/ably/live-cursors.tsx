@@ -1,4 +1,4 @@
-import useAblyClient from "./client";
+import { useAblyClient } from "./client";
 import React, { useEffect } from "react";
 import { Types } from "ably/promises";
 import throttle from "lodash/throttle";
@@ -78,7 +78,7 @@ export function useLiveCursors(
       run: throttle((cursor: Omit<Cursor, "id">) => {
         setLastSentLocalCursor(cursor);
         _channel.publish("update", cursor).catch(console.error);
-      }, 500),
+      }, 1000),
     });
 
     return () => {

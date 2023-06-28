@@ -84,6 +84,7 @@ export function Cursors({ localId }: { localId: string }) {
             fill={fill}
             border={border}
             angle={c.d + Math.PI * 0.5}
+            userName={localId}
           />
         );
       })}
@@ -97,32 +98,54 @@ function CursorIcon({
   fill = "red",
   border = "black",
   angle = 0,
+  userName = "Anonymous",
 }: {
   x: number;
   y: number;
   fill?: string;
   border?: string;
   angle: number;
+  userName?: string | undefined | null;
 }) {
   return (
     <div
       className={styles.cursor}
       style={{
-        transform: `translate(${x}px, ${y}px) rotate(${angle}rad)`,
+        transform: `translate(calc(-50% + ${x}px), calc(-50% + ${y}px))`,
       }}
     >
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        viewBox="0 0 64 64"
+      <div
+        className={styles.cursor}
         style={{
-          transform: "translateY(-10px)",
+          transform: `rotate(${angle}rad)`,
         }}
       >
-        <path
-          d="M52.48,50.05,33.34,11.34a1.5,1.5,0,0,0-2.68,0L11.52,50.05A1.5,1.5,0,0,0,13.66,52L32,40.43,50.34,52A1.51,1.51,0,0,0,52.48,50.05Z"
-          fill={fill}
-        />
-      </svg>
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 64 64"
+          style={{
+            transform: "translate(0px, 25%)",
+          }}
+        >
+          <path
+            d="M52.48,50.05,33.34,11.34a1.5,1.5,0,0,0-2.68,0L11.52,50.05A1.5,1.5,0,0,0,13.66,52L32,40.43,50.34,52A1.51,1.51,0,0,0,52.48,50.05Z"
+            fill={fill}
+          />
+        </svg>
+      </div>
+      <span
+        className={styles.cursorName}
+        style={{
+          color: fill,
+          transform: `translate(calc(-50% + ${Math.round(
+            Math.cos(angle + Math.PI * 0.5) * 64
+          )}px + 16px), calc(-50% + ${Math.round(
+            Math.sin(angle + Math.PI * 0.5) * 32
+          )}px + 16px))`,
+        }}
+      >
+        {userName}
+      </span>
     </div>
   );
 }

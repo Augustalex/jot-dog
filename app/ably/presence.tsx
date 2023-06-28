@@ -1,11 +1,8 @@
-import { useEffect } from "react";
+import { useEffect, useState, useCallback } from "react";
+import * as Ably from "ably/promises";
+import { useAblyClient } from "./client";
 
 const CHANNEL_NAME = "editors";
-
-import { useState, useCallback } from "react";
-
-import * as Ably from "ably/promises";
-import useAblyClient from "./client";
 
 export function usePresence(localId: string) {
   const { ably, clientId } = useAblyClient(localId);
