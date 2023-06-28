@@ -15,6 +15,5 @@
     z-index: 100;
     top: 0;
     left: 0;
-    transform-origin: 50% -50%;
-    transition: transform 1s ease-in-out;
+    transition: transform .8s ease-in-out;
 }

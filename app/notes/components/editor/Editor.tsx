@@ -8,6 +8,8 @@ import { useLocalEditorState } from "../../hooks/useLocalEditorState";
 import { EditorView } from "@codemirror/view";
 import { usePresence } from "../../../ably/presence";
 import { NoteFile } from "../../utils/file-utils";
+import { useDoc } from "../../../ably/live-doc";
+import { useSaveShortcut } from "../Shortcuts";
 
 let myTheme = EditorView.theme(
   {
@@ -23,19 +25,20 @@ const extensions = [markdown({}), myTheme];
 
 export function Editor({
   file,
-  content,
+  serverContent,
   localId,
 }: {
   file: NoteFile;
-  content: string;
+  serverContent: string;
   localId: string;
 }) {
-  const { scheduleSave, setUnsavedContent, fontSize } =
-    useLocalEditorState(file);
+  const { fontSize } = useLocalEditorState(file);
+  const { doc, updateDoc, backup } = useDoc(file, serverContent, localId);
   const [editorWindow, setEditorWindow] = React.useState<HTMLDivElement | null>(
     null
   );
   const { onlineUsers, userName } = usePresence(localId);
+  useSaveShortcut(backup);
 
   return (
     <div
@@ -52,13 +55,10 @@ export function Editor({
         })}
       </div>
       <CodeMirror
-        value={content}
+        value={doc}
         height={editorWindow?.offsetHeight + "px"}
         extensions={extensions}
-        onChange={async (newContent) => {
-          setUnsavedContent(newContent);
-          await scheduleSave(newContent);
-        }}
+        onChange={updateDoc}
         placeholder={"Make a note..."}
         autoFocus
       />

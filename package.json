@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@ably-labs/react-hooks": "^2.1.1",
+    "@ably/vcdiff-decoder": "^1.0.5",
     "@codemirror/lang-markdown": "^6.2.0",
     "@uiw/react-codemirror": "^4.21.5",
     "@vercel/kv": "^0.2.1",

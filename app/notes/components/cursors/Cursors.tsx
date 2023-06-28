@@ -18,10 +18,11 @@ const COLOR_PAIRS = [
 ];
 
 export function Cursors({ localId }: { localId: string }) {
-  const [cursors, updateCursor] = useLiveCursors(localId);
+  const [cursors, updateCursor, lastSentCursor] = useLiveCursors(localId);
   const [localMouse, setLocalMouse] = useState({
     x: 0,
     y: 0,
+    time: Date.now(),
   });
   const [color] = useState(
     COLOR_PAIRS[Math.floor(Math.random() * COLOR_PAIRS.length)]
@@ -29,17 +30,27 @@ export function Cursors({ localId }: { localId: string }) {
 
   const onMouseMove = React.useCallback(
     (e: MouseEvent) => {
-      setLocalMouse({
-        x: e.clientX,
-        y: e.clientY,
-      });
+      const clientY = e.clientY;
+      const clientX = e.clientX;
+      const direction = Math.atan2(
+        clientY - lastSentCursor.y,
+        clientX - lastSentCursor.x
+      );
+      if (Date.now() > localMouse.time + 600) {
+        setLocalMouse({
+          x: clientX,
+          y: clientY,
+          time: Date.now(),
+        });
+      }
       updateCursor({
-        x: e.clientX,
-        y: e.clientY,
+        x: clientX,
+        y: clientY,
         c: color.join(":"),
+        d: direction,
       });
     },
-    [color, updateCursor]
+    [color, lastSentCursor.x, lastSentCursor.y, localMouse.time, updateCursor]
   );
 
   useEffect(() => {
@@ -72,7 +83,7 @@ export function Cursors({ localId }: { localId: string }) {
             y={y}
             fill={fill}
             border={border}
-            angle={angleTowardsCenterPoint}
+            angle={c.d + Math.PI * 0.5}
           />
         );
       })}
@@ -94,21 +105,25 @@ function CursorIcon({
   angle: number;
 }) {
   return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 64 64"
+    <div
       className={styles.cursor}
       style={{
-        transform: `translate(${x}px, ${y}px) rotate(${
-          angle - Math.PI * 0.5
-        }rad)`,
+        transform: `translate(${x}px, ${y}px) rotate(${angle}rad)`,
       }}
     >
-      <path
-        d="M52.48,50.05,33.34,11.34a1.5,1.5,0,0,0-2.68,0L11.52,50.05A1.5,1.5,0,0,0,13.66,52L32,40.43,50.34,52A1.51,1.51,0,0,0,52.48,50.05Z"
-        fill={fill}
-      />
-    </svg>
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 64 64"
+        style={{
+          transform: "translateY(-10px)",
+        }}
+      >
+        <path
+          d="M52.48,50.05,33.34,11.34a1.5,1.5,0,0,0-2.68,0L11.52,50.05A1.5,1.5,0,0,0,13.66,52L32,40.43,50.34,52A1.51,1.51,0,0,0,52.48,50.05Z"
+          fill={fill}
+        />
+      </svg>
+    </div>
   );
 }
 

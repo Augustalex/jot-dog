@@ -15,13 +15,6 @@ export function usePresence(localId: string) {
 
   const handlePresenceMessage = useCallback(
     (message: Ably.Types.PresenceMessage) => {
-      console.log(
-        "handlePresenceMessage",
-        message.action,
-        message.clientId,
-        new Date()
-      );
-
       if (message.action === "enter" || message.action === "present") {
         setOnlineUsers((prev) => {
           if (prev.includes(message.clientId) === false) {

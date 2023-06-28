@@ -1,15 +1,16 @@
 "use client";
 
 import { useState, useEffect } from "react";
-
 import * as Ably from "ably/promises";
 import { configureAbly } from "@ably-labs/react-hooks";
+import vcdiffPlugin from "@ably/vcdiff-decoder";
 
 export default function useAblyClient(localId: string) {
   const [ably, setAbly] = useState<Ably.Types.RealtimePromise>(null);
   const [clientId, setClientId] = useState<string>(localId);
 
   useEffect(() => {
+    console.log("LOCALID:", localId);
     let clientId = localId;
     if (!clientId) {
       clientId =
@@ -22,6 +23,7 @@ export default function useAblyClient(localId: string) {
       authUrl: "/ably/auth",
       authMethod: "POST",
       clientId,
+      plugins: { vcdiff: vcdiffPlugin },
     });
     setAbly(newAbly);
 
@@ -30,5 +32,8 @@ export default function useAblyClient(localId: string) {
     };
   }, [localId]); // Only run the client
 
-  return { ably, clientId };
+  return {
+    ably,
+    clientId,
+  };
 }

@@ -12,9 +12,15 @@ interface Cursor {
   x: number;
   y: number;
   c: string;
+  d: number;
 }
 
-type UpdateCursor = (cursor: { x: number; y: number; c: string }) => void;
+type UpdateCursor = (cursor: {
+  x: number;
+  y: number;
+  c: string;
+  d: number;
+}) => void;
 
 function hookOnToListener(onUpdate: Types.messageCallback<Types.Message>) {
   const setupListener = () => {
@@ -28,22 +34,27 @@ function hookOnToListener(onUpdate: Types.messageCallback<Types.Message>) {
   };
 }
 
-export function useLiveCursors(localId: string): [Cursor[], UpdateCursor] {
+export function useLiveCursors(
+  localId: string
+): [Cursor[], UpdateCursor, Omit<Cursor, "id">] {
   const { ably } = useAblyClient(localId);
   const [updateCursor, setUpdateCursor] = React.useState<{ run: UpdateCursor }>(
     { run: () => {} }
   );
+  const [lastSentLocalCursor, setLastSentLocalCursor] = React.useState<
+    Omit<Cursor, "id">
+  >({ x: 0, y: 0, c: "black", d: 0 });
   const [cursors, setCursors] = React.useState<Cursor[]>([]);
 
   const onUpdate = React.useCallback(
     (message: Types.Message) => {
-      console.log("UPDATE", message);
       setCursors([
         ...cursors.filter((c) => c.id !== message.clientId),
         {
           x: message.data.x,
           y: message.data.y,
           c: message.data.c,
+          d: message.data.d,
           id: message.clientId,
         },
       ]);
@@ -52,7 +63,6 @@ export function useLiveCursors(localId: string): [Cursor[], UpdateCursor] {
   );
 
   React.useEffect(() => {
-    console.log("SETUP LISTENER");
     return hookOnToListener(onUpdate);
   }, [onUpdate]);
 
@@ -65,9 +75,10 @@ export function useLiveCursors(localId: string): [Cursor[], UpdateCursor] {
     });
 
     setUpdateCursor({
-      run: throttle((cursor: { x: number; y: number }) => {
+      run: throttle((cursor: Omit<Cursor, "id">) => {
+        setLastSentLocalCursor(cursor);
         _channel.publish("update", cursor).catch(console.error);
-      }, 1000),
+      }, 500),
     });
 
     return () => {
@@ -75,5 +86,5 @@ export function useLiveCursors(localId: string): [Cursor[], UpdateCursor] {
     };
   }, [ably, localId]); // Only run the client
 
-  return [cursors, updateCursor.run];
+  return [cursors, updateCursor.run, lastSentLocalCursor];
 }
