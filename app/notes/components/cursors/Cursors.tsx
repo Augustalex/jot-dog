@@ -1,7 +1,7 @@
 "use client";
 import styles from "./cursors.module.css";
 import { useLiveCursors } from "../../../ably/live-cursors";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 // List of 10 esthetically pleasing colors in different hues with same brightness and saturation, but paired with a less bright color of the same hue
 const COLOR_PAIRS = [
@@ -19,13 +19,42 @@ const COLOR_PAIRS = [
 
 export function Cursors({ localId }: { localId: string }) {
   const [cursors, updateCursor] = useLiveCursors(localId);
-  const [localMouse, setLocalMouse] = useState({ x: 0, y: 0 });
+  const [localMouse, setLocalMouse] = useState({
+    x: 0,
+    y: 0,
+  });
   const [color] = useState(
     COLOR_PAIRS[Math.floor(Math.random() * COLOR_PAIRS.length)]
   );
 
+  const onMouseMove = React.useCallback(
+    (e: MouseEvent) => {
+      setLocalMouse({
+        x: e.clientX,
+        y: e.clientY,
+      });
+      updateCursor({
+        x: e.clientX,
+        y: e.clientY,
+        c: color.join(":"),
+      });
+    },
+    [color, updateCursor]
+  );
+
+  useEffect(() => {
+    const listener = (e: MouseEvent) => {
+      onMouseMove(e);
+    };
+    window.addEventListener("mousemove", listener);
+
+    return () => {
+      window.removeEventListener("mousemove", listener);
+    };
+  }, [onMouseMove]);
+
   return (
-    <div className={styles.cursorWindow} onMouseMoveCapture={onMouseMove}>
+    <div className={styles.cursorWindow}>
       {cursors.map((c) => {
         if (c.id === localId) return null;
 
@@ -49,15 +78,6 @@ export function Cursors({ localId }: { localId: string }) {
       })}
     </div>
   );
-
-  function onMouseMove(e: React.MouseEvent) {
-    setLocalMouse({ x: e.clientX, y: e.clientY });
-    updateCursor({
-      x: e.clientX,
-      y: e.clientY,
-      c: color.join(":"),
-    });
-  }
 }
 
 function CursorIcon({
