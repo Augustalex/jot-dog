@@ -31,8 +31,8 @@ export async function renameFile(fileToRename: NoteFile, newName: string) {
   return file;
 }
 
-export async function createFile(): Promise<NoteFile> {
-  const files = await getFiles();
+export async function createFile(files: NoteFile[] = null): Promise<NoteFile> {
+  files = files || await getFiles();
   const newFile = generateFileDetails(files);
 
   return await forceCreateFile(newFile, files);
@@ -46,8 +46,8 @@ export async function forceCreateFile(file: NoteFile, files: NoteFile[] = null) 
   return file;
 }
 
-export async function getOrCreateFile(fileKey: string) {
-  const files = await getFiles();
+export async function getOrCreateFile(fileKey: string, files: NoteFile[] = null) {
+  files = files || await getFiles();
   const file = files.find((file) => file.key === fileKey);
   if (!file) {
     const newFile: NoteFile = {name: fileKey, key: fileKey};

@@ -4,7 +4,7 @@ import {createFile, getFiles} from "./db/files";
 
 export default async function Notes() {
   const files = await getFiles();
-  const file = files.length === 0 ? await createFile() : files[files.length - 1];
+  const file = files.length === 0 ? await createFile(files) : files[files.length - 1];
 
-  return <NotesEntry selectedFile={file} />;
+  return <NotesEntry selectedFile={file} files={files}/>;
 }
