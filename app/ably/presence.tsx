@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 
 const CHANNEL_NAME = "editors";
 
@@ -66,5 +66,8 @@ export function usePresence(localId: string) {
     }
   }, [ably, channel, handlePresenceMessage]);
 
-  return { onlineUsers, userName: clientId };
+  return {
+    onlineUsers,
+    userName: clientId,
+  };
 }

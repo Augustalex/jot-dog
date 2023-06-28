@@ -1,7 +1,7 @@
 "use client";
 import styles from "./cursors.module.css";
 import { useLiveCursors } from "../../../ably/live-cursors";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 
 // List of 10 esthetically pleasing colors in different hues with same brightness and saturation, but paired with a less bright color of the same hue
 const COLOR_PAIRS = [
