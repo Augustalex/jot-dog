@@ -1,11 +1,10 @@
-import { getAblyClient } from "./client";
-import React from "react";
+import useAblyClient from "./client";
+import React, { useEffect } from "react";
 import { Types } from "ably/promises";
 import throttle from "lodash/throttle";
 
 const CHANNEL_NAME = "editors";
 
-let setupDone = false;
 let listener: Types.messageCallback<Types.Message> | null = null;
 
 interface Cursor {
@@ -16,21 +15,6 @@ interface Cursor {
 }
 
 type UpdateCursor = (cursor: { x: number; y: number; c: string }) => void;
-
-function listenToCursors(localId: string): [() => void, UpdateCursor] {
-  if (!setupDone) setupPresence(localId).catch(console.error);
-
-  const cleanup = () => {};
-
-  const update = (cursor: { x: number; y: number }) => {
-    getAblyClient(localId)
-      .channels.get(CHANNEL_NAME)
-      .publish("update", cursor)
-      .catch(console.error);
-  };
-
-  return [cleanup, update];
-}
 
 function hookOnToListener(onUpdate: Types.messageCallback<Types.Message>) {
   const setupListener = () => {
@@ -44,24 +28,8 @@ function hookOnToListener(onUpdate: Types.messageCallback<Types.Message>) {
   };
 }
 
-async function setupPresence(localId: string) {
-  try {
-    const ablyClient = getAblyClient(localId);
-    console.log("SETUP LIVE CURSOR SUB:", ablyClient);
-    const channel = ablyClient.channels.get(CHANNEL_NAME);
-    await channel.subscribe("update", (...args) => {
-      console.log("udpate!");
-      listener?.(...args);
-    });
-    setupDone = true;
-  } catch (error) {
-    console.error(error);
-
-    return [];
-  }
-}
-
 export function useLiveCursors(localId: string): [Cursor[], UpdateCursor] {
+  const { ably } = useAblyClient(localId);
   const [updateCursor, setUpdateCursor] = React.useState<{ run: UpdateCursor }>(
     { run: () => {} }
   );
@@ -88,13 +56,24 @@ export function useLiveCursors(localId: string): [Cursor[], UpdateCursor] {
     return hookOnToListener(onUpdate);
   }, [onUpdate]);
 
-  React.useEffect(() => {
-    console.log("SETUP ABLY");
-    const [cleanup, update] = listenToCursors(localId);
-    setUpdateCursor({ run: throttle(update, 1000) });
+  useEffect(() => {
+    if (!ably) return;
 
-    return cleanup;
-  }, [localId]);
+    const _channel = ably.channels.get(CHANNEL_NAME);
+    _channel.subscribe((...args) => {
+      listener?.(...args);
+    });
+
+    setUpdateCursor({
+      run: throttle((cursor: { x: number; y: number }) => {
+        _channel.publish("update", cursor).catch(console.error);
+      }, 1000),
+    });
+
+    return () => {
+      _channel.unsubscribe();
+    };
+  }, [ably, localId]); // Only run the client
 
   return [cursors, updateCursor.run];
 }

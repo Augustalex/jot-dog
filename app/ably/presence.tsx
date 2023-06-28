@@ -1,62 +1,70 @@
-import { getAblyClient } from "./client";
-import React from "react";
+import React, { useEffect } from "react";
 
 const CHANNEL_NAME = "editors";
 
-let setupDone = false;
-const listeners = [];
+import { useState, useCallback } from "react";
 
-function listenToPresence(
-  localId: string,
-  setClients: (clients: string[]) => void
-) {
-  const listener = () => {
-    getAblyClient(localId)
-      .channels.get(CHANNEL_NAME)
-      .presence.get()
-      .then((clients) => setClients(clients.map((c) => c.clientId)));
-  };
-
-  const setupListener = () => {
-    listener();
-    listeners.push(listener);
-  };
-
-  if (!setupDone) setupPresence(localId).then(setupListener);
-  else setupListener();
-
-  return () => {
-    const index = listeners.indexOf(listener);
-    if (index >= 0) listeners.splice(listeners.indexOf(listener), 1);
-  };
-}
-
-async function setupPresence(localId: string) {
-  try {
-    const channel = getAblyClient(localId).channels.get(CHANNEL_NAME);
-    setupDone = true;
-
-    await channel.presence.enter("editing");
-    await channel.presence.subscribe((...args) => {
-      for (const listener of listeners) {
-        listener(...args);
-      }
-    });
-
-    return await channel.presence.get();
-  } catch (error) {
-    console.error(error);
-
-    return [];
-  }
-}
+import * as Ably from "ably/promises";
+import useAblyClient from "./client";
 
 export function usePresence(localId: string) {
-  const [clients, setClients] = React.useState<string[]>([]);
+  const { ably, clientId } = useAblyClient(localId);
+  const [onlineUsers, setOnlineUsers] = useState<string[]>([]);
+  const [channel, setChannel] =
+    useState<Ably.Types.RealtimeChannelPromise | null>(null);
 
-  React.useEffect(() => {
-    return listenToPresence(localId, setClients);
-  }, [localId]);
+  const handlePresenceMessage = useCallback(
+    (message: Ably.Types.PresenceMessage) => {
+      console.log(
+        "handlePresenceMessage",
+        message.action,
+        message.clientId,
+        new Date()
+      );
 
-  return { clients };
+      if (message.action === "enter" || message.action === "present") {
+        setOnlineUsers((prev) => {
+          if (prev.includes(message.clientId) === false) {
+            return [...prev, message.clientId];
+          } else {
+            return prev;
+          }
+        });
+      } else {
+        // user has left
+        setOnlineUsers((prev) =>
+          prev.filter((username) => {
+            return username !== message.clientId;
+          })
+        );
+      }
+    },
+    []
+  );
+
+  useEffect(() => {
+    if (ably === null) return;
+
+    // If not already subscribed to a channel, subscribe
+    if (channel === null) {
+      const _channel: Ably.Types.RealtimeChannelPromise =
+        ably.channels.get(CHANNEL_NAME);
+      setChannel(_channel);
+
+      // Note: the 'present' event doesn't always seem to fire
+      // so we use presence.get() later to get the initial list of users
+      // _channel.presence.subscribe(['present', 'enter', 'leave'], handlePresenceMessage)
+      _channel.presence.subscribe(["enter", "leave"], handlePresenceMessage);
+
+      const getExistingMembers = async () => {
+        const messages = await _channel.presence.get();
+        messages.forEach(handlePresenceMessage);
+      };
+      getExistingMembers();
+
+      _channel.presence.enter();
+    }
+  }, [ably, channel, handlePresenceMessage]);
+
+  return { onlineUsers, userName: clientId };
 }

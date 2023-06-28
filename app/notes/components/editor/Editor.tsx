@@ -37,7 +37,7 @@ export function Editor({
   const [editorWindow, setEditorWindow] = React.useState<HTMLDivElement | null>(
     null
   );
-  const { clients } = usePresence(localId);
+  const { onlineUsers, userName } = usePresence(localId);
 
   return (
     <div
@@ -48,8 +48,9 @@ export function Editor({
       }}
     >
       <div>
-        {clients.map((c) => {
-          return <span key={c}>{c}, </span>;
+        <span>You ({userName})</span>
+        {onlineUsers.map((c) => {
+          return <span key={c}>, {c}</span>;
         })}
       </div>
       <CodeMirror

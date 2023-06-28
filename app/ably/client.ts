@@ -1,25 +1,34 @@
 "use client";
 
-import { Realtime } from "ably/promises";
+import { useState, useEffect } from "react";
 
-let ablyClient: Realtime;
+import * as Ably from "ably/promises";
+import { configureAbly } from "@ably-labs/react-hooks";
 
-export function getAblyClient(localId: string) {
-  if (ablyClient) return ablyClient;
+export default function useAblyClient(localId: string) {
+  const [ably, setAbly] = useState<Ably.Types.RealtimePromise>(null);
+  const [clientId, setClientId] = useState<string>(localId);
 
-  if (!localId) {
-    console.error("Trying to use Ably without a local ID. This is a bug.");
-  }
+  useEffect(() => {
+    let clientId = localId;
+    if (!clientId) {
+      clientId =
+        prompt("What is your name?") ??
+        `Lab rat #${Math.floor(Math.random() * 1000)}`;
+      setClientId(clientId);
+    }
 
-  ablyClient = new Realtime({
-    authUrl: "https://www.agge.dev/ably/auth",
-    closeOnUnload: true,
-    authHeaders: {
-      Cookie: `local-id=${localId}`,
-    },
-    transportParams: { heartbeatInterval: 10000 },
-    queryTime: true,
-  });
+    const newAbly: Ably.Types.RealtimePromise = configureAbly({
+      authUrl: "/ably/auth",
+      authMethod: "POST",
+      clientId,
+    });
+    setAbly(newAbly);
 
-  return ablyClient;
+    return () => {
+      newAbly.connection.off();
+    };
+  }, [localId]); // Only run the client
+
+  return { ably, clientId };
 }
