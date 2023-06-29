@@ -84,7 +84,7 @@ export function Cursors({ localId }: { localId: string }) {
             fill={fill}
             border={border}
             angle={c.d + Math.PI * 0.5}
-            userName={localId}
+            userName={c.id}
           />
         );
       })}
