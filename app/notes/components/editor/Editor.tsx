@@ -32,12 +32,12 @@ export function Editor({
   serverContent: string;
   localId: string;
 }) {
-  const { fontSize } = useLocalEditorState(file);
+  const { fontSize } = useLocalEditorState();
+  const { onlineUsers, userName } = usePresence(file, localId);
   const { doc, updateDoc, backup } = useDoc(file, serverContent, localId);
   const [editorWindow, setEditorWindow] = React.useState<HTMLDivElement | null>(
     null
   );
-  const { onlineUsers, userName } = usePresence(localId);
   useSaveShortcut(backup);
 
   return (

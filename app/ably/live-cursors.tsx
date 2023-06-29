@@ -2,8 +2,7 @@ import { useAblyClient } from "./client";
 import React, { useEffect } from "react";
 import { Types } from "ably/promises";
 import throttle from "lodash/throttle";
-
-const CHANNEL_NAME = "editors";
+import { NoteFile } from "../notes/utils/file-utils";
 
 let listener: Types.messageCallback<Types.Message> | null = null;
 
@@ -35,15 +34,24 @@ function hookOnToListener(onUpdate: Types.messageCallback<Types.Message>) {
 }
 
 export function useLiveCursors(
+  file: NoteFile,
   localId: string
 ): [Cursor[], UpdateCursor, Omit<Cursor, "id">] {
-  const { ably } = useAblyClient(localId);
-  const [updateCursor, setUpdateCursor] = React.useState<{ run: UpdateCursor }>(
-    { run: () => {} }
-  );
+  const { ably: ablyRef } = useAblyClient(localId);
+  const channel = React.useRef<Types.RealtimeChannelPromise | null>(null);
+  const [updateCursor, setUpdateCursor] = React.useState<{
+    run: UpdateCursor;
+  }>({
+    run: () => {},
+  });
   const [lastSentLocalCursor, setLastSentLocalCursor] = React.useState<
     Omit<Cursor, "id">
-  >({ x: 0, y: 0, c: "black", d: 0 });
+  >({
+    x: 0,
+    y: 0,
+    c: "black",
+    d: 0,
+  });
   const [cursors, setCursors] = React.useState<Cursor[]>([]);
 
   const onUpdate = React.useCallback(
@@ -67,12 +75,15 @@ export function useLiveCursors(
   }, [onUpdate]);
 
   useEffect(() => {
-    if (!ably) return;
+    if (!ablyRef.get()) return;
+    if (channel.current) return;
 
-    const _channel = ably.channels.get(CHANNEL_NAME);
-    _channel.subscribe((...args) => {
-      listener?.(...args);
-    });
+    const _channel = ablyRef.get().channels.get(`cursors:${file.key}`);
+    _channel
+      .subscribe((...args) => {
+        listener?.(...args);
+      })
+      .catch(console.error);
 
     setUpdateCursor({
       run: throttle((cursor: Omit<Cursor, "id">) => {
@@ -80,11 +91,8 @@ export function useLiveCursors(
         _channel.publish("update", cursor).catch(console.error);
       }, 1000),
     });
-
-    return () => {
-      _channel.unsubscribe();
-    };
-  }, [ably, localId]); // Only run the client
+    channel.current = _channel;
+  }, [ablyRef, file.key]); // Only run the client
 
   return [cursors, updateCursor.run, lastSentLocalCursor];
 }

@@ -22,7 +22,7 @@ function hookOnToListener(onUpdate: Types.messageCallback<Types.Message>) {
 }
 
 function useLiveDoc(file: NoteFile, serverContent: string, localId: string) {
-  const { ably } = useAblyClient(localId);
+  const { ably: ablyRef } = useAblyClient(localId);
   const updateDocNow = React.useRef<{
     run: UpdateDoc;
   }>({
@@ -56,43 +56,41 @@ function useLiveDoc(file: NoteFile, serverContent: string, localId: string) {
   }, [onUpdate]);
 
   useEffect(() => {
-    if (!ably) return;
+    if (!ablyRef.get()) return;
+    if (channel.current) return;
 
-    if (!channel.current) {
-      const _channel = ably.channels.get(`doc:${file.key}`);
-      _channel.setOptions({
-        params: {
-          delta: "vcdiff",
-        },
-      });
-      _channel.subscribe((...args) => {
+    const _channel = ablyRef.get().channels.get(`doc:${file.key}`, {
+      params: {
+        delta: "vcdiff",
+      },
+    });
+    _channel
+      .subscribe((...args) => {
         listener?.(...args);
-      });
+      })
+      .catch(console.error);
 
-      updateDocNow.current = {
-        run: (latestDoc: string) => {
-          saveFile(file, latestDoc).catch(console.error);
-
-          _channel.publish("update", latestDoc).catch(console.error);
-        },
-      };
-      updateDocSoon.current = {
-        run: throttle(updateDocNow.current.run, 250),
-      };
-      setUpdateLocalDoc({
-        run: (newLocalDoc: string) => {
-          setDoc(newLocalDoc);
-          updateDocSoon.current.run(newLocalDoc);
-        },
-      });
-
-      channel.current = _channel;
-    }
-
-    return () => {
-      channel.current?.unsubscribe();
+    updateDocNow.current = {
+      run: (latestDoc: string) => {
+        saveFile(file, latestDoc).catch(console.error);
+        _channel.publish("update", latestDoc).catch(console.error);
+      },
     };
-  }, [ably, file, file.key, updateDocSoon]); // Only run the client
+    updateDocSoon.current = {
+      run: throttle(updateDocNow.current.run, 1000, {
+        leading: false,
+        trailing: true,
+      }),
+    };
+    setUpdateLocalDoc({
+      run: (newLocalDoc: string) => {
+        setDoc(newLocalDoc);
+        updateDocSoon.current.run(newLocalDoc);
+      },
+    });
+
+    channel.current = _channel;
+  }, [ablyRef, file]); // Only run the client
 
   return {
     doc,

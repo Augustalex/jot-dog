@@ -1,14 +1,12 @@
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useRef } from "react";
 import * as Ably from "ably/promises";
 import { useAblyClient } from "./client";
+import { NoteFile } from "../notes/utils/file-utils";
 
-const CHANNEL_NAME = "editors";
-
-export function usePresence(localId: string) {
-  const { ably, clientId } = useAblyClient(localId);
+export function usePresence(file: NoteFile, localId: string) {
+  const { ably: ablyRef, clientId } = useAblyClient(localId);
   const [onlineUsers, setOnlineUsers] = useState<string[]>([]);
-  const [channel, setChannel] =
-    useState<Ably.Types.RealtimeChannelPromise | null>(null);
+  const channel = useRef<Ably.Types.RealtimeChannelPromise | null>(null);
 
   const handlePresenceMessage = useCallback(
     (message: Ably.Types.PresenceMessage) => {
@@ -33,28 +31,21 @@ export function usePresence(localId: string) {
   );
 
   useEffect(() => {
-    if (ably === null) return;
+    if (ablyRef.get() === null) return;
+    if (channel.current) return;
 
-    // If not already subscribed to a channel, subscribe
-    if (channel === null) {
-      const _channel: Ably.Types.RealtimeChannelPromise =
-        ably.channels.get(CHANNEL_NAME);
-      setChannel(_channel);
+    const _channel = ablyRef.get().channels.get(`editors:${file.key}`);
+    _channel.presence.subscribe(["enter", "leave"], handlePresenceMessage);
 
-      // Note: the 'present' event doesn't always seem to fire
-      // so we use presence.get() later to get the initial list of users
-      // _channel.presence.subscribe(['present', 'enter', 'leave'], handlePresenceMessage)
-      _channel.presence.subscribe(["enter", "leave"], handlePresenceMessage);
+    const getExistingMembers = async () => {
+      const messages = await _channel.presence.get();
+      messages.forEach(handlePresenceMessage);
+    };
+    getExistingMembers().catch(console.error);
+    _channel.presence.enter().catch(console.error);
 
-      const getExistingMembers = async () => {
-        const messages = await _channel.presence.get();
-        messages.forEach(handlePresenceMessage);
-      };
-      getExistingMembers();
-
-      _channel.presence.enter();
-    }
-  }, [ably, channel, handlePresenceMessage]);
+    channel.current = _channel;
+  }, [ablyRef, channel, file.key, handlePresenceMessage]);
 
   return {
     onlineUsers,

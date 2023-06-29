@@ -3,27 +3,20 @@ import NotesEntry from "../components/NotesEntry";
 import { getOrCreateFile } from "../db/files";
 import { cookies } from "next/headers";
 import { getFile } from "../db/file";
+import { redirect } from "next/navigation";
 
 export default async function Notes({
   params,
-  searchParams,
 }: {
   params: {
     key: string;
   };
-  searchParams?: { [key: string]: string | string[] | undefined };
 }) {
+  const localId = cookies().get("local-id")?.value;
+  if (!localId) redirect(`/guest?redirect-to=/notes/${params.key}`);
+
   const file = await getOrCreateFile(params.key);
   const content = await getFile(file);
 
-  const customName = searchParams["name"]?.toString() ?? null;
-
-  return (
-    <NotesEntry
-      file={file}
-      content={content}
-      customName={customName}
-      localId={cookies().get("local-id")?.value}
-    />
-  );
+  return <NotesEntry file={file} content={content} localId={localId} />;
 }

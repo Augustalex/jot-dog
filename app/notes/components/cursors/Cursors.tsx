@@ -2,6 +2,7 @@
 import styles from "./cursors.module.css";
 import { useLiveCursors } from "../../../ably/live-cursors";
 import React, { useEffect, useState } from "react";
+import { NoteFile } from "../../utils/file-utils";
 
 // List of 10 esthetically pleasing colors in different hues with same brightness and saturation, but paired with a less bright color of the same hue
 const COLOR_PAIRS = [
@@ -17,8 +18,14 @@ const COLOR_PAIRS = [
   ["#fca311", "#14213d"],
 ];
 
-export function Cursors({ localId }: { localId: string }) {
-  const [cursors, updateCursor, lastSentCursor] = useLiveCursors(localId);
+export function Cursors({
+  file,
+  localId,
+}: {
+  file: NoteFile;
+  localId: string;
+}) {
+  const [cursors, updateCursor, lastSentCursor] = useLiveCursors(file, localId);
   const [localMouse, setLocalMouse] = useState({
     x: 0,
     y: 0,
@@ -71,18 +78,13 @@ export function Cursors({ localId }: { localId: string }) {
 
         const x = c.x;
         const y = c.y;
-        const angleTowardsCenterPoint = Math.atan2(
-          y - localMouse.y,
-          x - localMouse.x
-        );
-        const [fill, border] = c.c.split(":");
+        const [fill] = c.c.split(":");
         return (
           <CursorIcon
             key={c.id}
             x={x}
             y={y}
             fill={fill}
-            border={border}
             angle={c.d + Math.PI * 0.5}
             userName={c.id}
           />
@@ -96,14 +98,12 @@ function CursorIcon({
   x,
   y,
   fill = "red",
-  border = "black",
   angle = 0,
   userName = "Anonymous",
 }: {
   x: number;
   y: number;
   fill?: string;
-  border?: string;
   angle: number;
   userName?: string | undefined | null;
 }) {
