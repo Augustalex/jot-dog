@@ -77,7 +77,7 @@ function useLiveDoc(file: NoteFile, serverContent: string, localId: string) {
         },
       };
       updateDocSoon.current = {
-        run: throttle(updateDocNow.current.run, 200),
+        run: throttle(updateDocNow.current.run, 250),
       };
       setUpdateLocalDoc({
         run: (newLocalDoc: string) => {
