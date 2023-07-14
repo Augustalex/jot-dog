@@ -2,10 +2,12 @@
 
 import React from "react";
 import styles from "./notes-entry.module.css";
-import { Editor } from "./editor/Editor";
 import { ClientSwrConfig } from "./ClientSwrConfig";
 import { NoteFile } from "../utils/file-utils";
 import { Cursors } from "./cursors/Cursors";
+import dynamic from "next/dynamic";
+
+const Editor = dynamic(() => import("./editor/Editor"), { ssr: false });
 
 export default function NotesEntry({
   file,
@@ -21,7 +23,7 @@ export default function NotesEntry({
       <main className="main tomato">
         <div className={styles.window}>
           <Editor file={file} localId={localId} serverContent={content} />
-          <Cursors file={file} localId={localId} />
+          {/*<Cursors file={file} localId={localId} />*/}
         </div>
       </main>
     </ClientSwrConfig>

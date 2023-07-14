@@ -7,7 +7,7 @@ import vcdiffPlugin from "@ably/vcdiff-decoder";
 
 let ablyClient: Ably.Types.RealtimePromise = null;
 
-function getAbly() {
+export function getAbly() {
   return ablyClient;
 }
 

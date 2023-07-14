@@ -69,3 +69,12 @@ a {
     color: inherit;
     text-decoration: none;
 }
+
+@keyframes blink {
+    from {
+        border-color: darkred;
+    }
+    to {
+        border-color: transparent;
+    }
+}

@@ -16,7 +16,7 @@
     z-index: 100;
     top: 0;
     left: 0;
-    transition: transform 1.2s ease-in-out;
+    transition: transform .12s ease-in-out;
 }
 
 .cursorName {
@@ -31,5 +31,5 @@
     text-wrap: nowrap;
     text-align: center;
     font-weight: bold;
-    transition: transform 1.2s ease-in-out;
+    transition: transform .1s ease-in-out;
 }

@@ -1,5 +1,5 @@
 import styles from "./editor.module.css";
-import React, { useRef, useState } from "react";
+import React from "react";
 import CodeMirror, { ReactCodeMirrorRef } from "@uiw/react-codemirror";
 import { markdown } from "@codemirror/lang-markdown";
 import { useLocalEditorState } from "../../hooks/useLocalEditorState";
@@ -12,7 +12,6 @@ import { useAblyClient } from "../../../ably/client";
 import { liveRangesRenderer, liveRangesUpdater } from "./display-plugin";
 import Ably from "ably/promises";
 import { setupLiveRanges } from "../../../ably/imperative-ranges";
-import { useEditorData } from "./y-adapter";
 
 const collabState = {
   ranges: [
@@ -76,14 +75,8 @@ export function Editor({
   const [editorWindow, setEditorWindow] = React.useState<HTMLDivElement | null>(
     null
   );
-  const [editor, setEditor] = useState(null);
   useSaveShortcut(backup);
   const liveRangesClient = setupLiveRanges(ably, file, updateCollabState);
-  const { ready, initialDoc, extensions } = useEditorData(
-    localId,
-    editor,
-    serverContent
-  );
 
   return (
     <div
@@ -99,21 +92,27 @@ export function Editor({
           return <span key={c}>, {c}</span>;
         })}
       </div>
-      <div
-        ref={(newEditorRef) => setEditor(newEditorRef)}
-        className={styles.editorParent}
+      <CodeMirror
+        ref={refs}
+        value={doc}
+        height={editorWindow?.offsetHeight + "px"}
+        basicSetup={{
+          highlightSelectionMatches: false,
+        }}
+        extensions={[
+          ...extensions,
+          liveRangesUpdater({
+            liveRangesClient,
+          }),
+          liveRangesRenderer({
+            localId,
+            liveRangesClient,
+          }),
+        ]}
+        onChange={updateDoc}
+        placeholder={"Make a note..."}
+        autoFocus
       />
-      {/*<CodeMirror*/}
-      {/*  ref={refs}*/}
-      {/*  value={initialDoc}*/}
-      {/*  height={editorWindow?.offsetHeight + "px"}*/}
-      {/*  basicSetup={{*/}
-      {/*    highlightSelectionMatches: false,*/}
-      {/*  }}*/}
-      {/*  extensions={extensions}*/}
-      {/*  placeholder={"Make a note..."}*/}
-      {/*  autoFocus*/}
-      {/*/>*/}
     </div>
   );
 }

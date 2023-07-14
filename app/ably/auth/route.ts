@@ -14,7 +14,6 @@ export async function POST(request: NextRequest) {
     );
   } else {
     const requestBody = await request.text();
-    console.log(requestBody);
     const clientId = requestBody.split("=")[1] || "NO_CLIENT_ID";
     const client = new Ably.Rest(process.env.ABLY_API_KEY);
 
