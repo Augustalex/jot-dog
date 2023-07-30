@@ -1,8 +1,14 @@
 import slugify from "slugify";
 
+export enum FileType {
+  Text = "",
+  YDoc = ":ydoc:",
+}
+
 export interface NoteFile {
   name: string;
   key: string;
+  fileType: FileType;
 }
 
 export function generateFileDetails(files: NoteFile[]) {
@@ -17,8 +23,12 @@ export function generateFileDetails(files: NoteFile[]) {
       ? `${newNameTemplate} (${similarNamesCount})`
       : newNameTemplate;
 
-  const newKey = slugify(Date.now().toString(), {lower: true});
-  const newFile: NoteFile = {name: newName, key: newKey};
+  const newKey = slugify(Date.now().toString(), { lower: true });
+  const newFile: NoteFile = {
+    name: newName,
+    key: newKey,
+    fileType: FileType.YDoc,
+  };
 
   return newFile;
 }

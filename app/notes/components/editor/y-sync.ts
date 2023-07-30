@@ -99,7 +99,6 @@ class YSyncPluginValue {
     this.conf = view.state.facet(ySyncFacet);
 
     this._observer = (event, tr: Y.Transaction) => {
-      console.log("observer", tr.origin);
       if (tr.origin) {
         // Is null when from local changes
         const delta = event.delta;

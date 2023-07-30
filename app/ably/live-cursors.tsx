@@ -1,7 +1,6 @@
 import { useAblyClient } from "./client";
 import React, { useEffect } from "react";
 import { Types } from "ably/promises";
-import throttle from "lodash/throttle";
 import { NoteFile } from "../notes/utils/file-utils";
 
 let listener: Types.messageCallback<Types.Message> | null = null;

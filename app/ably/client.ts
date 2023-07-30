@@ -26,7 +26,8 @@ export const useAblyClient = (localId: string) => {
       authUrl: "/ably/auth",
       authMethod: "POST",
       clientId: localId,
-      plugins: { vcdiff: vcdiffPlugin },
+      // plugins: { vcdiff: vcdiffPlugin },
+      useBinaryProtocol: true,
     });
     setAbly({
       get: () => getAbly(),
