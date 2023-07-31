@@ -27,18 +27,11 @@ export {
   yUndoManagerKeymap,
 };
 
-/**
- * @param {Y.Text} ytext
- * @param {any} awareness
- * @param {Object} [opts]
- * @param {Y.UndoManager | false} [opts.undoManager] Set undoManager to false to disable the undo-redo plugin
- * @return {cmState.Extension}
- */
-export const yCollab = (
-  ytext,
-  awareness,
+export function yCollab(
+  ytext: Y.Text,
+  awareness: any,
   { undoManager = new Y.UndoManager(ytext) } = {}
-) => {
+): cmState.Extension {
   const ySyncConfig = new YSyncConfig(ytext, awareness);
   const plugins = [ySyncFacet.of(ySyncConfig), ySync];
   if (awareness) {
@@ -59,4 +52,4 @@ export const yCollab = (
     );
   }
   return plugins;
-};
+}
