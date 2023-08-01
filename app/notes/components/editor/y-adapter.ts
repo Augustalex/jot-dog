@@ -41,8 +41,7 @@ const assistTheme = EditorView.baseTheme({
 });
 
 const placeholderMatcher = new MatchDecorator({
-  regexp:
-    /https?:\/\/(?:w{1,3}\.)?[^\s.]+(?:\.[a-z]+)*(?::\d+)?(?![^<]*(?:<\/\w+>|\/?>))/gi,
+  regexp: /(http:\/\/|https:\/\/|www.)(.*)/gi,
   decoration: (match) => {
     const url = match[0];
     return Decoration.mark({
