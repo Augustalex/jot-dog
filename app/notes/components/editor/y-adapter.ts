@@ -24,6 +24,7 @@ import * as encoding from "lib0/encoding";
 import * as decoding from "lib0/decoding";
 import throttle from "lodash/throttle";
 import { YDocPersister } from "./YDocPersister";
+import { indentWithTab } from "@codemirror/commands";
 
 const assistTheme = EditorView.baseTheme({
   ".cm-decorated-line": {
@@ -133,7 +134,7 @@ export function useEditorData(
       const state = EditorState.create({
         doc: yText.toString(),
         extensions: [
-          keymap.of([...yUndoManagerKeymap]),
+          keymap.of([...yUndoManagerKeymap, indentWithTab]),
           basicSetup,
           assistTheme,
           markdown({
