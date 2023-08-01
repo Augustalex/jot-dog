@@ -3,7 +3,7 @@
 import { kv } from "@vercel/kv";
 import slugify from "slugify";
 import { deleteFileContent, getFile, saveFile } from "./file";
-import { generateFileDetails, NoteFile } from "../utils/file-utils";
+import { FileType, generateFileDetails, NoteFile } from "../utils/file-utils";
 
 const FILES_STORAGE_KEY = "files";
 
@@ -13,19 +13,19 @@ export async function getFiles(): Promise<NoteFile[]> {
 }
 
 export async function renameFile(fileToRename: NoteFile, newName: string) {
-  const files = await getFiles();
-
-  const file = files.find((f) => f.key === fileToRename.key);
-  file.name = newName;
-  file.key = slugify(newName, { lower: true });
-
-  await kv.set(FILES_STORAGE_KEY, files);
-
-  const content = await getFile(fileToRename);
-
-  await Promise.all([deleteFileContent(fileToRename), saveFile(file, content)]);
-
-  return file;
+  // const files = await getFiles();
+  //
+  // const file = files.find((f) => f.key === fileToRename.key);
+  // file.name = newName;
+  // file.key = slugify(newName, { lower: true });
+  //
+  // await kv.set(FILES_STORAGE_KEY, files);
+  //
+  // const content = await getFile(fileToRename);
+  //
+  // await Promise.all([deleteFileContent(fileToRename), saveFile(file, content)]);
+  //
+  // return file;
 }
 
 export async function createFile(files: NoteFile[] = null): Promise<NoteFile> {
@@ -57,12 +57,14 @@ export async function getOrCreateFile(
     const newFile: NoteFile = {
       name: fileKey,
       key: fileKey,
+      fileType: FileType.YDoc,
     };
     files.push(newFile);
     await kv.set(FILES_STORAGE_KEY, files);
 
     return newFile;
   } else {
+    file.fileType = FileType.YDoc;
     return file;
   }
 }

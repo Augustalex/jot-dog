@@ -6,20 +6,13 @@ import { NoteFile } from "../notes/utils/file-utils";
 
 let listener: Types.messageCallback<Types.Message> | null = null;
 
-interface Cursor {
+interface LiveRange {
   id: string;
-  x: number;
-  y: number;
-  c: string;
-  d: number;
+  s: number;
+  e: number;
 }
 
-type UpdateCursor = (cursor: {
-  x: number;
-  y: number;
-  c: string;
-  d: number;
-}) => void;
+type UpdateLiveRange = (cursor: { s: number; e: number }) => void;
 
 function hookOnToListener(onUpdate: Types.messageCallback<Types.Message>) {
   const setupListener = () => {
@@ -33,41 +26,40 @@ function hookOnToListener(onUpdate: Types.messageCallback<Types.Message>) {
   };
 }
 
-export function useLiveCursors(
+export function useLiveRanges(
   file: NoteFile,
-  localId: string
-): [Cursor[], UpdateCursor, Omit<Cursor, "id">] {
+  localId: string,
+  imperativeUpdate: (ranges: LiveRange[]) => void
+): [LiveRange[], UpdateLiveRange, Omit<LiveRange, "id">] {
   const { ably: ablyRef } = useAblyClient(localId);
   const channel = React.useRef<Types.RealtimeChannelPromise | null>(null);
-  const [updateCursor, setUpdateCursor] = React.useState<{
-    run: UpdateCursor;
+  const [updateLiveRange, setUpdateLiveRange] = React.useState<{
+    run: UpdateLiveRange;
   }>({
     run: () => {},
   });
-  const [lastSentLocalCursor, setLastSentLocalCursor] = React.useState<
-    Omit<Cursor, "id">
+  const [lastSentLiveRange, setLastSentLiveRange] = React.useState<
+    Omit<LiveRange, "id">
   >({
-    x: 0,
-    y: 0,
-    c: "black",
-    d: 0,
+    s: 0,
+    e: 0,
   });
-  const [cursors, setCursors] = React.useState<Cursor[]>([]);
+  const [liveRanges, setLiveRanges] = React.useState<LiveRange[]>([]);
 
   const onUpdate = React.useCallback(
     (message: Types.Message) => {
-      setCursors([
-        ...cursors.filter((c) => c.id !== message.clientId),
+      const newRanges = [
+        ...liveRanges.filter((c) => c.id !== message.clientId),
         {
-          x: message.data.x,
-          y: message.data.y,
-          c: message.data.c,
-          d: message.data.d,
+          s: message.data.s,
+          e: message.data.e,
           id: message.clientId,
         },
-      ]);
+      ];
+      setLiveRanges(newRanges);
+      imperativeUpdate(newRanges);
     },
-    [cursors]
+    [liveRanges]
   );
 
   React.useEffect(() => {
@@ -78,21 +70,21 @@ export function useLiveCursors(
     if (!ablyRef.get()) return;
     if (channel.current) return;
 
-    const _channel = ablyRef.get().channels.get(`cursors:${file.key}`);
+    const _channel = ablyRef.get().channels.get(`ranges:${file.key}`);
     _channel
       .subscribe((...args) => {
         listener?.(...args);
       })
       .catch(console.error);
 
-    setUpdateCursor({
-      run: throttle((cursor: Omit<Cursor, "id">) => {
-        setLastSentLocalCursor(cursor);
+    setUpdateLiveRange({
+      run: throttle((cursor: Omit<LiveRange, "id">) => {
+        setLastSentLiveRange(cursor);
         _channel.publish("update", cursor).catch(console.error);
       }, 1000),
     });
     channel.current = _channel;
   }, [ablyRef, file.key]); // Only run the client
 
-  return [cursors, updateCursor.run, lastSentLocalCursor];
+  return [liveRanges, updateLiveRange.run, lastSentLiveRange];
 }

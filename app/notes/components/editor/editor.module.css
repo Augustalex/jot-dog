@@ -12,3 +12,11 @@
     overflow-wrap: normal;
     overflow-x: scroll;
 }
+
+.editorParent {
+    height: 100%;
+}
+
+.editorParent > div {
+    height: 100%;
+}

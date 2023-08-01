@@ -7,7 +7,7 @@ import vcdiffPlugin from "@ably/vcdiff-decoder";
 
 let ablyClient: Ably.Types.RealtimePromise = null;
 
-function getAbly() {
+export function getAbly() {
   return ablyClient;
 }
 
@@ -26,7 +26,8 @@ export const useAblyClient = (localId: string) => {
       authUrl: "/ably/auth",
       authMethod: "POST",
       clientId: localId,
-      plugins: { vcdiff: vcdiffPlugin },
+      // plugins: { vcdiff: vcdiffPlugin },
+      useBinaryProtocol: true,
     });
     setAbly({
       get: () => getAbly(),

@@ -1,48 +1,44 @@
-"use client";
-
 import styles from "./editor.module.css";
-import React from "react";
-import CodeMirror from "@uiw/react-codemirror";
-import { markdown } from "@codemirror/lang-markdown";
+import React, { useState } from "react";
 import { useLocalEditorState } from "../../hooks/useLocalEditorState";
-import { EditorView } from "@codemirror/view";
 import { usePresence } from "../../../ably/presence";
 import { NoteFile } from "../../utils/file-utils";
-import { useDoc } from "../../../ably/live-doc";
 import { useSaveShortcut } from "../Shortcuts";
+import { useEditorData } from "./y-adapter";
+import { persistNowWith } from "./YDocPersister";
 
-let myTheme = EditorView.theme(
-  {
-    "&.cm-editor.cm-focused": { outline: "0" },
-    "&.cm-focused .cm-cursor": {
-      borderLeftColor: "var(--color-highlight)",
-      borderWidth: "3px",
-    },
-  },
-  { dark: false }
-);
-const extensions = [markdown({}), myTheme];
+export default Editor;
 
 export function Editor({
   file,
   serverContent,
+  persist,
   localId,
 }: {
   file: NoteFile;
-  serverContent: string;
+  serverContent: Uint8Array;
+  persist: (content: Uint8Array) => Promise<void>;
   localId: string;
 }) {
   const { fontSize } = useLocalEditorState();
   const { onlineUsers, userName } = usePresence(file, localId);
-  const { doc, updateDoc, backup } = useDoc(file, serverContent, localId);
-  const [editorWindow, setEditorWindow] = React.useState<HTMLDivElement | null>(
-    null
+  const [editorRef, setEditorRef] = useState(null);
+  const { ready, yDoc } = useEditorData(
+    localId,
+    editorRef,
+    serverContent,
+    persist
   );
-  useSaveShortcut(backup);
+
+  const persistDoc = React.useCallback(() => {
+    if (!ready) return;
+    persistNowWith(yDoc, persist);
+  }, [persist, ready, yDoc]);
+
+  useSaveShortcut(persistDoc);
 
   return (
     <div
-      ref={(newRef) => setEditorWindow(newRef)}
       className={styles.editorWindow}
       style={{
         fontSize: fontSize + "px",
@@ -54,13 +50,9 @@ export function Editor({
           return <span key={c}>, {c}</span>;
         })}
       </div>
-      <CodeMirror
-        value={doc}
-        height={editorWindow?.offsetHeight + "px"}
-        extensions={extensions}
-        onChange={updateDoc}
-        placeholder={"Make a note..."}
-        autoFocus
+      <div
+        ref={(newEditorRef) => setEditorRef(newEditorRef)}
+        className={styles.editorParent}
       />
     </div>
   );
