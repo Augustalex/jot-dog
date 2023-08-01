@@ -1,12 +1,19 @@
 import { useEffect, useState } from "react";
 import * as Y from "yjs";
 import { basicSetup, EditorView } from "codemirror";
-import { keymap } from "@codemirror/view";
+import {
+  Decoration,
+  DecorationSet,
+  keymap,
+  MatchDecorator,
+  ViewPlugin,
+  ViewUpdate,
+} from "@codemirror/view";
 import * as random from "lib0/random";
 import { EditorState } from "@codemirror/state";
 import { useAblyClient } from "../../../ably/client";
 import { yCollab, yUndoManagerKeymap } from "./y-collab";
-import { markdown } from "@codemirror/lang-markdown";
+import { markdown, markdownLanguage } from "@codemirror/lang-markdown";
 import { Types } from "ably";
 import {
   applyAwarenessUpdate,
@@ -17,6 +24,59 @@ import * as encoding from "lib0/encoding";
 import * as decoding from "lib0/decoding";
 import throttle from "lodash/throttle";
 import { YDocPersister } from "./YDocPersister";
+
+const assistTheme = EditorView.baseTheme({
+  ".cm-decorated-line": {
+    borderStyle: "solid",
+    borderWidth: "1px",
+    borderRadius: "3px",
+    borderColor: "rgb(150, 150, 150)",
+    background: "rgb(220, 219, 169)",
+    padding: "3px",
+  },
+  ".cm-clickable-link": {
+    color: "#0000EE",
+  },
+});
+
+const placeholderMatcher = new MatchDecorator({
+  regexp:
+    /https?:\/\/(?:w{1,3}\.)?[^\s.]+(?:\.[a-z]+)*(?::\d+)?(?![^<]*(?:<\/\w+>|\/?>))/gi,
+  decoration: (match) => {
+    const url = match[0];
+    return Decoration.mark({
+      class: "cm-clickable-link",
+      attributes: { "data-url": url },
+    });
+  },
+});
+
+const placeholders = ViewPlugin.fromClass(
+  class {
+    placeholders: DecorationSet;
+    constructor(view: EditorView) {
+      this.placeholders = placeholderMatcher.createDeco(view);
+    }
+    update(update: ViewUpdate) {
+      console.log("UPDATE!", update);
+      this.placeholders = placeholderMatcher.updateDeco(
+        update,
+        this.placeholders
+      );
+    }
+  },
+  {
+    decorations: (instance) => instance.placeholders,
+    provide: (plugin) =>
+      EditorView.decorations.of((view) => {
+        return view.plugin(plugin)?.placeholders || Decoration.none;
+      }),
+    // provide: (plugin) =>
+    //   EditorView.atomicRanges.of((view) => {
+    //     return view.plugin(plugin)?.placeholders || Decoration.none;
+    //   }),
+  }
+);
 
 export const userColors = [
   { color: "#30bced", light: "#30bced33" },
@@ -50,6 +110,8 @@ export function useEditorData(
     if (!ably.get()) return;
     if (!editorRef) return;
 
+    if (yDoc) return;
+
     (async () => {
       const yDoc = new Y.Doc();
       setYDoc(yDoc);
@@ -73,8 +135,12 @@ export function useEditorData(
         extensions: [
           keymap.of([...yUndoManagerKeymap]),
           basicSetup,
-          markdown(),
+          assistTheme,
+          markdown({
+            base: markdownLanguage,
+          }),
           EditorView.lineWrapping,
+          placeholders,
           yCollab(yText, provider.awareness),
         ],
       });
@@ -82,8 +148,34 @@ export function useEditorData(
         state,
         parent: editorRef,
       });
+
+      window.addEventListener("click", (e) => {
+        if (e.ctrlKey && e.target) {
+          // @ts-ignore
+          const activeLine = e.target?.closest?.(".cm-activeLine");
+
+          if (activeLine) {
+            const domElement = view.domAtPos(view.state.selection.main.head);
+            const url =
+              // @ts-ignore
+              domElement?.node?.cmView?.parent?.mark?.attrs?.["data-url"];
+
+            if (url) {
+              window.open(url, "_blank");
+            }
+          }
+        }
+      });
+      window.addEventListener("keydown", (e) => {
+        if (e.ctrlKey) document.body.classList.add("ctrl");
+        else document.body.classList.remove("ctrl");
+      });
+      window.addEventListener("keyup", (e) => {
+        if (e.ctrlKey) document.body.classList.add("ctrl");
+        else document.body.classList.remove("ctrl");
+      });
     })();
-  }, [ably, editorRef, persist, serverContent]);
+  }, [ably, editorRef, persist, serverContent, yDoc]);
 
   return {
     ready: yDoc !== null,

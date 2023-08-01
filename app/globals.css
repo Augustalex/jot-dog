@@ -78,3 +78,7 @@ a {
         border-color: transparent;
     }
 }
+
+.ctrl .cm-clickable-link:hover {
+    cursor: pointer;
+}
