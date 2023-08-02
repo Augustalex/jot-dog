@@ -25,6 +25,7 @@ import * as decoding from "lib0/decoding";
 import throttle from "lodash/throttle";
 import { YDocPersister } from "./YDocPersister";
 import { indentWithTab } from "@codemirror/commands";
+import { NoteFile } from "../../utils/file-utils";
 
 const assistTheme = EditorView.baseTheme({
   ".cm-decorated-line": {
@@ -98,6 +99,7 @@ const persistedDocument = 7;
 
 export function useEditorData(
   localId: string,
+  file: NoteFile,
   editorRef: HTMLDivElement | null,
   serverContent: Uint8Array,
   persist: (data: Uint8Array) => Promise<void>
@@ -122,6 +124,7 @@ export function useEditorData(
         yDoc,
         initialData: serverContent,
         persist,
+        file,
       });
       provider.awareness.setLocalStateField("user", {
         name: "Anonymous " + Math.floor(Math.random() * 100),
@@ -189,15 +192,17 @@ function triggersSpecialMode(e: any) {
 const createProvider = ({
   ably,
   yDoc,
+  file,
   initialData,
   persist,
 }: {
   ably: Types.RealtimePromise;
   yDoc: Y.Doc;
+  file: NoteFile;
   initialData?: Uint8Array;
   persist: (data: Uint8Array) => Promise<void>;
 }) => {
-  const channel = ably.channels.get("ydoc");
+  const channel = ably.channels.get(`ydoc:${file.key}`);
 
   const awareness = new Awareness(yDoc);
 

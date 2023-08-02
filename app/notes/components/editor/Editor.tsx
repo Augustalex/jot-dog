@@ -25,6 +25,7 @@ export function Editor({
   const [editorRef, setEditorRef] = useState(null);
   const { ready, yDoc } = useEditorData(
     localId,
+    file,
     editorRef,
     serverContent,
     persist
