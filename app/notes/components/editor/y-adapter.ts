@@ -58,7 +58,6 @@ const placeholders = ViewPlugin.fromClass(
       this.placeholders = placeholderMatcher.createDeco(view);
     }
     update(update: ViewUpdate) {
-      console.log("UPDATE!", update);
       this.placeholders = placeholderMatcher.updateDeco(
         update,
         this.placeholders
@@ -150,7 +149,7 @@ export function useEditorData(
       });
 
       window.addEventListener("click", (e) => {
-        if (e.ctrlKey && e.target) {
+        if (triggersSpecialMode(e) && e.target) {
           // @ts-ignore
           const activeLine = e.target?.closest?.(".cm-activeLine");
 
@@ -167,11 +166,11 @@ export function useEditorData(
         }
       });
       window.addEventListener("keydown", (e) => {
-        if (e.ctrlKey) document.body.classList.add("ctrl");
+        if (triggersSpecialMode(e)) document.body.classList.add("ctrl");
         else document.body.classList.remove("ctrl");
       });
       window.addEventListener("keyup", (e) => {
-        if (e.ctrlKey) document.body.classList.add("ctrl");
+        if (triggersSpecialMode(e)) document.body.classList.add("ctrl");
         else document.body.classList.remove("ctrl");
       });
     })();
@@ -181,6 +180,10 @@ export function useEditorData(
     ready: yDoc !== null,
     yDoc,
   };
+}
+
+function triggersSpecialMode(e: any) {
+  return e.ctrlKey || e.metaKey || e.altKey || e.shiftKey;
 }
 
 const createProvider = ({
