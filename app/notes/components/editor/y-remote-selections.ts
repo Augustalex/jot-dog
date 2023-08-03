@@ -137,9 +137,9 @@ export class YRemoteSelectionsPluginValue {
     this.conf = view.state.facet(ySyncFacet);
     this._listener = ({ added, updated, removed }, s, t) => {
       const clients = added.concat(updated).concat(removed);
-      if (
-        clients.findIndex((id) => id !== this.conf.awareness.doc.clientID) >= 0
-      ) {
+      const someoneRemoteHasBeenChanged =
+        clients.findIndex((id) => id !== this.conf.awareness.doc.clientID) >= 0;
+      if (someoneRemoteHasBeenChanged) {
         view.dispatch({ annotations: [yRemoteSelectionsAnnotation.of([])] });
       }
     };
@@ -193,11 +193,19 @@ export class YRemoteSelectionsPluginValue {
     }
 
     // update decorations (remote selections)
-    awareness.getStates().forEach((state) => {
+    const remoteStates = awareness.getStates();
+    remoteStates.forEach((state) => {
       const cursor = state.cursor;
-      if (cursor == null || cursor.anchor == null || cursor.head == null) {
+      const local = state.user.name === localAwarenessState.user.name;
+      if (
+        cursor == null ||
+        cursor.anchor == null ||
+        cursor.head == null ||
+        local
+      ) {
         return;
       }
+
       const anchor = Y.createAbsolutePositionFromRelativePosition(
         cursor.anchor,
         ydoc
