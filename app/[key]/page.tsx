@@ -23,6 +23,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       ? ["crab.png"]
       : ["diego", "hair"].includes(key)
       ? ["diego.png"]
+      : ["sad", "cat"].includes(key)
+      ? ["sad.png"]
       : undefined,
   };
 }
