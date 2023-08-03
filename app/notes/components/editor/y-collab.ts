@@ -39,7 +39,6 @@ export const yCollab = (
   awareness,
   { undoManager = new Y.UndoManager(ytext) } = {}
 ) => {
-  console.log("yText", ytext);
   const ySyncConfig = new YSyncConfig(ytext, awareness);
   const plugins = [ySyncFacet.of(ySyncConfig), ySync];
   if (awareness) {

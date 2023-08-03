@@ -17,6 +17,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     title: key,
     description: "Jot down notes with your team",
+    icons: key === "pug" || key === "kirby" ? ["kirby.webp"] : undefined,
   };
 }
 
