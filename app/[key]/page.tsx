@@ -15,9 +15,15 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const key = params.key;
 
   return {
-    title: key,
+    title: key.slice(0, 1).toUpperCase() + key.slice(1),
     description: "Jot down notes with your team",
-    icons: key === "pug" || key === "kirby" ? ["kirby.webp"] : undefined,
+    icons: ["pug", "kirby"].includes(key)
+      ? ["kirby.webp"]
+      : ["crabs", "payments"].includes(key)
+      ? ["crab.png"]
+      : ["diego", "hair"].includes(key)
+      ? ["diego.png"]
+      : undefined,
   };
 }
 
