@@ -26,16 +26,9 @@ import throttle from "lodash/throttle";
 import { YDocPersister } from "./YDocPersister";
 import { indentWithTab } from "@codemirror/commands";
 import { NoteFile } from "../../utils/file-utils";
+import { myTheme } from "./themes/theme";
 
 const assistTheme = EditorView.baseTheme({
-  ".cm-decorated-line": {
-    borderStyle: "solid",
-    borderWidth: "1px",
-    borderRadius: "3px",
-    borderColor: "rgb(150, 150, 150)",
-    background: "rgb(220, 219, 169)",
-    padding: "3px",
-  },
   ".cm-clickable-link": {
     color: "#0000EE",
   },
@@ -144,6 +137,7 @@ export function useEditorData(
           EditorView.lineWrapping,
           placeholders,
           yCollab(yText, provider.awareness),
+          myTheme,
         ],
       });
       const view = new EditorView({
