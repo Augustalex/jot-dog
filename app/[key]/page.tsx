@@ -5,13 +5,22 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { fileClient } from "../notes/db/fileClient";
 
-export default async function Notes({
-  params,
-}: {
-  params: {
-    key: string;
+import { Metadata } from "next";
+
+type Props = {
+  params: { key: string };
+};
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const key = params.key;
+
+  return {
+    title: key,
+    description: "Jot down notes with your team",
   };
-}) {
+}
+
+export default async function Notes({ params }: Props) {
   const localId = cookies().get("local-id")?.value;
   if (!localId) redirect(`/guest?redirect-to=/${params.key}`);
 
