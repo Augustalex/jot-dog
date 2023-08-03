@@ -15,7 +15,6 @@ export const fileClient = {
       throw new Error("File does not contain binary data");
     }
 
-    console.log("Returning file as array");
     const storedContent = await getFile(file);
     if (!storedContent) return null;
 
