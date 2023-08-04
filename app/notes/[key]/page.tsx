@@ -12,10 +12,17 @@ export default async function Notes({
     key: string;
   };
 }) {
-  const localId = cookies().get("local-id")?.value;
-  if (!localId) redirect(`/guest?redirect-to=/notes/${params.key}`);
+  const key = params.key;
+  if (key.includes(".")) {
+    const preDot = key.split(".")[0];
+    redirect(`/${preDot}`);
+    return;
+  }
 
-  const file = await getOrCreateFile(params.key);
+  const localId = cookies().get("local-id")?.value;
+  if (!localId) redirect(`/guest?redirect-to=/notes/${key}`);
+
+  const file = await getOrCreateFile(key);
   const content = await fileClient.getBinaryFile(file);
   return (
     <NotesEntry file={file} content={content as Uint8Array} localId={localId} />
