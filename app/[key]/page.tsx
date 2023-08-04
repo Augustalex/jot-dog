@@ -30,21 +30,26 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 export default async function Notes({ params }: Props) {
-  const localId = cookies().get("local-id")?.value;
-  if (!localId) redirect(`/guest?redirect-to=/${params.key}`);
-
-  if (params.key === "new") {
+  const key = params.key;
+  if (key === "new") {
     const file = await createFile();
     return redirect(`/${file.key}`);
-  } else {
-    const file = await getOrCreateFile(params.key);
-    const content = await fileClient.getBinaryFile(file);
-    return (
-      <NotesEntry
-        file={file}
-        content={content as Uint8Array}
-        localId={localId}
-      />
-    );
   }
+  if (key.includes(".")) {
+    const preDot = key.split(".")[0];
+    redirect(`/${preDot}`);
+    return;
+  }
+
+  const localId = cookies().get("local-id")?.value;
+  if (!localId) {
+    redirect(`/guest?redirect-to=/${key}`);
+    return;
+  }
+
+  const file = await getOrCreateFile(key);
+  const content = await fileClient.getBinaryFile(file);
+  return (
+    <NotesEntry file={file} content={content as Uint8Array} localId={localId} />
+  );
 }
