@@ -50,6 +50,9 @@ export function HistoryModal({ file, yDoc, close }: HistoryModalProps) {
               </button>
             );
           })}
+          {backups.length === 0 && (
+            <div className={`${styles.backup}`}>No backups yet</div>
+          )}
         </div>
         <div
           className={styles.previewContainer}
