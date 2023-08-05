@@ -11,11 +11,14 @@
     --color-tertiary: #fde24f;
     --color-stroke: #00214d;
     --color-highlight: #00ebc7;
+    --color-highlight-green: #45d197;
 
 
     --color-light-bg: #ffffff;
     --color-light-text: #000000;
+    --color-light-textWeak: #7a7a7a;
     --color-light-border: #000000;
+    --color-light-borderWeak: #dddddd;
 
     --color-dark-bg: #222222;
     --color-dark-text: #ffffff;

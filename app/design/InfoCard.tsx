@@ -1,25 +1,18 @@
 import styles from "./design.module.css";
 import React from "react";
-import Link from "next/link";
 
-export function LinkCard({
+export function InfoCard({
   children,
   style,
   className = "",
-  href,
 }: {
   children: React.ReactNode;
   style?: React.CSSProperties;
   className?: string;
-  href: string;
 } & React.ButtonHTMLAttributes<HTMLButtonElement>) {
   return (
-    <Link
-      style={style}
-      className={[styles.card, styles.cardClickable, className].join(" ")}
-      href={href}
-    >
+    <div style={style} className={[styles.infoCard, className].join(" ")}>
       {children}
-    </Link>
+    </div>
   );
 }

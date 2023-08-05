@@ -10,7 +10,12 @@ export interface RecentView {
 const LOCAL_STORAGE_KEY = "recent-views";
 
 export const useRecentlyViewed = () => {
-  return useLocalState<RecentView[]>(LOCAL_STORAGE_KEY, []);
+  const { localState, isReady } = useLocalState<RecentView[]>(
+    LOCAL_STORAGE_KEY,
+    []
+  );
+
+  return { recentlyViewed: localState, isReady };
 };
 
 export const useRegisterView = (file: NoteFile) => {
