@@ -31,10 +31,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function Notes({ params }: Props) {
   const key = params.key;
+
   if (key === "new") {
     const file = await createFile();
     return redirect(`/${file.key}`);
   }
+
   if (key.includes(".")) {
     const preDot = key.split(".")[0];
     redirect(`/${preDot}`);

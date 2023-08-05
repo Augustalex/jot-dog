@@ -12,6 +12,18 @@
     --color-stroke: #00214d;
     --color-highlight: #00ebc7;
 
+
+    --color-light-bg: #ffffff;
+    --color-light-text: #000000;
+    --color-light-border: #000000;
+
+    --color-dark-bg: #222222;
+    --color-dark-text: #ffffff;
+    --color-dark-border: #292930;
+    --color-dark-surface: #292930;
+    --color-dark-surfaceRaised: #5a5a6b;
+    --color-dark-onSurface: #ababcc;
+
     --s1: 4px;
     --s2: 8px;
     --s3: 12px;
@@ -51,6 +63,12 @@
     justify-content: center;
     align-items: center;
     min-height: 100vh;
+    color: var(--color-light-text);
+    background: var(--color-light-bg);
+}
+
+.editor {
+    background: var(--color-dark-bg);
 }
 
 * {
@@ -81,4 +99,20 @@ a {
 
 .ctrl .cm-clickable-link:hover {
     cursor: pointer;
+}
+
+button {
+    font-family: inherit;
+}
+
+h1 {
+    font-size: var(--s6);
+    font-weight: 600;
+    margin-bottom: var(--s2);
+}
+
+h2 {
+    font-size: var(--s5);
+    font-weight: 600;
+    margin-bottom: var(--s2);
 }

@@ -6,6 +6,7 @@ import { ClientSwrConfig } from "./ClientSwrConfig";
 import { NoteFile } from "../utils/file-utils";
 import dynamic from "next/dynamic";
 import { fileClient } from "../db/fileClient";
+import { useRegisterView } from "../hooks/useRecentlyViewed";
 
 const Editor = dynamic(() => import("./editor/Editor"), { ssr: false });
 
@@ -18,6 +19,7 @@ export default function NotesEntry({
   content: Uint8Array;
   localId: string;
 }) {
+  useRegisterView(file);
   const persist = useMemo(
     () => (file: NoteFile, content: Uint8Array) =>
       fileClient.saveBinaryData(file, content),
@@ -26,7 +28,7 @@ export default function NotesEntry({
 
   return (
     <ClientSwrConfig fallback={{}}>
-      <main className="main tomato">
+      <main className="main editor">
         <div className={styles.window}>
           <Editor
             file={file}
