@@ -18,6 +18,7 @@ export function BottomBar({ file, yDoc }) {
         <button
           className={styles.bottomBarButton}
           onClick={() => setView(View.History)}
+          title="Local history"
         >
           <Image src={revertIcon.src} alt="History" width={42} height={42} />
         </button>
