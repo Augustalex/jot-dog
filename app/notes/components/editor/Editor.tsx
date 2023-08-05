@@ -6,6 +6,7 @@ import { NoteFile } from "../../utils/file-utils";
 import { useSaveShortcut } from "../Shortcuts";
 import { useEditorData } from "./y-adapter";
 import { persistNowWith } from "./YDocPersister";
+import { BottomBar } from "../BottomBar";
 
 export default Editor;
 
@@ -33,28 +34,31 @@ export function Editor({
 
   const persistDoc = React.useCallback(() => {
     if (!ready) return;
-    persistNowWith(yDoc, persist);
-  }, [persist, ready, yDoc]);
+    persistNowWith(file, yDoc, persist);
+  }, [file, persist, ready, yDoc]);
 
   useSaveShortcut(persistDoc);
 
   return (
-    <div
-      className={styles.editorWindow}
-      style={{
-        fontSize: fontSize + "px",
-      }}
-    >
-      <div style={{ display: "none" }}>
-        <span>You ({userName})</span>
-        {onlineUsers.map((c) => {
-          return <span key={c}>, {c}</span>;
-        })}
-      </div>
+    <>
       <div
-        ref={(newEditorRef) => setEditorRef(newEditorRef)}
-        className={styles.editorParent}
-      />
-    </div>
+        className={styles.editorWindow}
+        style={{
+          fontSize: fontSize + "px",
+        }}
+      >
+        <div style={{ display: "none" }}>
+          <span>You ({userName})</span>
+          {onlineUsers.map((c) => {
+            return <span key={c}>, {c}</span>;
+          })}
+        </div>
+        <div
+          ref={(newEditorRef) => setEditorRef(newEditorRef)}
+          className={styles.editorParent}
+        />
+      </div>
+      <BottomBar file={file} yDoc={yDoc} />
+    </>
   );
 }

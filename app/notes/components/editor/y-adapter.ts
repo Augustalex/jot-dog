@@ -27,6 +27,7 @@ import { YDocPersister } from "./YDocPersister";
 import { indentWithTab } from "@codemirror/commands";
 import { NoteFile } from "../../utils/file-utils";
 import { myTheme } from "./themes/theme";
+import { Y_TEXT_KEY } from "./constants";
 
 const assistTheme = EditorView.baseTheme({
   ".cm-clickable-link": {
@@ -110,7 +111,7 @@ export function useEditorData(
       const yDoc = new Y.Doc();
       setYDoc(yDoc);
 
-      const yText = yDoc.getText("codemirror");
+      const yText = yDoc.getText(Y_TEXT_KEY);
 
       const provider = createProvider({
         ably: ably.get(),
@@ -171,7 +172,7 @@ export function useEditorData(
         else document.body.classList.remove("ctrl");
       });
     })();
-  }, [ably, editorRef, persist, serverContent, yDoc]);
+  }, [ably, editorRef, file, persist, serverContent, yDoc]);
 
   return {
     ready: yDoc !== null,
@@ -205,6 +206,7 @@ const createProvider = ({
     delay: 1000,
   });
   const schedulePersist = YDocPersister({
+    file,
     yDoc,
     persist,
     persistInterval: 3 * 1000,

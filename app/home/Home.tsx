@@ -36,25 +36,15 @@ export function Home() {
           );
         })}
         {recentlyViewed.length < 7 && (
-          <InfoCard
-            style={{
-              fontStyle: "italic",
-            }}
-            className={ibmPlexMono.className}
-          >
-            Any address can be a note:
-            <br />
+          <InfoCard className={ibmPlexMono.className}>
+            <span>Any address can be a new note:</span>
             jot.dog/my-note
           </InfoCard>
         )}
-        <InfoCard
-          style={{
-            fontStyle: "italic",
-          }}
-          className={ibmPlexMono.className}
-        >
-          Get a new unique note at:
-          <br />
+        <InfoCard className={ibmPlexMono.className}>
+          <span>
+            Create a new <em>unique</em> note at:
+          </span>
           jot.dog/new
         </InfoCard>
       </Grid>

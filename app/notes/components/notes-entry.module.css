@@ -5,3 +5,34 @@
   display: flex;
   flex-direction: column;
 }
+
+.bottomBar {
+  position: absolute;
+  bottom: var(--d3);
+  right: var(--d4);
+  display: flex;
+  gap: var(--d2);
+  align-items: center;
+}
+
+.bottomBarButton {
+  width: 42px;
+  height: 42px;
+  border: none;
+  box-shadow: none;
+  outline: 0;
+  background: transparent;
+  filter: invert();
+  transition: all .1s ease-out;
+  transform: scale(1);
+}
+
+.bottomBarButton:hover {
+  cursor: pointer;
+  transform: scale(1.1);
+}
+
+.bottomBarButton:active {
+  cursor: pointer;
+  transform: scale(.95);
+}

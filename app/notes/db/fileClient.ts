@@ -1,5 +1,9 @@
 import { FileType, NoteFile } from "../utils/file-utils";
 import { getFile, saveFile } from "./file";
+import {
+  fromBase64StringToUint8Array,
+  fromUint8ArrayToBase64String,
+} from "../utils/binary-helpers";
 
 export const fileClient = {
   async saveBinaryData(file: NoteFile, content: Uint8Array) {
@@ -7,8 +11,7 @@ export const fileClient = {
       throw new Error("File does not contain binary data");
     }
 
-    const contentToStore = Buffer.from(content).toString("base64");
-    await saveFile(file, contentToStore);
+    await saveFile(file, fromUint8ArrayToBase64String(content));
   },
   async getBinaryFile(file: NoteFile) {
     if (file.fileType !== FileType.YDoc) {
@@ -18,6 +21,6 @@ export const fileClient = {
     const storedContent = await getFile(file);
     if (!storedContent) return null;
 
-    return new Uint8Array(Buffer.from(storedContent, "base64"));
+    return fromBase64StringToUint8Array(storedContent);
   },
 };
