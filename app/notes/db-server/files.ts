@@ -2,7 +2,11 @@
 
 import { kv } from "@vercel/kv";
 import slugify from "slugify";
-import { deleteFileContent, getFile, saveFile } from "./file";
+import {
+  deleteFileContent,
+  getFileContent,
+  saveFileContent,
+} from "./file-content";
 import { FileType, generateFileDetails, NoteFile } from "../utils/file-utils";
 
 const FILES_STORAGE_KEY = "files";

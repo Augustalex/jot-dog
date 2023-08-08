@@ -1,5 +1,5 @@
 import useSWR from "swr";
-import { getConfig } from "../editor";
+import { getConfig } from "../../db-server/editor";
 
 export const EDITOR_CONFIG_KEY = "editor_config";
 

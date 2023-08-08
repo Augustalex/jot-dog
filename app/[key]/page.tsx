@@ -1,9 +1,9 @@
 import React from "react";
 import NotesEntry from "../notes/components/NotesEntry";
-import { createFile, getOrCreateFile } from "../notes/db/files";
+import { createFile, getOrCreateFile } from "../notes/db-server/files";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
-import { fileClient } from "../notes/db/fileClient";
+import { fileClient } from "../notes/db-client/fileClient";
 
 import { Metadata } from "next";
 

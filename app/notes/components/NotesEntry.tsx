@@ -5,7 +5,7 @@ import styles from "./notes-entry.module.css";
 import { ClientSwrConfig } from "./ClientSwrConfig";
 import { NoteFile } from "../utils/file-utils";
 import dynamic from "next/dynamic";
-import { fileClient } from "../db/fileClient";
+import { fileClient } from "../db-client/fileClient";
 import { useRegisterView } from "../hooks/useRecentlyViewed";
 
 const Editor = dynamic(() => import("./editor/Editor"), { ssr: false });

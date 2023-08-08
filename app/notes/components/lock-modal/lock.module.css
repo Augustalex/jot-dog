@@ -1,0 +1,81 @@
+
+.historyOverlay {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  backdrop-filter: blur(4px) grayscale(100%) sepia(100%) hue-rotate(200deg) brightness(.4);
+  -webkit-backdrop-filter: blur(4px) grayscale(100%) sepia(100%) hue-rotate(200deg) brightness(.4);
+}
+
+.modalRoot {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  top: 50%;
+  left: 50%;
+  display: flex;
+  flex-direction: column;
+  border: 2px solid var(--color-dark-border);
+  background: var(--color-dark-surface);
+  color: var(--color-dark-text);
+  padding: var(--d4);
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.modalHeader {
+    font-size: var(--d4);
+    font-weight: bold;
+    margin-bottom: var(--d4);
+}
+
+.lockButton {
+  padding: var(--d2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: var(--d3);
+  background: transparent;
+  color: var(--color-dark-text);
+  border: 2px solid var(--color-dark-border);
+  box-shadow: none;
+}
+
+.lockButton:hover:not(:disabled) {
+  background: var(--color-dark-surfaceRaised);
+  color: var(--color-dark-text);
+  border: 2px solid var(--color-dark-border);
+  box-shadow: none;
+}
+
+.lockButton:active:not(:disabled) {
+  background: var(--color-dark-border);
+  color: var(--color-dark-text);
+  border: 2px solid var(--color-dark-border);
+  box-shadow: none;
+}
+
+.lockButton:disabled {
+  opacity: .5;
+}
+
+.lockButton > img {
+  filter: invert(100%);
+}
+
+.passwordInputRow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.eyeIcon {
+  filter: invert(100%);
+  margin-left: var(--d1);
+}
+
+.eyeIcon:hover {
+  cursor: pointer;
+}
