@@ -15,7 +15,6 @@ export function LockNote({ fileKey }: { fileKey: string }) {
     }
 
     (async () => {
-      console.log("Locking with: ", fileKey, password);
       const response = await fetch("/auth/lock", {
         method: "POST",
         body: JSON.stringify({
@@ -25,10 +24,8 @@ export function LockNote({ fileKey }: { fileKey: string }) {
       });
       const data = await response.json();
       if (data.status === "success") {
-        console.log("Successfully locked: ", fileKey, password);
         router.push(`/${fileKey}`);
       } else {
-        console.log("Failed locking: ", fileKey, password);
         window.location.reload();
       }
     })();

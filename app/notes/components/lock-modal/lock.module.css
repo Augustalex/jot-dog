@@ -32,7 +32,7 @@
 }
 
 .lockButton {
-  padding: var(--d2);
+  padding: var(--d2) var(--d3);
   display: flex;
   align-items: center;
   justify-content: center;

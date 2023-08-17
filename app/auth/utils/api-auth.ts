@@ -25,8 +25,7 @@ export async function lock<T extends NextResponse>(
   const passwordHash = await bcrypt.hash(password, TEST_PASSWORD_SALT);
   await kv.set(passwordStorageKey(fileKey), passwordHash);
 
-  const token = await setLoginToken(fileKey, response);
-  console.log("LOCKED NOTE: ", token);
+  await setLoginToken(fileKey, response);
 
   return response;
 }
@@ -41,11 +40,10 @@ export async function login(
   }
   if (!password) throw new Error(INVALID_PASSWORD);
 
-  const matchesHash = bcrypt.compare(password, storedPasswordHash);
+  const matchesHash = await bcrypt.compare(password, storedPasswordHash);
   if (!matchesHash) throw new Error(INVALID_PASSWORD);
 
-  const token = await setLoginToken(fileKey, response);
-  console.log("LOGIN SUCCESS: ", token, ". Did set cookie for:", fileKey);
+  await setLoginToken(fileKey, response);
 
   return response;
 }

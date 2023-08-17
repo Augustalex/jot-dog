@@ -1,6 +1,6 @@
 import styles from "./notes-entry.module.css";
 import revertIcon from "./revert.svg";
-import lockIcon from "./lock.svg";
+import lockIcon from "../../lock.svg";
 import Image from "next/image";
 import { useState } from "react";
 import { HistoryModal } from "./history-modal/HistoryModal";

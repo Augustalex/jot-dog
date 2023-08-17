@@ -13,6 +13,9 @@
     --color-highlight: #00ebc7;
     --color-highlight-green: #45d197;
 
+    --color-failure: #ff5470;
+    --color-success: #45d197;
+
 
     --color-light-bg: #ffffff;
     --color-light-text: #000000;

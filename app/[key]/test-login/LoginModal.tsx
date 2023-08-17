@@ -1,11 +1,12 @@
-import styles from "./lock.module.css";
+import styles from "./login-to-note.module.css";
 import React, { useRef, useState } from "react";
-import { NoteFile } from "../../utils/file-utils";
 import { IBM_Plex_Mono } from "next/font/google";
 import Image from "next/image";
-import lockIcon from "../../../lock.svg";
-import hiddenIcon from "../../../hidden.svg";
-import shownIcon from "../../../shown.svg";
+import lockIcon from "../../lock.svg";
+import hiddenIcon from "../../hidden.svg";
+import shownIcon from "../../shown.svg";
+import { NoteFile } from "../../notes/utils/file-utils";
+import { useRouter } from "next/navigation";
 
 const ibmPlexMono = IBM_Plex_Mono({
   weight: ["100", "200", "300", "400", "500", "600", "700"],
@@ -14,29 +15,32 @@ const ibmPlexMono = IBM_Plex_Mono({
 
 interface HistoryModalProps {
   file: NoteFile;
-  close(): void;
 }
 
-export function LockModal({ file, close }: HistoryModalProps) {
+export function LoginModal({ file }: HistoryModalProps) {
+  const router = useRouter();
   const modalRoot = useRef<HTMLDivElement>(null);
   const [password, setPassword] = useState("");
   const [passwordVisible, setPasswordVisible] = useState(false);
-  const [_, setStatus] = useState<"none" | "failed" | "success">("none");
+  const [status, setStatus] = useState<"none" | "failed" | "success">("none");
 
   return (
-    <div
-      className={`${styles.historyOverlay} ${ibmPlexMono.className}`}
-      onClick={onOverlayClick}
-    >
+    <div className={`${styles.historyOverlay} ${ibmPlexMono.className}`}>
       <div
         ref={modalRoot}
-        className={styles.modalRoot}
+        className={`${styles.modalRoot} ${
+          status === "success"
+            ? styles.modalStatusSuccess
+            : status === "failed"
+            ? styles.modalStatusFailed
+            : ""
+        }`}
         style={{
           height: "min(300px, 80vh)",
           width: "min(400px, 90vw)",
         }}
       >
-        <h2 className={styles.modalHeader}>Take your note private</h2>
+        <h2 className={styles.modalHeader}>This note is private.</h2>
         <label>
           <span>Password</span>
           <div className={styles.passwordInputRow}>
@@ -46,6 +50,7 @@ export function LockModal({ file, close }: HistoryModalProps) {
               onChange={(e) => {
                 setPassword(e.target?.value ?? "");
               }}
+              disabled={status === "success"}
             />
             <Image
               className={styles.eyeIcon}
@@ -60,18 +65,18 @@ export function LockModal({ file, close }: HistoryModalProps) {
         <button
           className={styles.lockButton}
           title="Lock note"
-          onClick={lockNote}
-          disabled={password.length === 0}
+          onClick={login}
+          disabled={password.length === 0 || status === "success"}
         >
           <Image src={lockIcon.src} alt="Lock" width={42} height={42} />
-          <span>Lock /{file.key} with password</span>
+          <span>Login to /{file.key}</span>
         </button>
       </div>
     </div>
   );
 
-  async function lockNote() {
-    const response = await fetch("/auth/lock", {
+  async function login() {
+    const response = await fetch("/auth/login", {
       method: "POST",
       body: JSON.stringify({
         fileKey: file.key,
@@ -79,23 +84,17 @@ export function LockModal({ file, close }: HistoryModalProps) {
       }),
     });
     const data = await response.json();
+
     if (data.status === "success") {
       setStatus("success");
-      window.location.reload();
+      router.push(`/${file.key}`);
     } else {
       setStatus("failed");
-      console.error("Failed to lock note");
+      setPassword("");
     }
   }
 
   function togglePasswordVisibility() {
     setPasswordVisible(!passwordVisible);
-  }
-
-  function onOverlayClick(e: React.MouseEvent) {
-    const target = e.target as HTMLElement;
-    if (target !== modalRoot.current && !modalRoot.current?.contains(target)) {
-      close();
-    }
   }
 }

@@ -17,8 +17,7 @@ export async function publicLogin(
   { fileKey }: { fileKey: string },
   response: NextResponse
 ) {
-  const token = await setLoginToken(fileKey, response);
-  console.log("LOGIN WITH PUBLIC TOKEN: ", token);
+  await setLoginToken(fileKey, response);
 
   return response;
 }
