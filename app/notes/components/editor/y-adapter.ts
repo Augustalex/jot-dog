@@ -225,6 +225,7 @@ const createProvider = ({
 
   function setup() {
     yDoc.on("update", (update, origin) => {
+      if (origin === "remote") return;
       scheduleYDocUpdate(update);
       schedulePersist();
     });
