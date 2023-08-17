@@ -261,29 +261,25 @@ export const basicDarkHighlightStyle = HighlightStyle.define([
   // },
   { tag: t.invalid, color: base02, borderBottom: `1px dotted ${invalid}` },
   // { tag: t.heading, fontWeight: "bold" },
+
   {
-    tag: t.heading1,
+    tag: t.heading2,
     fontSize: "2em",
     ...headingCommonStyles,
   },
   {
-    tag: t.heading2,
+    tag: t.heading3,
     fontSize: "1.5em",
     ...headingCommonStyles,
   },
   {
-    tag: t.heading3,
+    tag: t.heading4,
     fontSize: "1.25em",
     ...headingCommonStyles,
   },
   {
-    tag: t.heading4,
-    fontSize: "1em",
-    ...headingCommonStyles,
-  },
-  {
     tag: t.heading5,
-    fontSize: ".875em",
+    fontSize: "1em",
     ...headingCommonStyles,
   },
   {
@@ -292,24 +288,39 @@ export const basicDarkHighlightStyle = HighlightStyle.define([
     ...headingCommonStyles,
     color: textWeaker,
   },
-  {
-    tag: t.special(t.heading1),
-    fontWeight: "bold",
-    color: "red !important",
-    borderTop: "2px solid green",
-  },
-  {
-    tag: t.special(t.heading),
-    fontWeight: "bold",
-    color: "red !important",
-    borderTop: "2px solid green",
-  },
-  {
-    tag: t.special(t.heading2),
-    fontWeight: "bold",
-    color: "red !important",
-    borderTop: "2px solid green",
-  },
+
+  // Useful after fixing so that = and - doesn't result in a 1 or 2 heading.
+  // {
+  //   tag: t.heading1,
+  //   fontSize: "2em",
+  //   ...headingCommonStyles,
+  // },
+  // {
+  //   tag: t.heading2,
+  //   fontSize: "1.5em",
+  //   ...headingCommonStyles,
+  // },
+  // {
+  //   tag: t.heading3,
+  //   fontSize: "1.25em",
+  //   ...headingCommonStyles,
+  // },
+  // {
+  //   tag: t.heading4,
+  //   fontSize: "1em",
+  //   ...headingCommonStyles,
+  // },
+  // {
+  //   tag: t.heading5,
+  //   fontSize: ".875em",
+  //   ...headingCommonStyles,
+  // },
+  // {
+  //   tag: t.heading6,
+  //   fontSize: ".85em",
+  //   ...headingCommonStyles,
+  //   color: textWeaker,
+  // },
 ]);
 
 /// Extension to enable the Basic Dark theme (both the editor theme and
