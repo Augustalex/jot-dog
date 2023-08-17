@@ -8,8 +8,28 @@ import {
   publicLogin,
   verifyFileAccess,
 } from "./app/auth/utils/edge-auth";
+import { getAdjectiveAnimal } from "./app/guest/animal-name";
 
 export async function middleware(request: NextRequest) {
+  const responseOrNull = await ensureLoggedIn(request);
+  if (responseOrNull) return responseOrNull;
+
+  console.log("has local id? ", request.cookies.has("local-id"));
+  if (!request.cookies.has("local-id")) {
+    const response = NextResponse.next();
+    response.cookies.set("local-id", getAdjectiveAnimal());
+    console.log("setting local id");
+    return response;
+  } else {
+    console.log("NOT setting local id");
+  }
+
+  return NextResponse.next();
+}
+
+async function ensureLoggedIn(
+  request: NextRequest
+): Promise<NextResponse | null> {
   const url = new URL(request.url);
   const parts = url.pathname.split("/").filter((s) => s.length > 0);
   if (parts.length !== 1) return NextResponse.next();
@@ -17,7 +37,6 @@ export async function middleware(request: NextRequest) {
 
   try {
     await verifyFileAccess(rootPath, request);
-    return NextResponse.next();
   } catch (error) {
     if (error.message === EXPIRED_TOKEN || error.message === NO_TOKEN) {
       if (await isPrivateNote(rootPath)) {
@@ -40,6 +59,8 @@ export async function middleware(request: NextRequest) {
       );
     }
   }
+
+  return null;
 }
 
 export const config = {

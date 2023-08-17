@@ -121,7 +121,7 @@ export function useEditorData(
         file,
       });
       provider.awareness.setLocalStateField("user", {
-        name: "Anonymous " + Math.floor(Math.random() * 100),
+        name: localId,
         color: userColor.color,
         colorLight: userColor.light,
       });

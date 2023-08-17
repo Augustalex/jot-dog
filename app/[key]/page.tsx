@@ -43,11 +43,7 @@ export default async function Notes({ params }: Props) {
     return;
   }
 
-  const localId = cookies().get("local-id")?.value;
-  if (!localId) {
-    redirect(`/guest?redirect-to=/${key}`);
-    return;
-  }
+  const localId = cookies().get("local-id")?.value ?? "anonymous";
 
   const file = await getOrCreateFile(key);
   const content = await fileClient.getBinaryFile(file);
