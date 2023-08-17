@@ -2,8 +2,9 @@ import { NextRequest, NextResponse } from "next/server";
 import { kv } from "@vercel/kv";
 import { sign, TokenPayload, verify } from "./jwt-utils";
 
-const TEST_JWT_SALT = "$2b$10$0nkMkjrliXMlKkv7C1xI8e";
-const TEST_EXPIRY_SECONDS = 60;
+const TEST_JWT_SALT = process.env.CRYPT_SALT || undefined;
+const TEST_EXPIRE_DAYS = 30;
+const TEST_EXPIRY_TIME = TEST_EXPIRE_DAYS * 24 * 60 * 60 * 1000;
 
 export const NO_TOKEN = "No token";
 export const NO_ACCESS = "No access";
@@ -36,6 +37,8 @@ export async function verifyFileAccess<T extends NextRequest>(
 }
 
 async function verifyAndCatchExpiredToken(token: string) {
+  if (!TEST_JWT_SALT) throw new Error("Server configuration error 1");
+
   try {
     return await verify(token, TEST_JWT_SALT);
   } catch (error) {
@@ -55,6 +58,8 @@ export async function setLoginToken<T extends NextResponse>(
   fileKey: string,
   response: T
 ) {
+  if (!TEST_JWT_SALT) throw new Error("Server configuration error 1");
+
   const token = await sign({ fileKey }, TEST_JWT_SALT);
   response.cookies.set({
     name: "login-token",
@@ -62,7 +67,7 @@ export async function setLoginToken<T extends NextResponse>(
     path: `/${fileKey}`,
     sameSite: "strict",
     secure: true,
-    maxAge: TEST_EXPIRY_SECONDS * 1000,
+    maxAge: TEST_EXPIRY_TIME,
   });
 
   return token;
