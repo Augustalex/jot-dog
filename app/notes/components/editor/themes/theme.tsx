@@ -65,6 +65,7 @@ export const basicDarkTheme = EditorView.theme(
     // Makes sure highlight sits above text, otherwise it won't be visible
     ".cm-selectionLayer:has(.cm-selectionBackground) ": {
       zIndex: "1 !important",
+      pointerEvents: "none",
     },
     "&.cm-focused .cm-selectionBackground, .cm-selectionBackground, .cm-content ::selection":
       {
