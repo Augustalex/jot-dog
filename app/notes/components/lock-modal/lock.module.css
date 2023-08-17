@@ -25,6 +25,14 @@
   text-align: center;
 }
 
+.modalStatusSuccess {
+  border: 2px solid var(--color-success);
+}
+
+.modalStatusFailed {
+  border: 2px solid var(--color-failure);
+}
+
 .modalHeader {
     font-size: var(--d4);
     font-weight: bold;

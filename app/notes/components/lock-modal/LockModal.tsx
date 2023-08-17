@@ -21,7 +21,11 @@ export function LockModal({ file, close }: HistoryModalProps) {
   const modalRoot = useRef<HTMLDivElement>(null);
   const [password, setPassword] = useState("");
   const [passwordVisible, setPasswordVisible] = useState(false);
-  const [_, setStatus] = useState<"none" | "failed" | "success">("none");
+  const [status, setStatus] = useState<
+    "none" | "in-progress" | "failed" | "success"
+  >("none");
+
+  const disableInput = status === "success" || status === "in-progress";
 
   return (
     <div
@@ -30,7 +34,13 @@ export function LockModal({ file, close }: HistoryModalProps) {
     >
       <div
         ref={modalRoot}
-        className={styles.modalRoot}
+        className={`${styles.modalRoot} ${
+          status === "success"
+            ? styles.modalStatusSuccess
+            : status === "failed"
+            ? styles.modalStatusFailed
+            : ""
+        }`}
         style={{
           height: "min(300px, 80vh)",
           width: "min(400px, 90vw)",
@@ -45,6 +55,13 @@ export function LockModal({ file, close }: HistoryModalProps) {
               autoComplete="new-password"
               onChange={(e) => {
                 setPassword(e.target?.value ?? "");
+              }}
+              autoFocus
+              disabled={disableInput}
+              onKeyDown={async (e) => {
+                if (e.key === "Enter") {
+                  await lockNote();
+                }
               }}
             />
             <Image
@@ -61,7 +78,7 @@ export function LockModal({ file, close }: HistoryModalProps) {
           className={styles.lockButton}
           title="Lock note"
           onClick={lockNote}
-          disabled={password.length === 0}
+          disabled={password.length === 0 || disableInput}
         >
           <Image src={lockIcon.src} alt="Lock" width={42} height={42} />
           <span>Lock /{file.key} with password</span>

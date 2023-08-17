@@ -9,6 +9,9 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ status: "missing-password" }, { status: 400 });
   if (!body.fileKey)
     return NextResponse.json({ status: "missing-file-key" }, { status: 400 });
+  if (body.password.length > 128)
+    return NextResponse.json({ status: "invalid-password" }, { status: 400 });
+
   const { password, fileKey } = body;
 
   let successResponse = NextResponse.json(

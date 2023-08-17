@@ -22,7 +22,11 @@ export function LoginModal({ file }: HistoryModalProps) {
   const modalRoot = useRef<HTMLDivElement>(null);
   const [password, setPassword] = useState("");
   const [passwordVisible, setPasswordVisible] = useState(false);
-  const [status, setStatus] = useState<"none" | "failed" | "success">("none");
+  const [status, setStatus] = useState<
+    "none" | "in-progress" | "failed" | "success"
+  >("none");
+
+  const disableInput = status === "success" || status === "in-progress";
 
   return (
     <div className={`${styles.historyOverlay} ${ibmPlexMono.className}`}>
@@ -45,12 +49,18 @@ export function LoginModal({ file }: HistoryModalProps) {
           <span>Password</span>
           <div className={styles.passwordInputRow}>
             <input
+              autoFocus
               type={passwordVisible ? "text" : "password"}
               autoComplete="new-password"
               onChange={(e) => {
                 setPassword(e.target?.value ?? "");
               }}
-              disabled={status === "success"}
+              onKeyDown={async (e) => {
+                if (e.key === "Enter") {
+                  await login();
+                }
+              }}
+              disabled={disableInput}
             />
             <Image
               className={styles.eyeIcon}
@@ -66,7 +76,7 @@ export function LoginModal({ file }: HistoryModalProps) {
           className={styles.lockButton}
           title="Lock note"
           onClick={login}
-          disabled={password.length === 0 || status === "success"}
+          disabled={password.length === 0 || disableInput}
         >
           <Image src={openLock.src} alt="Lock" width={42} height={42} />
           <span>Login to /{file.key}</span>
@@ -76,6 +86,7 @@ export function LoginModal({ file }: HistoryModalProps) {
   );
 
   async function login() {
+    setStatus("in-progress");
     const response = await fetch("/auth/login", {
       method: "POST",
       body: JSON.stringify({
