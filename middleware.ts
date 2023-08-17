@@ -22,7 +22,7 @@ export async function middleware(request: NextRequest) {
     if (error.message === EXPIRED_TOKEN || error.message === NO_TOKEN) {
       if (await isPrivateNote(rootPath)) {
         const url = request.nextUrl.clone();
-        url.pathname = `/${rootPath}/test-login`;
+        url.pathname = `/${rootPath}/login`;
         return NextResponse.redirect(url);
       } else {
         try {

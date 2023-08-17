@@ -26,8 +26,8 @@ export async function verifyFileAccess<T extends NextRequest>(
   fileKey: string,
   request: T
 ) {
-  if (!request.cookies.has("test-login-token")) throw new Error(NO_TOKEN);
-  const { value: token } = request.cookies.get("test-login-token");
+  if (!request.cookies.has("login-token")) throw new Error(NO_TOKEN);
+  const { value: token } = request.cookies.get("login-token");
 
   const payload = await verifyAndCatchExpiredToken(token);
   if (payload.fileKey !== fileKey) throw new Error(NO_ACCESS);
@@ -57,7 +57,7 @@ export async function setLoginToken<T extends NextResponse>(
 ) {
   const token = await sign({ fileKey }, TEST_JWT_SALT);
   response.cookies.set({
-    name: "test-login-token",
+    name: "login-token",
     value: token,
     path: `/${fileKey}`,
     sameSite: "strict",
