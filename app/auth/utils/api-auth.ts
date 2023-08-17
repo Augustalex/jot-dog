@@ -8,7 +8,7 @@ import {
   setLoginToken,
 } from "./edge-auth";
 
-const TEST_PASSWORD_SALT = "$2b$10$VxTfpTjFHzr5xDcNGoFRre";
+const JWT_SALT = process.env.CRYPT_SALT || undefined;
 
 export interface LoginPayload {
   password?: string;
@@ -22,7 +22,9 @@ export async function lock<T extends NextResponse>(
   { password, fileKey }: LoginPayload,
   response: T
 ) {
-  const passwordHash = await bcrypt.hash(password, TEST_PASSWORD_SALT);
+  if (!JWT_SALT) throw new Error("Server configuration error 1");
+
+  const passwordHash = await bcrypt.hash(password, JWT_SALT);
   await kv.set(passwordStorageKey(fileKey), passwordHash);
 
   await setLoginToken(fileKey, response);
