@@ -11,6 +11,11 @@ import {
 import { getAdjectiveAnimal } from "./app/guest/animal-name";
 
 export async function middleware(request: NextRequest) {
+  // Ignore files and images.
+  if (request.url.includes(".")) {
+    return NextResponse.next();
+  }
+
   const responseOrNull = await ensureLoggedIn(request);
   if (responseOrNull) return responseOrNull;
 
