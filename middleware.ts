@@ -12,16 +12,10 @@ import { getAdjectiveAnimal } from "./app/guest/animal-name";
 
 export async function middleware(request: NextRequest) {
   // Ignore files and images.
-  if (request.url.includes(".")) {
+  const url = new URL(request.url);
+  if (url.pathname.includes(".")) {
     return NextResponse.next();
   }
-
-  console.log(
-    "S:",
-    process.env.SALT,
-    `"${process.env.SALT}"`,
-    decodeURIComponent(process.env.SALT)
-  );
 
   const responseOrNull = await ensureLoggedIn(request);
   if (responseOrNull) return responseOrNull;

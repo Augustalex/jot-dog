@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { kv } from "@vercel/kv";
 import { sign, TokenPayload, verify } from "./jwt-utils";
+import { readSalt } from "../../notes/utils/read-salt";
 
-const JWT_SALT = process.env.SALT || undefined;
 const TOKEN_EXPIRE_DAYS = 30;
 const TOKEN_EXPIRE_TIME = TOKEN_EXPIRE_DAYS * 24 * 60 * 60 * 1000;
 
@@ -37,10 +37,8 @@ export async function verifyFileAccess<T extends NextRequest>(
 }
 
 async function verifyAndCatchExpiredToken(token: string) {
-  if (!JWT_SALT) throw new Error("Server configuration error 1");
-
   try {
-    return await verify(token, JWT_SALT);
+    return await verify(token, readSalt());
   } catch (error) {
     if (error.code === "ERR_JWT_EXPIRED") {
       throw new Error(EXPIRED_TOKEN);
@@ -58,9 +56,7 @@ export async function setLoginToken<T extends NextResponse>(
   fileKey: string,
   response: T
 ) {
-  if (!JWT_SALT) throw new Error("Server configuration error 1");
-
-  const token = await sign({ fileKey }, JWT_SALT);
+  const token = await sign({ fileKey }, readSalt());
   response.cookies.set({
     name: "login-token",
     value: token,
