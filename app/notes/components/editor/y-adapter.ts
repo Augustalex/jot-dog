@@ -1,14 +1,7 @@
 import { useEffect, useState } from "react";
 import * as Y from "yjs";
 import { basicSetup, EditorView } from "codemirror";
-import {
-  Decoration,
-  DecorationSet,
-  keymap,
-  MatchDecorator,
-  ViewPlugin,
-  ViewUpdate,
-} from "@codemirror/view";
+import { keymap } from "@codemirror/view";
 import * as random from "lib0/random";
 import { EditorState } from "@codemirror/state";
 import { useAblyClient } from "../../../ably/client";
@@ -28,49 +21,7 @@ import { indentWithTab } from "@codemirror/commands";
 import { NoteFile } from "../../utils/file-utils";
 import { myTheme } from "./themes/theme";
 import { Y_TEXT_KEY } from "./constants";
-
-const assistTheme = EditorView.baseTheme({
-  ".cm-clickable-link": {
-    color: "#0000EE",
-  },
-});
-
-const placeholderMatcher = new MatchDecorator({
-  regexp: /(http:\/\/|https:\/\/|www.)(.*)/gi,
-  decoration: (match) => {
-    const url = match[0];
-    return Decoration.mark({
-      class: "cm-clickable-link",
-      attributes: { "data-url": url },
-    });
-  },
-});
-
-const placeholders = ViewPlugin.fromClass(
-  class {
-    placeholders: DecorationSet;
-    constructor(view: EditorView) {
-      this.placeholders = placeholderMatcher.createDeco(view);
-    }
-    update(update: ViewUpdate) {
-      this.placeholders = placeholderMatcher.updateDeco(
-        update,
-        this.placeholders
-      );
-    }
-  },
-  {
-    decorations: (instance) => instance.placeholders,
-    provide: (plugin) =>
-      EditorView.decorations.of((view) => {
-        return view.plugin(plugin)?.placeholders || Decoration.none;
-      }),
-    // provide: (plugin) =>
-    //   EditorView.atomicRanges.of((view) => {
-    //     return view.plugin(plugin)?.placeholders || Decoration.none;
-    //   }),
-  }
-);
+import { clickableLinkExtensions } from "./extensions/clickable-links";
 
 export const userColors = [
   { color: "#30bced", light: "#30bced33" },
@@ -131,12 +82,11 @@ export function useEditorData(
         extensions: [
           keymap.of([...yUndoManagerKeymap, indentWithTab]),
           basicSetup,
-          assistTheme,
           markdown({
             base: markdownLanguage,
           }),
           EditorView.lineWrapping,
-          placeholders,
+          ...clickableLinkExtensions,
           yCollab(yText, provider.awareness),
           myTheme,
         ],
