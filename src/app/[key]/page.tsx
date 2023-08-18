@@ -1,0 +1,53 @@
+import React from "react";
+import NotesEntry from "../../features/notes-entry/NotesEntry";
+import { createFile, getOrCreateFile } from "../files/file-actions";
+import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
+import { fileClient } from "../files/file-client";
+
+import { Metadata } from "next";
+
+type Props = {
+  params: { key: string };
+};
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const key = params.key;
+
+  return {
+    title: key.slice(0, 1).toUpperCase() + key.slice(1),
+    description: "Jot down notes with your team",
+    icons: ["pug", "kirby"].includes(key)
+      ? ["kirby.webp"]
+      : ["crabs", "payments"].includes(key)
+      ? ["crab.png"]
+      : ["diego", "hair"].includes(key)
+      ? ["diego.png"]
+      : ["sad", "cat"].includes(key)
+      ? ["sad.png"]
+      : undefined,
+  };
+}
+
+export default async function Notes({ params }: Props) {
+  const key = params.key;
+
+  if (key === "new") {
+    const file = await createFile();
+    return redirect(`/${file.key}`);
+  }
+
+  if (key.includes(".")) {
+    const preDot = key.split(".")[0];
+    redirect(`/${preDot}`);
+    return;
+  }
+
+  const localId = cookies().get("local-id")?.value ?? "anonymous";
+
+  const file = await getOrCreateFile(key);
+  const content = await fileClient.getBinaryFile(file);
+  return (
+    <NotesEntry file={file} content={content as Uint8Array} localId={localId} />
+  );
+}

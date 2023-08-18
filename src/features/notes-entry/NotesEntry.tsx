@@ -1,0 +1,42 @@
+"use client";
+
+import React, { useMemo } from "react";
+import styles from "./notes-entry.module.css";
+import { NoteFile } from "../../utils/file-utils";
+import dynamic from "next/dynamic";
+import { fileClient } from "../../app/files/file-client";
+import { useRegisterView } from "../../utils/hooks/useRecentlyViewed";
+
+const Editor = dynamic(() => import("../editor-core/Editor"), {
+  ssr: false,
+});
+
+export default function NotesEntry({
+  file,
+  content,
+  localId,
+}: {
+  file: NoteFile;
+  content: Uint8Array;
+  localId: string;
+}) {
+  useRegisterView(file);
+  const persist = useMemo(
+    () => (file: NoteFile, content: Uint8Array) =>
+      fileClient.saveBinaryData(file, content),
+    []
+  );
+
+  return (
+    <main className="main editor">
+      <div className={styles.window}>
+        <Editor
+          file={file}
+          localId={localId}
+          serverContent={content}
+          persist={(newContent) => persist(file, newContent)}
+        />
+      </div>
+    </main>
+  );
+}
