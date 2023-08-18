@@ -32,7 +32,12 @@ export async function lock<T extends NextResponse>(
 
     return response;
   } catch (error) {
-    console.log("S:", process.env.SALT, `"${process.env.SALT}"`);
+    console.log(
+      "S:",
+      process.env.SALT,
+      `"${process.env.SALT}"`,
+      decodeURIComponent(process.env.SALT)
+    );
     console.log("error:", error);
     throw new Error(
       "Server configuration error 2: " +

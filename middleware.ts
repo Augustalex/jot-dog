@@ -16,7 +16,12 @@ export async function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
-  console.log("S:", process.env.SALT, `"${process.env.SALT}"`);
+  console.log(
+    "S:",
+    process.env.SALT,
+    `"${process.env.SALT}"`,
+    decodeURIComponent(process.env.SALT)
+  );
 
   const responseOrNull = await ensureLoggedIn(request);
   if (responseOrNull) return responseOrNull;
