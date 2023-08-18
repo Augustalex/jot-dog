@@ -46,7 +46,7 @@ export function LockModal({ file, close }: HistoryModalProps) {
           width: "min(400px, 90vw)",
         }}
       >
-        <h2 className={styles.modalHeader}>Take your note private</h2>
+        <h2 className={styles.modalHeader}>Take your note private.</h2>
         <label>
           <span>Password</span>
           <div className={styles.passwordInputRow}>
