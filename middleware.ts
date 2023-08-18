@@ -19,14 +19,10 @@ export async function middleware(request: NextRequest) {
   const responseOrNull = await ensureLoggedIn(request);
   if (responseOrNull) return responseOrNull;
 
-  console.log("has local id? ", request.cookies.has("local-id"));
   if (!request.cookies.has("local-id")) {
     const response = NextResponse.next();
     response.cookies.set("local-id", getAdjectiveAnimal());
-    console.log("setting local id");
     return response;
-  } else {
-    console.log("NOT setting local id");
   }
 
   return NextResponse.next();
