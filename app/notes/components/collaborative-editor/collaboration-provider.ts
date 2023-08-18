@@ -7,7 +7,7 @@ import {
   encodeAwarenessUpdate,
 } from "y-protocols/awareness";
 import { YDocUpdateThrottler } from "./y-doc-update-throttler";
-import { YDocPersister } from "./YDocPersister";
+import { YDocPersister } from "./y-doc-persister";
 import { AwarenessChangeThrottler } from "./awareness-change-throttler";
 import * as encoding from "lib0/encoding";
 import * as decoding from "lib0/decoding";

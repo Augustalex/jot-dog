@@ -1,9 +1,9 @@
 import styles from "./history.module.css";
 import React, { useMemo, useRef, useState } from "react";
-import { FileBackup, YDocBackup } from "../editor/YDocBackup";
+import { FileBackup, YDocBackup } from "../collaborative-editor/y-doc-backup";
 import { NoteFile } from "../../utils/file-utils";
 import * as Y from "yjs";
-import { usePreviewEditor } from "../editor/preview-editor";
+import { usePreviewEditor } from "../editor-core/preview-editor";
 import { IBM_Plex_Mono } from "next/font/google";
 
 const ibmPlexMono = IBM_Plex_Mono({

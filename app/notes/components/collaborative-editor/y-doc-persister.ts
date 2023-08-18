@@ -2,7 +2,7 @@ import * as encoding from "lib0/encoding";
 import * as Y from "yjs";
 import throttle from "lodash/throttle";
 import { NoteFile } from "../../utils/file-utils";
-import { YDocBackup } from "./YDocBackup";
+import { YDocBackup } from "./y-doc-backup";
 import { persistedDocument } from "./message-constants";
 
 export function persistNowWith(file, yDoc, persist) {

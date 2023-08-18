@@ -8,7 +8,7 @@ import dynamic from "next/dynamic";
 import { fileClient } from "../db-client/fileClient";
 import { useRegisterView } from "../hooks/useRecentlyViewed";
 
-const Editor = dynamic(() => import("./editor/Editor"), { ssr: false });
+const Editor = dynamic(() => import("./editor-core/Editor"), { ssr: false });
 
 export default function NotesEntry({
   file,

@@ -3,8 +3,8 @@ import React, { useState } from "react";
 import { useLocalEditorState } from "../../hooks/useLocalEditorState";
 import { NoteFile } from "../../utils/file-utils";
 import { useSaveShortcut } from "../Shortcuts";
-import { useCollaborativeEditor } from "./collaborative-editor";
-import { persistNowWith } from "./YDocPersister";
+import { useCollaborativeEditor } from "../collaborative-editor/collaborative-editor";
+import { persistNowWith } from "../collaborative-editor/y-doc-persister";
 import { BottomBar } from "../BottomBar";
 
 export default Editor;
