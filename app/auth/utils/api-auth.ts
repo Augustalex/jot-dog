@@ -8,7 +8,7 @@ import {
   setLoginToken,
 } from "./edge-auth";
 
-const JWT_SALT = process.env.CRYPT_SALT || undefined;
+const JWT_SALT = process.env.SALT || undefined;
 
 export interface LoginPayload {
   password?: string;

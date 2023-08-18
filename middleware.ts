@@ -52,14 +52,23 @@ async function ensureLoggedIn(
         try {
           await publicLogin({ fileKey: rootPath }, NextResponse.next());
         } catch (error) {
-          return NextResponse.json({ message: error }, { status: 500 });
+          return NextResponse.json(
+            {
+              message: error?.message ?? "unknown error",
+              context: "public login",
+            },
+            { status: 500 }
+          );
         }
       }
     } else if (error.message === NO_ACCESS) {
-      return NextResponse.json({ message: error }, { status: 401 });
+      return NextResponse.json(
+        { message: error, context: "verifying access" },
+        { status: 401 }
+      );
     } else {
       return NextResponse.json(
-        { message: "Something went wrong" },
+        { message: "Something went wrong", context: "verifying access" },
         { status: 500 }
       );
     }

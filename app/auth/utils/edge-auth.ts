@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { kv } from "@vercel/kv";
 import { sign, TokenPayload, verify } from "./jwt-utils";
 
-const JWT_SALT = process.env.CRYPT_SALT || undefined;
+const JWT_SALT = process.env.SALT || undefined;
 const TOKEN_EXPIRE_DAYS = 30;
 const TOKEN_EXPIRE_TIME = TOKEN_EXPIRE_DAYS * 24 * 60 * 60 * 1000;
 
