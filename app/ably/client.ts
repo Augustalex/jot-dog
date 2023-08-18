@@ -3,7 +3,6 @@
 import { useState, useEffect } from "react";
 import * as Ably from "ably/promises";
 import { configureAbly } from "@ably-labs/react-hooks";
-import vcdiffPlugin from "@ably/vcdiff-decoder";
 
 let ablyClient: Ably.Types.RealtimePromise = null;
 

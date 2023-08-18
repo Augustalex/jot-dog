@@ -1,10 +1,9 @@
 import styles from "./editor.module.css";
 import React, { useState } from "react";
 import { useLocalEditorState } from "../../hooks/useLocalEditorState";
-import { usePresence } from "../../../ably/presence";
 import { NoteFile } from "../../utils/file-utils";
 import { useSaveShortcut } from "../Shortcuts";
-import { useEditorData } from "./y-adapter";
+import { useCollaborativeEditor } from "./collaborative-editor";
 import { persistNowWith } from "./YDocPersister";
 import { BottomBar } from "../BottomBar";
 
@@ -22,9 +21,8 @@ export function Editor({
   localId: string;
 }) {
   const { fontSize } = useLocalEditorState();
-  const { onlineUsers, userName } = usePresence(file, localId);
   const [editorRef, setEditorRef] = useState(null);
-  const { ready, yDoc } = useEditorData(
+  const { ready, yDoc } = useCollaborativeEditor(
     localId,
     file,
     editorRef,
@@ -47,12 +45,6 @@ export function Editor({
           fontSize: fontSize + "px",
         }}
       >
-        <div style={{ display: "none" }}>
-          <span>You ({userName})</span>
-          {onlineUsers.map((c) => {
-            return <span key={c}>, {c}</span>;
-          })}
-        </div>
         <div
           ref={(newEditorRef) => setEditorRef(newEditorRef)}
           className={styles.editorParent}

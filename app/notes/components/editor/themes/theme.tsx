@@ -325,7 +325,7 @@ export const basicDarkHighlightStyle = HighlightStyle.define([
 
 /// Extension to enable the Basic Dark theme (both the editor theme and
 /// the highlight style).
-export const myTheme: Extension = [
+export const darkTheme: Extension = [
   basicDarkTheme,
   syntaxHighlighting(basicDarkHighlightStyle),
 ];
