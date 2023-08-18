@@ -42,7 +42,7 @@ export async function lock<T extends NextResponse>(
     throw new Error(
       "Server configuration error 2: " +
         process.env.SALT +
-        ` - ${process.env.SALT}`
+        ` - ${process.env.SALT} - ${decodeURIComponent(process.env.SALT)}`
     );
   }
 }
