@@ -1,9 +1,9 @@
 import * as encoding from "lib0/encoding";
 import * as Y from "yjs";
 import throttle from "lodash/throttle";
-import { persistedDocument } from "./message-types";
 import { NoteFile } from "../../utils/file-utils";
 import { YDocBackup } from "./YDocBackup";
+import { persistedDocument } from "./message-constants";
 
 export function persistNowWith(file, yDoc, persist) {
   const persistedEncoder = encoding.createEncoder();
