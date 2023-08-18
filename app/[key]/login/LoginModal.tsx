@@ -49,9 +49,17 @@ export function LoginModal({ file }: HistoryModalProps) {
           <span>Password</span>
           <div className={styles.passwordInputRow}>
             <input
+              type="text"
+              name="username"
+              value={file.key}
+              readOnly
+              hidden
+            />
+            <input
               autoFocus
               type={passwordVisible ? "text" : "password"}
-              autoComplete="new-password"
+              autoComplete="current-password"
+              name="password"
               onChange={(e) => {
                 setPassword(e.target?.value ?? "");
               }}
@@ -76,7 +84,7 @@ export function LoginModal({ file }: HistoryModalProps) {
           className={styles.lockButton}
           title="Lock note"
           onClick={login}
-          disabled={password.length === 0 || disableInput}
+          disabled={disableInput}
         >
           <Image src={openLock.src} alt="Lock" width={42} height={42} />
           <span>Login to /{file.key}</span>
@@ -86,6 +94,11 @@ export function LoginModal({ file }: HistoryModalProps) {
   );
 
   async function login() {
+    if (password.length === 0) {
+      setStatus("failed");
+      return;
+    }
+
     setStatus("in-progress");
     const response = await fetch("/auth/login", {
       method: "POST",

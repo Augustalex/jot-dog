@@ -51,8 +51,16 @@ export function LockModal({ file, close }: HistoryModalProps) {
           <span>Password</span>
           <div className={styles.passwordInputRow}>
             <input
+              type="text"
+              name="username"
+              value={file.key}
+              readOnly
+              hidden
+            />
+            <input
               type={passwordVisible ? "text" : "password"}
               autoComplete="new-password"
+              name="password"
               onChange={(e) => {
                 setPassword(e.target?.value ?? "");
               }}
