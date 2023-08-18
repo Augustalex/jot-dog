@@ -24,12 +24,22 @@ export async function lock<T extends NextResponse>(
 ) {
   if (!JWT_SALT) throw new Error("Server configuration error 1");
 
-  const passwordHash = await bcrypt.hash(password, JWT_SALT);
-  await kv.set(passwordStorageKey(fileKey), passwordHash);
+  try {
+    const passwordHash = await bcrypt.hash(password, JWT_SALT);
+    await kv.set(passwordStorageKey(fileKey), passwordHash);
 
-  await setLoginToken(fileKey, response);
+    await setLoginToken(fileKey, response);
 
-  return response;
+    return response;
+  } catch (error) {
+    console.log("S:", process.env.SALT, `"${process.env.SALT}"`);
+    console.log("error:", error);
+    throw new Error(
+      "Server configuration error 2: " +
+        process.env.SALT +
+        ` - ${process.env.SALT}`
+    );
+  }
 }
 
 export async function login(
