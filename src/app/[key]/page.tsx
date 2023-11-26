@@ -21,6 +21,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       ? ["kirby.webp"]
       : ["crabs", "payments"].includes(key)
       ? ["crab.png"]
+      : ["mango", "mangos"].includes(key)
+      ? ["mango.png"]
       : ["diego", "hair"].includes(key)
       ? ["diego.png"]
       : ["sad", "cat"].includes(key)
