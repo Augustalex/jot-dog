@@ -72,7 +72,7 @@ export const CollaborationProvider = ({
       if (message.connectionId === ably.connection.id) return;
       const rawData = message.data;
       const data = new Uint8Array(rawData);
-      const reply = readMessage(data);
+      const reply = applyMessageToDocument(data);
       if (reply) {
         broadcast(encoding.toUint8Array(reply));
       }
@@ -81,7 +81,7 @@ export const CollaborationProvider = ({
     // Apply initial data
     if (initialData) {
       try {
-        readMessage(new Uint8Array(initialData));
+        applyMessageToDocument(new Uint8Array(initialData));
       } catch (error) {
         console.error(error);
       }
@@ -92,7 +92,7 @@ export const CollaborationProvider = ({
     channel.publish("update", data);
   }
 
-  function readMessage(buf: Uint8Array): encoding.Encoder | null {
+  function applyMessageToDocument(buf: Uint8Array): encoding.Encoder | null {
     const origin = "remote"; // originally: room, What should the origin be? Remote? ClientID?
     const decoder = decoding.createDecoder(buf);
     const encoder = encoding.createEncoder();
@@ -101,12 +101,11 @@ export const CollaborationProvider = ({
     const doc: Y.Doc = yDoc;
     let sendReply = false;
     switch (messageType) {
-      case messageSync: {
+      case messageSync:
         const update = decoding.readVarUint8Array(decoder);
         Y.applyUpdate(doc, update, origin);
 
         break;
-      }
       case messageQueryAwareness:
         encoding.writeVarUint(encoder, messageAwareness);
         encoding.writeVarUint8Array(

@@ -17,14 +17,16 @@ export async function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
-  const responseOrNull = await ensureLoggedIn(request);
-  if (responseOrNull) return responseOrNull;
-
+  // Ensure that user has a local-id, if not then set the cookie and
+  // redirect back to same URL to ensure cookie is in the request object
   if (!request.cookies.has("local-id")) {
-    const response = NextResponse.next();
+    const response = NextResponse.redirect(request.nextUrl.clone());
     response.cookies.set("local-id", getAdjectiveAnimal());
     return response;
   }
+
+  const responseOrNull = await ensureLoggedIn(request);
+  if (responseOrNull) return responseOrNull;
 
   return NextResponse.next();
 }

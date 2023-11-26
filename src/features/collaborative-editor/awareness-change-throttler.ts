@@ -6,18 +6,6 @@ import throttle from "lodash/throttle";
 export function AwarenessChangeThrottler({ awareness, send, delay }) {
   let latestChanges = [];
 
-  const doUpdate = () => {
-    const encoderAwareness = encoding.createEncoder();
-    encoding.writeVarUint(encoderAwareness, messageAwareness);
-
-    encoding.writeVarUint8Array(
-      encoderAwareness,
-      encodeAwarenessUpdate(awareness, latestChanges)
-    );
-    latestChanges = [];
-
-    send(encoding.toUint8Array(encoderAwareness));
-  };
   const scheduleUpdate = throttle(doUpdate, delay, {
     leading: false,
     trailing: true,
@@ -32,4 +20,16 @@ export function AwarenessChangeThrottler({ awareness, send, delay }) {
       scheduleUpdate();
     }
   };
+
+  function doUpdate() {
+    const encoderAwareness = encoding.createEncoder();
+    encoding.writeVarUint(encoderAwareness, messageAwareness);
+    encoding.writeVarUint8Array(
+        encoderAwareness,
+        encodeAwarenessUpdate(awareness, latestChanges)
+    );
+    latestChanges = [];
+
+    send(encoding.toUint8Array(encoderAwareness));
+  }
 }
