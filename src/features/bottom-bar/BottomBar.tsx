@@ -23,7 +23,7 @@ export function BottomBar({ file, yDoc }) {
           onClick={() => setView(View.LockNote)}
           title="Lock note"
         >
-          <Image src={lockIcon.src} alt="Lock" width={42} height={42} />
+          <Image src={lockIcon.src} alt="Lock" width={42} height={42}/>
         </button>
         <button
           className={styles.bottomBarButton}

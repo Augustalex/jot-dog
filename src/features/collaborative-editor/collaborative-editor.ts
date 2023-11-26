@@ -27,7 +27,6 @@ export function useCollaborativeEditor(
   useEffect(() => {
     if (!ably.get()) return;
     if (!editorRef) return;
-
     if (yDoc) return;
 
     (async () => {
