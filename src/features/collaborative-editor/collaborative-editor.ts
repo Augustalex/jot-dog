@@ -3,7 +3,7 @@ import * as Y from "yjs";
 import { basicSetup, EditorView } from "codemirror";
 import { keymap } from "@codemirror/view";
 import { EditorState } from "@codemirror/state";
-import { useAblyClient } from "../../app/ably/client";
+import { useAblyClient } from "../ably/client";
 import { yCollab, yUndoManagerKeymap } from "./y-collab";
 import { markdown, markdownLanguage } from "@codemirror/lang-markdown";
 import { indentWithTab } from "@codemirror/commands";
