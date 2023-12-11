@@ -1,0 +1,23 @@
+
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    color: var(--color-dark-text);
+    text-transform: capitalize;
+    margin: var(--d2) var(--d2);
+    font-size: var(--f6);
+}
+
+.chip {
+    display: inline-flex;
+    align-items: center;
+    margin: var(--d2);
+    padding: var(--d2) var(--s4);
+    border-radius: 16px;
+    background-color: var(--color-dark-surface);
+    color: var(--color-dark-onSurface);
+    font-size: var(--f5);
+    cursor: pointer;
+    transition: background-color 0.25s ease-in-out;
+}
