@@ -1,15 +1,15 @@
 .bottomBar {
     position: absolute;
     bottom: var(--d2);
-    right: var(--d2);
+    right: var(--d3);
     display: flex;
     gap: var(--d1);
     align-items: center;
 }
 
 .bottomBarButton {
-    width: 16px;
-    height: 16px;
+    width: 24px;
+    height: 24px;
     border: none;
     box-shadow: none;
     outline: 0;
