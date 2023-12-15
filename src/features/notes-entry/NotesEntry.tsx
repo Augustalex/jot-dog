@@ -15,10 +15,12 @@ export default function NotesEntry({
   file,
   content,
   localId,
+  gotoTitle,
 }: {
   file: NoteFile;
   content: Uint8Array;
   localId: string;
+  gotoTitle: string | undefined;
 }) {
   useRegisterView(file);
   const persist = useMemo(
@@ -35,6 +37,7 @@ export default function NotesEntry({
           localId={localId}
           serverContent={content}
           persist={(newContent) => persist(file, newContent)}
+          gotoTitle={gotoTitle}
         />
       </div>
     </main>

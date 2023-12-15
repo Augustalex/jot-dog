@@ -9,6 +9,7 @@ import { Metadata } from "next";
 
 type Props = {
   params: { key: string };
+  searchParams?: { title: string | undefined };
 };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
@@ -31,8 +32,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
-export default async function Notes({ params }: Props) {
+export default async function Notes({ params, searchParams }: Props) {
   const key = params.key;
+  const title = searchParams?.title;
 
   if (key === "new") {
     const file = await createFile();
@@ -50,6 +52,11 @@ export default async function Notes({ params }: Props) {
   const file = await getOrCreateFile(key);
   const content = await fileClient.getBinaryFile(file);
   return (
-    <NotesEntry file={file} content={content as Uint8Array} localId={localId} />
+    <NotesEntry
+      file={file}
+      content={content as Uint8Array}
+      localId={localId}
+      gotoTitle={title}
+    />
   );
 }

@@ -19,7 +19,8 @@ export function useCollaborativeEditor(
   file: NoteFile,
   editorRef: HTMLDivElement | null,
   serverContent: Uint8Array,
-  persist: (data: Uint8Array) => Promise<void>
+  persist: (data: Uint8Array) => Promise<void>,
+  gotoTitle: string | undefined
 ) {
   const [yDoc, setYDoc] = useState(null);
   const { ably } = useAblyClient(localId);
@@ -66,6 +67,26 @@ export function useCollaborativeEditor(
         state,
         parent: editorRef,
       });
+
+      if (gotoTitle) {
+        view.focus();
+
+        const searchString = `## ${gotoTitle}`;
+        const lineOfText = view.state.doc
+          .toString()
+          .split("\n")
+          .findIndex((l) => l.startsWith(searchString));
+        const line = view.state.doc.line(lineOfText + 1);
+        view.dispatch({
+          selection: {
+            anchor: line.from,
+            head: line.to,
+          },
+          effects: EditorView.scrollIntoView(line.from, {
+            y: "center",
+          }),
+        });
+      }
 
       window.addEventListener("click", (e) => {
         if (triggersSpecialMode(e) && e.target) {

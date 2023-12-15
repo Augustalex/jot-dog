@@ -49,7 +49,6 @@ export default async function BoardPage({ params }: Props) {
 
   const file = await getOrCreateFile(key);
   const content = await fileClient.getBinaryFile(file);
-  console.log("content", content);
 
-  return <Board localId={localId} content={content} />;
+  return <Board file={file} localId={localId} content={content} />;
 }

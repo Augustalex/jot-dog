@@ -1,5 +1,17 @@
 import styles from "./board.module.css";
 
-export function Chip({ children }: { children: React.ReactNode }) {
-  return <div className={styles.chip}>{children}</div>;
+export function Chip({
+  children,
+  href,
+}: {
+  children: React.ReactNode;
+  href?: string;
+}) {
+  if (href)
+    return (
+      <a href={href} className={styles.chip}>
+        {children}
+      </a>
+    );
+  else return <div className={styles.chip}>{children}</div>;
 }

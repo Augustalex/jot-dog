@@ -5,7 +5,11 @@ import { NoteFile } from "../../utils/file-utils";
 import { useSaveShortcut } from "../shortcuts/Shortcuts";
 import { useCollaborativeEditor } from "../collaborative-editor/collaborative-editor";
 import { persistNowWith } from "../collaborative-editor/y-doc-persister";
-import { BottomBar } from "../bottom-bar/BottomBar";
+import { BottomBarWrapper } from "../bottom-bar/BottomBarWrapper";
+import { LockNoteButton } from "../bottom-bar/LockNoteButton";
+import { LocalHistoryButton } from "../bottom-bar/LocalHistoryButton";
+import { ShowBoardButton } from "../bottom-bar/ShowBoardButton";
+import { toggles } from "../toggles";
 
 export default Editor;
 
@@ -14,11 +18,13 @@ export function Editor({
   serverContent,
   persist,
   localId,
+  gotoTitle,
 }: {
   file: NoteFile;
   serverContent: Uint8Array;
   persist: (content: Uint8Array) => Promise<void>;
   localId: string;
+  gotoTitle: string | undefined;
 }) {
   const { fontSize } = useLocalEditorState();
   const [editorRef, setEditorRef] = useState(null);
@@ -27,7 +33,8 @@ export function Editor({
     file,
     editorRef,
     serverContent,
-    persist
+    persist,
+    gotoTitle
   );
 
   const persistDoc = React.useCallback(() => {
@@ -50,7 +57,13 @@ export function Editor({
           className={styles.editorParent}
         />
       </div>
-      <BottomBar file={file} yDoc={yDoc} />
+      <BottomBarWrapper>
+        <ShowBoardButton file={file} />
+        {toggles.private_notes && <LockNoteButton file={file} />}
+        {toggles.local_history && (
+          <LocalHistoryButton file={file} yDoc={yDoc} />
+        )}
+      </BottomBarWrapper>
     </>
   );
 }

@@ -5,11 +5,16 @@ import { Chip } from "../../design/board/Chip";
 import * as Y from "yjs";
 import { Y_TEXT_KEY } from "../editor-core/constants";
 import * as decoding from "lib0/decoding";
+import { NoteFile } from "../../utils/file-utils";
+import { BottomBarWrapper } from "../bottom-bar/BottomBarWrapper";
+import { ShowJotButton } from "../bottom-bar/ShowJotButton";
 
 export default function Board({
+  file,
   localId,
   content,
 }: {
+  file: NoteFile;
   localId: string;
   content: Uint8Array;
 }) {
@@ -26,12 +31,17 @@ export default function Board({
               {items
                 .filter((i) => i.status === section)
                 .map((i) => (
-                  <Chip key={i.title}>{i.title}</Chip>
+                  <Chip key={i.title} href={`/${file.key}?title=${i.title}`}>
+                    {i.title}
+                  </Chip>
                 ))}
             </Chips>
           </Section>
         ))}
       </div>
+      <BottomBarWrapper>
+        <ShowJotButton file={file} />
+      </BottomBarWrapper>
     </main>
   );
 }
