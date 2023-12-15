@@ -7,7 +7,7 @@ import { tags as t } from "@lezer/highlight";
 const hidden = "#00000000";
 const bg = "#222222",
   text = "#ffffff",
-  link = text,
+  link = "#818199",
   base02 = "#B9D2FF",
   base03 = "#b0b0b0",
   base04 = "#d0d0d0",
@@ -23,7 +23,7 @@ const bg = "#222222",
   base0A = "#fda331",
   base0B = "#8abeb7",
   base0C = "#b5bd68",
-  base0D = "#6fb3d2",
+  base0D = "#cecef5",
   base0E = "#cc99cc",
   base0F = "#6987AF";
 
