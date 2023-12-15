@@ -91,12 +91,5 @@ function Chips({ children }: { children: React.ReactNode }) {
 }
 
 function Section({ children }: { children: React.ReactNode }) {
-  return (
-    <div
-      className={styles.section}
-      style={{ width: "100%", marginTop: "16px" }}
-    >
-      {children}
-    </div>
-  );
+  return <div className={styles.section}>{children}</div>;
 }

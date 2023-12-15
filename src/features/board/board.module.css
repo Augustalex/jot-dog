@@ -4,7 +4,7 @@
   height: 100%;
   display: flex;
   flex-direction: column;
-  padding: var(--d3);
+  padding: var(--d4);
 }
 
 .section {
@@ -12,7 +12,7 @@
 }
 
 .section:not(:first-child) {
-  margin-top: var(--d3);
+  margin-top: var(--d4);
 }
 
 .chips {
