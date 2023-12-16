@@ -75,7 +75,8 @@
 
 .main {
     display: flex;
-    height: 100vh;
+    flex-direction: column;
+    flex: 1 0 auto;
     justify-content: center;
     align-items: center;
     min-height: 100vh;

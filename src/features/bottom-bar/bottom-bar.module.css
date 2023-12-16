@@ -1,5 +1,5 @@
 .bottomBar {
-    position: absolute;
+    position: fixed;
     bottom: var(--d2);
     right: var(--d3);
     display: flex;
