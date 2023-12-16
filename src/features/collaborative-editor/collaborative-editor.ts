@@ -13,6 +13,7 @@ import { Y_TEXT_KEY } from "../editor-core/constants";
 import { clickableLinkExtensions } from "../editor-core/extensions/clickable-links";
 import { userColor } from "./awareness-colors";
 import { CollaborationProvider } from "./collaboration-provider";
+import { languages } from "@codemirror/language-data";
 
 export function useCollaborativeEditor(
   localId: string,
@@ -56,6 +57,12 @@ export function useCollaborativeEditor(
           basicSetup,
           markdown({
             base: markdownLanguage,
+            codeLanguages: languages,
+            extensions: [
+              {
+                remove: ["SetextHeading"],
+              },
+            ],
           }),
           EditorView.lineWrapping,
           ...clickableLinkExtensions,
