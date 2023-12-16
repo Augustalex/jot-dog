@@ -73,18 +73,18 @@
     text-wrap: nowrap;
 }
 
+html, body {
+    background: var(--color-dark-bg);
+}
+
 .main {
     display: flex;
     flex-direction: column;
     flex: 1 0 auto;
-    justify-content: center;
-    align-items: center;
+    justify-content: stretch;
+    align-items: stretch;
     min-height: 100vh;
     color: var(--color-light-text);
-    background: var(--color-light-bg);
-}
-
-.editor {
     background: var(--color-dark-bg);
 }
 
