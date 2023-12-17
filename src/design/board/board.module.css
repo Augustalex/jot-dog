@@ -17,7 +17,7 @@
     padding: var(--d3) var(--d4);
     border-radius: 16px;
     background-color: var(--color-dark-surface);
-    color: var(--color-dark-onSurface);
+    color: var(--color-dark-text);
     font-size: var(--f5);
     cursor: pointer;
     transition: background-color 0.25s ease-in-out;
