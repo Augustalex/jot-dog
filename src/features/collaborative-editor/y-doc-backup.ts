@@ -3,7 +3,7 @@ import {
   fromBase64StringToUint8Array,
   fromUint8ArrayToBase64String,
 } from "../../utils/binary-helpers";
-import { Y_TEXT_KEY } from "../editor-core/constants";
+import { Y_TEXT_KEY } from "../editor/constants";
 import { NoteFile } from "../../utils/file-utils";
 
 export interface FileBackup {

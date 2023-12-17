@@ -3,7 +3,7 @@ import styles from "./board.module.css";
 import { Header } from "../../design/board/Header";
 import { Chip } from "../../design/board/Chip";
 import * as Y from "yjs";
-import { Y_TEXT_KEY } from "../editor-core/constants";
+import { Y_TEXT_KEY } from "../editor/constants";
 import * as decoding from "lib0/decoding";
 import { NoteFile } from "../../utils/file-utils";
 import { BottomBarWrapper } from "../bottom-bar/BottomBarWrapper";

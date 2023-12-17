@@ -7,7 +7,7 @@ import dynamic from "next/dynamic";
 import { fileClient } from "../../app/files/file-client";
 import { useRegisterView } from "../../utils/hooks/useRecentlyViewed";
 
-const Editor = dynamic(() => import("../editor-core/Editor"), {
+const Editor = dynamic(() => import("../editor/Editor"), {
   ssr: false,
 });
 

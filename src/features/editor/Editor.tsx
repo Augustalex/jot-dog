@@ -2,7 +2,7 @@ import styles from "./editor.module.css";
 import React, { useState } from "react";
 import { useLocalEditorState } from "../../utils/hooks/useLocalEditorState";
 import { NoteFile } from "../../utils/file-utils";
-import { useSaveShortcut } from "../shortcuts/Shortcuts";
+import { useSaveShortcut } from "../../utils/hooks/useSaveShortcut";
 import { useCollaborativeEditor } from "../collaborative-editor/collaborative-editor";
 import { persistNowWith } from "../collaborative-editor/y-doc-persister";
 import { BottomBarWrapper } from "../bottom-bar/BottomBarWrapper";
