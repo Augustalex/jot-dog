@@ -2,23 +2,19 @@ import React from "react";
 import styles from "./board.module.css";
 import { Header } from "../../design/board/Header";
 import { Chip } from "../../design/board/Chip";
-import * as Y from "yjs";
-import { Y_TEXT_KEY } from "../editor/constants";
-import * as decoding from "lib0/decoding";
 import { NoteFile } from "../../utils/file-utils";
 import { BottomBarWrapper } from "../bottom-bar/BottomBarWrapper";
 import { ShowJotButton } from "../bottom-bar/ShowJotButton";
+import { getRawContent } from "../../utils/getRawContent";
 
 export default function Board({
   file,
-  localId,
   content,
 }: {
   file: NoteFile;
-  localId: string;
   content: Uint8Array;
 }) {
-  const items = getItems(content);
+  const items = getItems(getRawContent(content));
   const sections = Array.from(new Set(items.map((i) => i.status)).values());
 
   return (
@@ -46,20 +42,7 @@ export default function Board({
   );
 }
 
-function getItems(content: Uint8Array) {
-  const origin = "remote";
-  const yDoc = new Y.Doc();
-  const yText = yDoc.getText(Y_TEXT_KEY);
-  const data = new Uint8Array(content);
-  const decoder = decoding.createDecoder(data);
-
-  // Not used here, but needs to be consumed
-  const messageType = decoding.readVarUint(decoder);
-
-  const update = decoding.readVarUint8Array(decoder);
-  Y.applyUpdate(yDoc, update, origin);
-
-  const textContent = yText.toString();
+function getItems(textContent: string) {
   const regex = /^##\s*([^\n\r#]*[^#\s])/gm;
   const titles = textContent.match(regex)?.map((s) => s) ?? [];
 

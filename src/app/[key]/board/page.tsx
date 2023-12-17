@@ -1,6 +1,5 @@
 import React from "react";
 import { createFile, getOrCreateFile } from "../../files/file-actions";
-import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
 import { Metadata } from "next";
@@ -45,10 +44,8 @@ export default async function BoardPage({ params }: Props) {
     return;
   }
 
-  const localId = cookies().get("local-id")?.value ?? "anonymous";
-
   const file = await getOrCreateFile(key);
   const content = await fileClient.getBinaryFile(file);
 
-  return <Board file={file} localId={localId} content={content} />;
+  return <Board file={file} content={content} />;
 }

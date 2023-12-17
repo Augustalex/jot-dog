@@ -10,6 +10,7 @@ import { LockNoteButton } from "../bottom-bar/LockNoteButton";
 import { LocalHistoryButton } from "../bottom-bar/LocalHistoryButton";
 import { ShowBoardButton } from "../bottom-bar/ShowBoardButton";
 import { toggles } from "../toggles";
+import { DownloadButton } from "../bottom-bar/DownloadButton";
 
 export default Editor;
 
@@ -58,6 +59,7 @@ export function Editor({
         />
       </div>
       <BottomBarWrapper>
+        <DownloadButton file={file} yDoc={yDoc} />
         <ShowBoardButton file={file} />
         {toggles.private_notes && <LockNoteButton file={file} />}
         {toggles.local_history && (
