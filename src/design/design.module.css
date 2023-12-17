@@ -77,24 +77,19 @@
     justify-content: center;
     align-items: center;
     border-radius: var(--s2);
-}
-
-.card {
-    background: var(--color-light-bg);
-    border: 2px solid var(--color-light-border);
+    background: var(--color-dark-surface);
+    border: 2px solid var(--color-dark-border);
+    color: var(--color-dark-text);
+    user-select: none;
 }
 
 .cardClickable:hover {
-    border: 2px solid var(--color-secondary);
+    border: 2px solid var(--color-dark-onSurface);
     cursor: pointer;
 }
 
 .infoCard {
-    user-select: none;
     cursor: help;
-    background: var(--color-light-bg);
-    border: 2px solid var(--color-light-borderWeak);
-    color: var(--color-light-textWeak);
 }
 
 .grid {

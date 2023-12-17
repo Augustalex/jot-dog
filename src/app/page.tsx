@@ -10,7 +10,7 @@ const ibmPlexSerif = IBM_Plex_Serif({
 
 export default function Root() {
   return (
-    <main className={`main ${ibmPlexSerif.className}`}>
+    <main className={`main`}>
       <div
         style={{
           margin: "0 auto",
@@ -26,7 +26,9 @@ export default function Root() {
           height={1280 / 4}
         />
       </div>
-      <Home />
+      <div className="home-wrapper">
+        <Home />
+      </div>
     </main>
   );
 }

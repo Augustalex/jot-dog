@@ -20,7 +20,9 @@ export function Home() {
 
   return (
     <div>
-      <div style={{ marginBottom: "var(--s2)" }}>
+      <div
+        style={{ marginBottom: "var(--s2)", color: "var(--color-dark-text)" }}
+      >
         <h2>Recently Viewed</h2>
       </div>
       <Grid style={{ width: "80vw" }}>
