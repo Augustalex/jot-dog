@@ -59,12 +59,12 @@ export function Editor({
         />
       </div>
       <BottomBarWrapper>
-        <DownloadButton file={file} yDoc={yDoc} />
-        <ShowBoardButton file={file} />
         {toggles.private_notes && <LockNoteButton file={file} />}
+        <DownloadButton file={file} yDoc={yDoc} />
         {toggles.local_history && (
           <LocalHistoryButton file={file} yDoc={yDoc} />
         )}
+        <ShowBoardButton file={file} />
       </BottomBarWrapper>
     </>
   );

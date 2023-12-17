@@ -1,10 +1,10 @@
 import styles from "./history.module.css";
-import React, { useMemo, useRef, useState } from "react";
-import { FileBackup, YDocBackup } from "../collaborative-editor/y-doc-backup";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { NoteFile } from "../../utils/file-utils";
 import * as Y from "yjs";
 import { usePreviewEditor } from "../editor/preview-editor";
 import { IBM_Plex_Mono } from "next/font/google";
+import { DocBackup, YDocBackup } from "../collaborative-editor/y-doc-backup";
 
 const ibmPlexMono = IBM_Plex_Mono({
   weight: ["100", "200", "300", "400", "500", "600", "700"],
@@ -20,15 +20,25 @@ interface HistoryModalProps {
 export function HistoryModal({ file, yDoc, close }: HistoryModalProps) {
   const historyModalRoot = useRef<HTMLDivElement>(null);
   const { backups } = useLocalHistory({ file, yDoc });
-  const [selectedBackup, setSelectedBackup] = useState<FileBackup | null>(
+  const [selectedBackup, setSelectedBackup] = useState<DocBackup | null>(
     backups[0] ?? null
   );
-  const previewDoc = useMemo(() => {
-    if (!selectedBackup) return new Y.Doc();
-    return YDocBackup({ file, yDoc }).preview(selectedBackup);
-  }, [file, selectedBackup, yDoc]);
   const [previewEditorRef, setPreviewEditorRef] = useState(null);
-  usePreviewEditor(previewDoc, previewEditorRef);
+  usePreviewEditor(selectedBackup?.text ?? "", previewEditorRef);
+
+  useEffect(() => {
+    window.addEventListener("keydown", onKeyDown);
+
+    function onKeyDown(e: KeyboardEvent) {
+      if (e.key === "Escape") {
+        close();
+      }
+    }
+
+    return () => {
+      window.removeEventListener("keydown", onKeyDown);
+    };
+  }, [close]);
 
   return (
     <div
@@ -41,7 +51,7 @@ export function HistoryModal({ file, yDoc, close }: HistoryModalProps) {
             return (
               <button
                 key={backup.day}
-                onClick={() => previewBackup(backup)}
+                onClick={() => setSelectedBackup(backup)}
                 className={`${styles.backup} ${
                   backup === selectedBackup ? styles.backupSelected : ""
                 }`}
@@ -67,10 +77,6 @@ export function HistoryModal({ file, yDoc, close }: HistoryModalProps) {
       </div>
     </div>
   );
-
-  function previewBackup(backup: FileBackup) {
-    setSelectedBackup(backup);
-  }
 
   function onOverlayClick(e: React.MouseEvent) {
     const target = e.target as HTMLElement;

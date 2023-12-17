@@ -1,10 +1,8 @@
 import { useEffect } from "react";
-import * as Y from "yjs";
 import { basicSetup, EditorView } from "codemirror";
 import { EditorState } from "@codemirror/state";
 import { markdown, markdownLanguage } from "@codemirror/lang-markdown";
 import { darkTheme } from "./themes/theme";
-import { Y_TEXT_KEY } from "./constants";
 import { clickableLinkExtensions } from "./extensions/clickable-links";
 
 const styling = EditorView.baseTheme({
@@ -14,17 +12,15 @@ const styling = EditorView.baseTheme({
 });
 
 export function usePreviewEditor(
-  yDoc: Y.Doc,
+  text: string,
   editorRef: HTMLDivElement | null
 ) {
   useEffect(() => {
     if (!editorRef) return;
 
     (async () => {
-      const yText = yDoc.getText(Y_TEXT_KEY);
-
       const state = EditorState.create({
-        doc: yText.toString(),
+        doc: text,
         extensions: [
           basicSetup,
           styling,
@@ -42,5 +38,5 @@ export function usePreviewEditor(
         parent: editorRef,
       });
     })();
-  }, [editorRef, yDoc]);
+  }, [editorRef, text]);
 }
