@@ -47,7 +47,7 @@ function getItems(textContent: string) {
   const titles = textContent.match(regex)?.map((s) => s) ?? [];
 
   const sections = titles
-    .map((t) => textContent.indexOf(t))
+    .map((t) => textContent.indexOf(t + "\n"))
     .map((i, currentIndex, list) =>
       textContent.substring(i, list[currentIndex + 1] ?? textContent.length)
     );

@@ -82,7 +82,7 @@ export function useCollaborativeEditor(
         const lineOfText = view.state.doc
           .toString()
           .split("\n")
-          .findIndex((l) => l.startsWith(searchString));
+          .findIndex((l) => l === searchString);
         const line = view.state.doc.line(lineOfText + 1);
         view.dispatch({
           selection: {
