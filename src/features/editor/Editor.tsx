@@ -8,7 +8,6 @@ import { persistNowWith } from "../collaborative-editor/y-doc-persister";
 import { BottomBarWrapper } from "../bottom-bar/BottomBarWrapper";
 import { LockNoteButton } from "../bottom-bar/LockNoteButton";
 import { LocalHistoryButton } from "../bottom-bar/LocalHistoryButton";
-import { ShowBoardButton } from "../bottom-bar/ShowBoardButton";
 import { toggles } from "../toggles";
 import { DownloadButton } from "../bottom-bar/DownloadButton";
 
@@ -64,7 +63,6 @@ export function Editor({
         {toggles.local_history && (
           <LocalHistoryButton file={file} yDoc={yDoc} />
         )}
-        <ShowBoardButton file={file} />
       </BottomBarWrapper>
     </>
   );
