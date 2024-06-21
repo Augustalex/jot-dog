@@ -4,7 +4,7 @@ import * as cmView from "@codemirror/view"; // eslint-disable-line
 import { YRange } from "./y-range";
 
 export class YSyncConfig {
-  private ytext: any;
+  private readonly ytext: any;
   private awareness: any;
   private undoManager: Y.UndoManager;
   constructor(ytext, awareness) {
@@ -86,10 +86,10 @@ export const ySyncAnnotation: cmState.AnnotationType<YSyncConfig> =
 
 class YSyncPluginValue {
   private view: any;
-  private conf: any;
+  private readonly conf: any;
   private _ytext: Y.Text;
 
-  private _observer: (event, tr) => void;
+  private readonly _observer: (event, tr) => void;
 
   constructor(view: cmView.EditorView) {
     this.view = view;

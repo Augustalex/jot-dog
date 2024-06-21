@@ -9,7 +9,7 @@ export function getRawContent(content: Uint8Array) {
   const decoder = decoding.createDecoder(data);
 
   // Not used here, but needs to be consumed to advance the decoder
-  const messageType = decoding.readVarUint(decoder);
+  decoding.readVarUint(decoder); // consume "message type"
 
   const update = decoding.readVarUint8Array(decoder);
   Y.applyUpdate(yDoc, update, origin);

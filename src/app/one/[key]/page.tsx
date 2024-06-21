@@ -43,8 +43,7 @@ export default async function Notes({ params, searchParams }: Props) {
 
   if (key.includes(".")) {
     const preDot = key.split(".")[0];
-    redirect(`/one/${preDot}`);
-    return;
+    return redirect(`/one/${preDot}`);
   }
 
   const localId = cookies().get("local-id")?.value ?? "anonymous";

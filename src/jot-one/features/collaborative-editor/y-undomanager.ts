@@ -52,18 +52,18 @@ class YUndoManagerPluginValue {
   private view: cmView.EditorView;
   private conf: any;
   private _undoManager: any;
-  private syncConf: any;
+  private readonly syncConf: any;
   private _beforeChangeSelection: null | YRange;
   private _mux: any;
-  private _onStackItemAdded: ({
+  private readonly _onStackItemAdded: ({
     stackItem,
     changedParentTypes,
   }: {
     stackItem: any;
     changedParentTypes: any;
   }) => void;
-  private _onStackItemPopped: ({ stackItem }: { stackItem: any }) => void;
-  private _storeSelection: () => void;
+  private readonly _onStackItemPopped: ({ stackItem }: { stackItem: any }) => void;
+  private readonly _storeSelection: () => void;
 
   constructor(view: cmView.EditorView) {
     this.view = view;
