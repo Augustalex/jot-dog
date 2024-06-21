@@ -100,12 +100,7 @@ export default function Tiptap() {
         provider: websocketProvider,
       }),
     ],
-    editorProps: {
-      attributes: {
-        class:
-          "flex flex-col px-4 py-3 justify-start focus:outline-none outline-none border-none m-auto w-[960px] min-h-[90vh]",
-      },
-    },
+
     // content: `
     // <p>
     //   Markdown shortcuts make it easy to format the text while typing.
