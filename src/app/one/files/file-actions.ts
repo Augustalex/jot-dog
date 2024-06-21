@@ -5,7 +5,7 @@ import {
   FileType,
   generateFileDetails,
   NoteFile,
-} from "../../jot-one/utils/file-utils";
+} from "../../../jot-one/utils/file-utils";
 
 const FILES_STORAGE_KEY = "files";
 

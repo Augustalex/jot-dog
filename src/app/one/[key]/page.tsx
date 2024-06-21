@@ -1,9 +1,9 @@
 import React from "react";
 import NotesEntry from "../../../jot-one/features/notes-entry/NotesEntry";
-import { createFile, getOrCreateFile } from "../../files/file-actions";
+import { createFile, getOrCreateFile } from "../files/file-actions";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
-import { fileClient } from "../../files/file-client";
+import { fileClient } from "../files/file-client";
 
 import { Metadata } from "next";
 

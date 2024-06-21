@@ -1,5 +1,5 @@
 import styles from "./bottom-bar.module.css";
-import downloadIcon from "../../../app/images/download.svg";
+import downloadIcon from "../../../app/one/images/download.svg";
 import Image from "next/image";
 import * as Y from "yjs";
 import { getDocumentText } from "../../utils/getDocumentText";
