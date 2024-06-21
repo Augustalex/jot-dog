@@ -1,4 +1,3 @@
-
 export const Features = {
-    jot_two: false,
-}
+  jot_two: true,
+};

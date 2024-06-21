@@ -5,7 +5,7 @@ import {
   FileType,
   generateFileDetails,
   NoteFile,
-} from "../../../jot-one/utils/file-utils";
+} from "../../jot-one/utils/file-utils";
 
 const FILES_STORAGE_KEY = "files";
 
@@ -14,7 +14,9 @@ export async function getFiles(): Promise<NoteFile[]> {
   return filesRaw ?? [];
 }
 
-export async function createFile(files: NoteFile[] = null): Promise<NoteFile> {
+export async function createFile(
+  files: NoteFile[] | null = null
+): Promise<NoteFile> {
   files = files || (await getFiles());
   const newFile = generateFileDetails(files);
 
@@ -23,7 +25,7 @@ export async function createFile(files: NoteFile[] = null): Promise<NoteFile> {
 
 export async function forceCreateFile(
   file: NoteFile,
-  files: NoteFile[] = null
+  files: NoteFile[] | null = null
 ) {
   files = files ?? (await getFiles());
   files.push(file);
@@ -35,7 +37,7 @@ export async function forceCreateFile(
 
 export async function getOrCreateFile(
   fileKey: string,
-  files: NoteFile[] = null
+  files: NoteFile[] | null = null
 ) {
   files = files || (await getFiles());
   const file = files.find((file) => file.key === fileKey);
