@@ -1,9 +1,9 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
-import {jotOneMiddleware} from "./jot-one/middleware";
+import { jotOneMiddleware } from "./jot-one/middleware";
 
 export async function middleware(request: NextRequest) {
-  if(request.url.startsWith('/one')) return jotOneMiddleware(request);
+  if (request.url.startsWith("/one")) return jotOneMiddleware(request);
   else return NextResponse.next();
 }
 

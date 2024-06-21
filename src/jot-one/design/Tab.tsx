@@ -27,13 +27,16 @@ export function Tab({
       onClick={onClick}
     >
       <span className={[styles.tabText, "truncate"].join(" ")}>{children}</span>
-      <button className={styles.tabDeleteButton} onClick={e => {
-        // Prevent clicking through to the Link
-        e.preventDefault();
-        e.stopPropagation();
+      <button
+        className={styles.tabDeleteButton}
+        onClick={(e) => {
+          // Prevent clicking through to the Link
+          e.preventDefault();
+          e.stopPropagation();
 
-        onClose(e);
-      }}>
+          onClose(e);
+        }}
+      >
         x
       </button>
     </Link>

@@ -1,35 +1,35 @@
 .bottomBar {
-    position: fixed;
-    bottom: var(--d2);
-    right: var(--d3);
-    display: flex;
-    gap: var(--d1);
-    align-items: center;
+  position: fixed;
+  bottom: var(--d2);
+  right: var(--d3);
+  display: flex;
+  gap: var(--d1);
+  align-items: center;
 }
 
 .bottomBarButton {
-    width: 24px;
-    height: 24px;
-    border: none;
-    box-shadow: none;
-    outline: 0;
-    background: transparent;
-    filter: invert();
-    transition: all .1s ease-out;
-    transform: scale(1);
+  width: 24px;
+  height: 24px;
+  border: none;
+  box-shadow: none;
+  outline: 0;
+  background: transparent;
+  filter: invert();
+  transition: all 0.1s ease-out;
+  transform: scale(1);
 }
 
 .bottomBarButton > img {
-    width: 100%;
-    height: 100%;
+  width: 100%;
+  height: 100%;
 }
 
 .bottomBarButton:hover {
-    cursor: pointer;
-    transform: scale(1.1);
+  cursor: pointer;
+  transform: scale(1.1);
 }
 
 .bottomBarButton:active {
-    cursor: pointer;
-    transform: scale(.95);
+  cursor: pointer;
+  transform: scale(0.95);
 }

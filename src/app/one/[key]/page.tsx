@@ -19,16 +19,16 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     title: key.slice(0, 1).toUpperCase() + key.slice(1),
     description: "Jot down notes with your team",
     icons: ["pug", "kirby"].includes(key)
-        ? ["kirby.webp"]
-        : ["crabs", "payments"].includes(key)
-            ? ["crab.png"]
-            : ["mango", "mangos"].includes(key)
-                ? ["mango.png"]
-                : ["diego", "hair"].includes(key)
-                    ? ["diego.png"]
-                    : ["sad", "cat"].includes(key)
-                        ? ["sad.png"]
-                        : undefined,
+      ? ["kirby.webp"]
+      : ["crabs", "payments"].includes(key)
+      ? ["crab.png"]
+      : ["mango", "mangos"].includes(key)
+      ? ["mango.png"]
+      : ["diego", "hair"].includes(key)
+      ? ["diego.png"]
+      : ["sad", "cat"].includes(key)
+      ? ["sad.png"]
+      : undefined,
   };
 }
 
@@ -51,11 +51,11 @@ export default async function Notes({ params, searchParams }: Props) {
   const file = await getOrCreateFile(key);
   const content = await fileClient.getBinaryFile(file);
   return (
-      <NotesEntry
-          file={file}
-          content={content as Uint8Array}
-          localId={localId}
-          gotoTitle={title}
-      />
+    <NotesEntry
+      file={file}
+      content={content as Uint8Array}
+      localId={localId}
+      gotoTitle={title}
+    />
   );
 }

@@ -25,8 +25,8 @@ export function AwarenessChangeThrottler({ awareness, send, delay }) {
     const encoderAwareness = encoding.createEncoder();
     encoding.writeVarUint(encoderAwareness, messageAwareness);
     encoding.writeVarUint8Array(
-        encoderAwareness,
-        encodeAwarenessUpdate(awareness, latestChanges)
+      encoderAwareness,
+      encodeAwarenessUpdate(awareness, latestChanges)
     );
     latestChanges = [];
 

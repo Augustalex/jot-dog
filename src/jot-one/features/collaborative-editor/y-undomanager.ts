@@ -62,7 +62,11 @@ class YUndoManagerPluginValue {
     stackItem: any;
     changedParentTypes: any;
   }) => void;
-  private readonly _onStackItemPopped: ({ stackItem }: { stackItem: any }) => void;
+  private readonly _onStackItemPopped: ({
+    stackItem,
+  }: {
+    stackItem: any;
+  }) => void;
   private readonly _storeSelection: () => void;
 
   constructor(view: cmView.EditorView) {
