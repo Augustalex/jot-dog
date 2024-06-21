@@ -6,8 +6,6 @@ import { useSaveShortcut } from "../../utils/hooks/useSaveShortcut";
 import { useCollaborativeEditor } from "../collaborative-editor/collaborative-editor";
 import { persistNowWith } from "../collaborative-editor/y-doc-persister";
 import { BottomBarWrapper } from "../bottom-bar/BottomBarWrapper";
-import { LocalHistoryButton } from "../bottom-bar/LocalHistoryButton";
-import { toggles } from "../toggles";
 import { DownloadButton } from "../bottom-bar/DownloadButton";
 
 export default Editor;
@@ -58,9 +56,6 @@ export function Editor({
       </div>
       <BottomBarWrapper>
         <DownloadButton file={file} yDoc={yDoc} />
-        {toggles.local_history && (
-          <LocalHistoryButton file={file} yDoc={yDoc} />
-        )}
       </BottomBarWrapper>
     </>
   );
