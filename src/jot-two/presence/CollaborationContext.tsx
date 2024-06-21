@@ -47,7 +47,11 @@ export function CollaborationProvider({ children }: { children: ReactNode }) {
       appId: "7j9y6m10",
       name: file.key,
       document: doc,
-      baseUrl: "ws://live.jot.dog:80",
+
+      baseUrl:
+        window.location.hostname === "localhost"
+          ? "ws://localhost:1234"
+          : "wss://live.jot.dog:443",
       // baseUrl: "ws://37.27.16.141:80",
       // baseUrl: "http://localhost:1234",
       // The onSynced callback ensures initial content is set only once using editor.setContent(), preventing repetitive content insertion on editor syncs.
