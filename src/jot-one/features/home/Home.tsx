@@ -31,7 +31,7 @@ export function Home() {
             <LinkCard
               key={file.key}
               className={ibmPlexMono.className}
-              href={`/notes/${file.key}`}
+              href={`/one/${file.key}`}
             >
               {capitalize(file.key)}
             </LinkCard>

@@ -1,9 +1,9 @@
 import React from "react";
-import NotesEntry from "../../jot-one/features/notes-entry/NotesEntry";
-import { createFile, getOrCreateFile } from "../files/file-actions";
+import NotesEntry from "../../../jot-one/features/notes-entry/NotesEntry";
+import { createFile, getOrCreateFile } from "../../files/file-actions";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
-import { fileClient } from "../files/file-client";
+import { fileClient } from "../../files/file-client";
 
 import { Metadata } from "next";
 
@@ -19,16 +19,16 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     title: key.slice(0, 1).toUpperCase() + key.slice(1),
     description: "Jot down notes with your team",
     icons: ["pug", "kirby"].includes(key)
-      ? ["kirby.webp"]
-      : ["crabs", "payments"].includes(key)
-      ? ["crab.png"]
-      : ["mango", "mangos"].includes(key)
-      ? ["mango.png"]
-      : ["diego", "hair"].includes(key)
-      ? ["diego.png"]
-      : ["sad", "cat"].includes(key)
-      ? ["sad.png"]
-      : undefined,
+        ? ["kirby.webp"]
+        : ["crabs", "payments"].includes(key)
+            ? ["crab.png"]
+            : ["mango", "mangos"].includes(key)
+                ? ["mango.png"]
+                : ["diego", "hair"].includes(key)
+                    ? ["diego.png"]
+                    : ["sad", "cat"].includes(key)
+                        ? ["sad.png"]
+                        : undefined,
   };
 }
 
@@ -38,12 +38,12 @@ export default async function Notes({ params, searchParams }: Props) {
 
   if (key === "new") {
     const file = await createFile();
-    return redirect(`/${file.key}`);
+    return redirect(`/one/${file.key}`);
   }
 
   if (key.includes(".")) {
     const preDot = key.split(".")[0];
-    redirect(`/${preDot}`);
+    redirect(`/one/${preDot}`);
     return;
   }
 
@@ -52,11 +52,11 @@ export default async function Notes({ params, searchParams }: Props) {
   const file = await getOrCreateFile(key);
   const content = await fileClient.getBinaryFile(file);
   return (
-    <NotesEntry
-      file={file}
-      content={content as Uint8Array}
-      localId={localId}
-      gotoTitle={title}
-    />
+      <NotesEntry
+          file={file}
+          content={content as Uint8Array}
+          localId={localId}
+          gotoTitle={title}
+      />
   );
 }
