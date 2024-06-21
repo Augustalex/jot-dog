@@ -1,7 +1,6 @@
 "use client";
 
 import "./tiptap.scss";
-import { TiptapCollabProvider } from "@hocuspocus/provider";
 import CharacterCount from "@tiptap/extension-character-count";
 import Collaboration from "@tiptap/extension-collaboration";
 import CollaborationCursor from "@tiptap/extension-collaboration-cursor";
@@ -11,6 +10,7 @@ import Typography from "@tiptap/extension-typography";
 import { EditorContent, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import { useCallback, useEffect, useState } from "react";
+import { useCollaborationProvider } from "./useCollaborationProvider";
 
 const colors = [
   "#958DF1",
@@ -49,30 +49,22 @@ const names = [
   "Lisa Bonet",
 ];
 
-const getRandomElement = (list) =>
+const getRandomElement = (list: any) =>
   list[Math.floor(Math.random() * list.length)];
 
-const getRandomRoom = () => {
-  const roomNumbers = [10, 11, 12];
-
-  return getRandomElement(roomNumbers.map((number) => `rooms.${number}`));
-};
 const getRandomColor = () => getRandomElement(colors);
 const getRandomName = () => getRandomElement(names);
 
-const room = getRandomRoom();
-
-const ydoc = new Y.Doc();
-const websocketProvider = new TiptapCollabProvider({
-  appId: "7j9y6m10",
-  name: room,
-  document: ydoc,
-  url: "http://localhost:1234",
-});
-
 const getInitialUser = () => {
+  const currentUser = localStorage.getItem("currentUser");
+  if (!currentUser)
+    return {
+      name: getRandomName(),
+      color: getRandomColor(),
+    };
+
   return (
-    JSON.parse(localStorage.getItem("currentUser")) || {
+    JSON.parse(currentUser) || {
       name: getRandomName(),
       color: getRandomColor(),
     }
@@ -82,6 +74,9 @@ const getInitialUser = () => {
 export default function Tiptap() {
   const [status, setStatus] = useState("connecting");
   const [currentUser, setCurrentUser] = useState(getInitialUser);
+  const [doc] = useState(new Y.Doc());
+
+  const collaborationProvider = useCollaborationProvider(doc);
 
   const editor = useEditor({
     extensions: [
@@ -94,38 +89,20 @@ export default function Tiptap() {
         limit: 10000,
       }),
       Collaboration.configure({
-        document: ydoc,
+        document: doc,
       }),
       CollaborationCursor.configure({
-        provider: websocketProvider,
+        provider: collaborationProvider,
       }),
     ],
-
-    // content: `
-    // <p>
-    //   Markdown shortcuts make it easy to format the text while typing.
-    // </p>
-    // <p>
-    //   To test that, start a new line and type <code>#</code> followed by a space to get a heading. Try <code>#</code>, <code>##</code>, <code>###</code>, <code>####</code>, <code>#####</code>, <code>######</code> for different levels.
-    // </p>
-    // <p>
-    //   Those conventions are called input rules in Tiptap. Some of them are enabled by default. Try <code>></code> for blockquotes, <code>*</code>, <code>-</code> or <code>+</code> for bullet lists, or <code>\`foobar\`</code> to highlight code, <code>~~tildes~~</code> to strike text, or <code>==equal signs==</code> to highlight text.
-    // </p>
-    // <p>
-    //   You can overwrite existing input rules or add your own to nodes, marks and extensions.
-    // </p>
-    // <p>
-    //   For example, we added the <code>Typography</code> extension here. Try typing <code>(c)</code> to see how it’s converted to a proper © character. You can also try <code>-></code>, <code>>></code>, <code>1/2</code>, <code>!=</code>, or <code>--</code>.
-    // </p>
-    // `,
   });
 
   useEffect(() => {
     // Update status changes
-    websocketProvider.on("status", (event) => {
+    collaborationProvider.on("status", (event: any) => {
       setStatus(event.status);
     });
-  }, []);
+  }, [collaborationProvider, editor]);
 
   // Save current user to localStorage and emit to editor
   useEffect(() => {
@@ -146,18 +123,22 @@ export default function Tiptap() {
   return (
     <div className="editor">
       <EditorContent className="editor__content" editor={editor} />
-      <div className="editor__footer">
-        <div className={`editor__status editor__status--${status}`}>
-          {status === "connected"
-            ? `${editor.storage.collaborationCursor.users.length} user${
-                editor.storage.collaborationCursor.users.length === 1 ? "" : "s"
-              } online in ${room}`
-            : "offline"}
+      {editor && (
+        <div className="editor__footer">
+          <div className={`editor__status editor__status--${status}`}>
+            {status === "connected"
+              ? `${editor.storage.collaborationCursor.users.length} user${
+                  editor.storage.collaborationCursor.users.length === 1
+                    ? ""
+                    : "s"
+                } online`
+              : "offline"}
+          </div>
+          <div className="editor__name">
+            <button onClick={setName}>{currentUser.name}</button>
+          </div>
         </div>
-        <div className="editor__name">
-          <button onClick={setName}>{currentUser.name}</button>
-        </div>
-      </div>
+      )}
     </div>
   );
 }
