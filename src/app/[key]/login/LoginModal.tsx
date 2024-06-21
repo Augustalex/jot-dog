@@ -5,7 +5,7 @@ import Image from "next/image";
 import openLock from "../../images/open_lock.svg";
 import hiddenIcon from "../../images/hidden.svg";
 import shownIcon from "../../images/shown.svg";
-import { NoteFile } from "../../../utils/file-utils";
+import { NoteFile } from "../../../jot-one/utils/file-utils";
 import { useRouter } from "next/navigation";
 
 const ibmPlexMono = IBM_Plex_Mono({

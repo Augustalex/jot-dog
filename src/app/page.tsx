@@ -1,7 +1,7 @@
 import React from "react";
 import Image from "next/image";
 import { IBM_Plex_Serif } from "next/font/google";
-import { Home } from "../features/home/Home";
+import { Home } from "../jot-one/features/home/Home";
 
 const ibmPlexSerif = IBM_Plex_Serif({
   weight: ["100", "200", "300", "400", "500", "600", "700"],

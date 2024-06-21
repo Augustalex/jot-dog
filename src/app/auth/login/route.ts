@@ -3,7 +3,7 @@ import {
   INVALID_PASSWORD,
   login,
   NO_PASSWORD_SET,
-} from "../../../utils/auth/api-auth";
+} from "../../../jot-one/utils/auth/api-auth";
 
 export async function POST(request: NextRequest) {
   const body: { password: string; fileKey: string } | undefined =

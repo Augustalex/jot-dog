@@ -1,7 +1,7 @@
 "use server";
 
 import { kv } from "@vercel/kv";
-import { NoteFile } from "../../utils/file-utils";
+import { NoteFile } from "../../jot-one/utils/file-utils";
 
 const FILE_CONTENT_STORAGE_PREFIX = "file_content:";
 

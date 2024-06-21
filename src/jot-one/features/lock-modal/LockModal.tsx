@@ -3,9 +3,9 @@ import React, { useRef, useState } from "react";
 import { NoteFile } from "../../utils/file-utils";
 import { IBM_Plex_Mono } from "next/font/google";
 import Image from "next/image";
-import lockIcon from "../../app/images/lock.svg";
-import hiddenIcon from "../../app/images/hidden.svg";
-import shownIcon from "../../app/images/shown.svg";
+import lockIcon from "../../../app/images/lock.svg";
+import hiddenIcon from "../../../app/images/hidden.svg";
+import shownIcon from "../../../app/images/shown.svg";
 
 const ibmPlexMono = IBM_Plex_Mono({
   weight: ["100", "200", "300", "400", "500", "600", "700"],

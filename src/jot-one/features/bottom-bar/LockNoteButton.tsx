@@ -1,5 +1,5 @@
 import styles from "./bottom-bar.module.css";
-import lockIcon from "../../app/images/lock.svg";
+import lockIcon from "../../../app/images/lock.svg";
 import Image from "next/image";
 import { useState } from "react";
 import { LockModal } from "../lock-modal/LockModal";

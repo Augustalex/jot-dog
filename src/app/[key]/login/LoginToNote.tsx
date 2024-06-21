@@ -3,7 +3,7 @@
 import styles from "./login-to-note.module.css";
 import React from "react";
 import { LoginModal } from "./LoginModal";
-import { NoteFile } from "../../../utils/file-utils";
+import { NoteFile } from "../../../jot-one/utils/file-utils";
 
 export function LoginToNote({ file }: { file: NoteFile }) {
   return (

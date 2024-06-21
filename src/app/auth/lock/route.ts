@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { lock } from "../../../utils/auth/api-auth";
+import { lock } from "../../../jot-one/utils/auth/api-auth";
 
 export async function POST(request: NextRequest) {
   const body: { password: string; fileKey: string } = await request.json();

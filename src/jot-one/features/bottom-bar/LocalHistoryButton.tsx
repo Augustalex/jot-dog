@@ -1,5 +1,5 @@
 import styles from "./bottom-bar.module.css";
-import revertIcon from "../../app/images/revert.svg";
+import revertIcon from "../../../app/images/revert.svg";
 import Image from "next/image";
 import { useState } from "react";
 import { HistoryModal } from "../history-modal/HistoryModal";

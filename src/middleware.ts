@@ -7,8 +7,8 @@ import {
   NO_TOKEN,
   publicLogin,
   verifyFileAccess,
-} from "./utils/auth/edge-auth";
-import { getAdjectiveAnimal } from "./utils/animal-name";
+} from "./jot-one/utils/auth/edge-auth";
+import { getAdjectiveAnimal } from "./jot-one/utils/animal-name";
 
 export async function middleware(request: NextRequest) {
   // Ignore files and images.
