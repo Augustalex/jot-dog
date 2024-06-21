@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import * as Ably from "ably/promises";
 import { configureAbly } from "@ably-labs/react-hooks";
 
-let ablyClient: Ably.Types.RealtimePromise = null;
+let ablyClient: Ably.Types.RealtimePromise | null = null;
 
 export function getAbly() {
   return ablyClient;

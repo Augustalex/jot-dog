@@ -24,7 +24,7 @@ export function Editor({
   gotoTitle: string | undefined;
 }) {
   const { fontSize } = useLocalEditorState();
-  const [editorRef, setEditorRef] = useState(null);
+  const [editorRef, setEditorRef] = useState<any>(null);
   const { ready, yDoc } = useCollaborativeEditor(
     localId,
     file,
@@ -35,9 +35,9 @@ export function Editor({
   );
 
   const persistDoc = React.useCallback(() => {
-    if (!ready) return;
-    persistNowWith(file, yDoc, persist);
-  }, [file, persist, ready, yDoc]);
+    if (!ready || !yDoc) return;
+    persistNowWith(yDoc, persist);
+  }, [persist, ready, yDoc]);
 
   useSaveShortcut(persistDoc);
 

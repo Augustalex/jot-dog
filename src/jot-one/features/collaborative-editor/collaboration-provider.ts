@@ -41,7 +41,6 @@ export const CollaborationProvider = ({
     delay: 1000,
   });
   const schedulePersist = YDocPersister({
-    file,
     yDoc,
     persist,
     persistInterval: 3 * 1000,
@@ -64,9 +63,23 @@ export const CollaborationProvider = ({
       scheduleYDocUpdate(update);
       schedulePersist();
     });
-    awareness.on("update", ({ added, updated, removed }, origin) => {
-      scheduleAwarenessUpdate({ added, updated, removed });
-    });
+    awareness.on(
+      "update",
+      (
+        {
+          added,
+          updated,
+          removed,
+        }: {
+          added: any[];
+          updated: any[];
+          removed: any[];
+        },
+        origin: any
+      ) => {
+        scheduleAwarenessUpdate({ added, updated, removed });
+      }
+    );
 
     channel.subscribe("update", (message) => {
       if (message.connectionId === ably.connection.id) return;

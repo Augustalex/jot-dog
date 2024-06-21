@@ -25,24 +25,21 @@ export {
   yUndoManagerKeymap,
 };
 
-/**
- * @param {Y.Text} ytext
- * @param {any} awareness
- * @param {Object} [opts]
- * @param {Y.UndoManager | false} [opts.undoManager] Set undoManager to false to disable the undo-redo plugin
- * @return {cmState.Extension}
- */
-export const yCollab = (
-  ytext,
-  awareness,
-  { undoManager = new Y.UndoManager(ytext) } = {}
-) => {
+export function yCollab(
+  ytext: Y.Text,
+  awareness: any,
+  {
+    undoManager = new Y.UndoManager(ytext),
+  }: {
+    undoManager?: Y.UndoManager | false;
+  } = {}
+) {
   const ySyncConfig = new YSyncConfig(ytext, awareness);
   const plugins = [ySyncFacet.of(ySyncConfig), ySync];
   if (awareness) {
     plugins.push(yRemoteSelectionsTheme, yRemoteSelections);
   }
-  if (Boolean(undoManager) !== false) {
+  if (Boolean(undoManager)) {
     // By default, only track changes that are produced by the sync plugin (local edits)
     plugins.push(
       yUndoManagerFacet.of(new YUndoManagerConfig(undoManager)),
@@ -57,4 +54,4 @@ export const yCollab = (
     );
   }
   return plugins;
-};
+}

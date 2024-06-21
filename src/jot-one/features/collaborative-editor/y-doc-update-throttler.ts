@@ -3,8 +3,14 @@ import * as encoding from "lib0/encoding";
 import { messageSync } from "./message-constants";
 import throttle from "lodash/throttle";
 
-export function YDocUpdateThrottler({ send, delay }) {
-  let queue = [];
+export function YDocUpdateThrottler({
+  send,
+  delay,
+}: {
+  send: (data: Uint8Array) => void;
+  delay: number;
+}) {
+  let queue: any[] = [];
 
   const doUpdate = () => {
     const update = Y.mergeUpdates(queue);

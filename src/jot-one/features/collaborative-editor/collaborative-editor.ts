@@ -23,7 +23,7 @@ export function useCollaborativeEditor(
   persist: (data: Uint8Array) => Promise<void>,
   gotoTitle: string | undefined
 ) {
-  const [yDoc, setYDoc] = useState(null);
+  const [yDoc, setYDoc] = useState<Y.Doc | null>(null);
   const { ably } = useAblyClient(localId);
 
   useEffect(() => {
@@ -37,8 +37,11 @@ export function useCollaborativeEditor(
 
       const yText = yDoc.getText(Y_TEXT_KEY);
 
+      const ablyInstance = ably.get();
+      if (!ablyInstance) throw new Error("Ably failed to instantiate");
+
       const provider = CollaborationProvider({
-        ably: ably.get(),
+        ably: ablyInstance,
         yDoc,
         initialData: serverContent,
         persist,
@@ -121,6 +124,8 @@ export function useCollaborativeEditor(
         else document.body.classList.remove("ctrl");
       });
     })();
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [ably, editorRef, file, persist, serverContent, yDoc]);
 
   return {

@@ -9,21 +9,21 @@ import { createMutex } from "lib0/mutex";
 export class YUndoManagerConfig {
   undoManager: Y.UndoManager;
 
-  constructor(undoManager) {
+  constructor(undoManager: any) {
     this.undoManager = undoManager;
   }
 
   /**
    * @param {any} origin
    */
-  addTrackedOrigin(origin) {
+  addTrackedOrigin(origin: any) {
     this.undoManager.addTrackedOrigin(origin);
   }
 
   /**
    * @param {any} origin
    */
-  removeTrackedOrigin(origin) {
+  removeTrackedOrigin(origin: any) {
     this.undoManager.removeTrackedOrigin(origin);
   }
 

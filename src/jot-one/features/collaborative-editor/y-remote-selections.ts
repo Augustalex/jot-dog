@@ -105,11 +105,11 @@ class YRemoteCaretWidget extends cmView.WidgetType {
     ) as HTMLElement;
   }
 
-  eq(widget) {
+  eq(widget: any) {
     return widget.color === this.color;
   }
 
-  compare(widget) {
+  compare(widget: any) {
     return widget.color === this.color;
   }
 
@@ -135,7 +135,19 @@ export class YRemoteSelectionsPluginValue {
 
   constructor(view: cmView.EditorView) {
     this.conf = view.state.facet(ySyncFacet);
-    this._listener = ({ added, updated, removed }, s, t) => {
+    this._listener = (
+      {
+        added,
+        updated,
+        removed,
+      }: {
+        added: any[];
+        updated: any[];
+        removed: any[];
+      },
+      s: any,
+      t: any
+    ) => {
       const clients = added.concat(updated).concat(removed);
       const someoneRemoteHasBeenChanged =
         clients.findIndex((id) => id !== this.conf.awareness.doc.clientID) >= 0;
@@ -194,7 +206,7 @@ export class YRemoteSelectionsPluginValue {
 
     // update decorations (remote selections)
     const remoteStates = awareness.getStates();
-    remoteStates.forEach((state) => {
+    remoteStates.forEach((state: any) => {
       const cursor = state.cursor;
       const local = state.user.name === localAwarenessState.user.name;
       if (

@@ -7,7 +7,7 @@ export class YSyncConfig {
   private readonly ytext: any;
   private awareness: any;
   private undoManager: Y.UndoManager;
-  constructor(ytext, awareness) {
+  constructor(ytext: any, awareness: any) {
     this.ytext = ytext;
     this.awareness = awareness;
     this.undoManager = new Y.UndoManager(ytext);
@@ -89,7 +89,7 @@ class YSyncPluginValue {
   private readonly conf: any;
   private _ytext: Y.Text;
 
-  private readonly _observer: (event, tr) => void;
+  private readonly _observer: (event: any, tr: any) => void;
 
   constructor(view: cmView.EditorView) {
     this.view = view;
