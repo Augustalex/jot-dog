@@ -47,7 +47,6 @@ export function CollaborationProvider({ children }: { children: ReactNode }) {
       appId: "7j9y6m10",
       name: file.key,
       document: doc,
-
       baseUrl: "wss://live.jot.dog:443",
 
       // The onSynced callback ensures initial content is set only once using editor.setContent(), preventing repetitive content insertion on editor syncs.
