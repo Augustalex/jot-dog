@@ -10,6 +10,7 @@ import DocumentEditor from "../editor/DocumentEditor";
 import { DocumentTitle } from "./DocumentTitle";
 import { useRegisterView } from "../utils/useRecentlyViewed";
 import { TabBar } from "../tab-bar/TabBar";
+import { UserLoader } from "../user/UserLoader";
 
 export function Document({
   file,
@@ -21,15 +22,17 @@ export function Document({
   useRegisterView(file);
 
   return (
-    <FileProvider file={file}>
-      <LocalUserProvider localId={localId}>
-        <CollaborationProvider>
-          <DocumentEditorProvider>
-            <DocumentInner />
-          </DocumentEditorProvider>
-        </CollaborationProvider>
-      </LocalUserProvider>
-    </FileProvider>
+    <UserLoader>
+      <FileProvider file={file}>
+        <LocalUserProvider localId={localId}>
+          <CollaborationProvider>
+            <DocumentEditorProvider>
+              <DocumentInner />
+            </DocumentEditorProvider>
+          </CollaborationProvider>
+        </LocalUserProvider>
+      </FileProvider>
+    </UserLoader>
   );
 }
 

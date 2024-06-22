@@ -2,6 +2,7 @@ import "./globals.css";
 import "@radix-ui/themes/styles.css";
 import { Noto_Sans } from "next/font/google";
 import { ReactNode } from "react";
+import { ClerkProvider } from "@clerk/nextjs";
 
 const noto = Noto_Sans({ subsets: ["latin"], weight: "400" });
 
@@ -13,7 +14,9 @@ export const metadata = {
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en">
-      <body className={noto.className}>{children}</body>
+      <body className={noto.className}>
+        <ClerkProvider>{children}</ClerkProvider>
+      </body>
     </html>
   );
 }

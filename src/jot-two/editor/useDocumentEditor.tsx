@@ -14,7 +14,7 @@ export function useDocumentEditor() {
   const { doc } = useFileContext();
   const { collaborationProvider } = useCollaborationContext();
 
-  const editor = useEditor({
+  return useEditor({
     extensions: [
       StarterKit.configure({
         history: false,
@@ -29,13 +29,11 @@ export function useDocumentEditor() {
       }),
       CollaborationCursor.configure({
         provider: collaborationProvider,
-        user: localUser,
+        user: {
+          ...localUser,
+          color: localUser.primaryColor,
+        },
       }),
     ],
   });
-
-  // if (!editor) {
-  //   throw new Error("No editor found");
-  // }
-  return editor;
 }

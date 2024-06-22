@@ -11,6 +11,7 @@
   "dependencies": {
     "@ably-labs/react-hooks": "^2.1.1",
     "@ably/vcdiff-decoder": "^1.0.5",
+    "@clerk/nextjs": "^5.1.6",
     "@codemirror/lang-markdown": "^6.2.0",
     "@codemirror/language-data": "^6.3.1",
     "@hocuspocus/provider": "^2.13.2",

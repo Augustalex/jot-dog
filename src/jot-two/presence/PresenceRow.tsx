@@ -6,7 +6,8 @@ import {
   useDocumentEditorContext,
 } from "../editor/DocumentEditorProvider";
 import { WebSocketStatus } from "@hocuspocus/provider";
-import { Avatar } from "./Avatar";
+import { PresenceAvatar } from "./PresenceAvatar";
+import { useLocalUserContext } from "../local-user/LocalUserContext";
 
 export function PresenceRow() {
   const { collaborationProvider } = useCollaborationContext();
@@ -37,10 +38,15 @@ export function PresenceRow() {
 }
 
 function AvatarRow({ users }: { users: PresenceUser[] }) {
+  const { localUser } = useLocalUserContext();
   return (
-    <div className="flex -space-x-4 relative">
+    <div className="flex space-x-1 relative">
       {users.map((user, index) => (
-        <Avatar key={index} user={user} />
+        <PresenceAvatar
+          key={index}
+          user={user}
+          isLocalUser={localUser.name === user.name}
+        />
       ))}
     </div>
   );

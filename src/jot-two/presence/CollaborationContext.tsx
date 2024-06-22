@@ -42,17 +42,19 @@ export function CollaborationProvider({ children }: { children: ReactNode }) {
     }
   }, [doc, editorContext]);
 
-  const [provider] = useState<TiptapCollabProvider>(
-    new TiptapCollabProvider({
+  console.log("run");
+  const [provider] = useState<TiptapCollabProvider>(() => {
+    console.log("GENERATE----");
+    return new TiptapCollabProvider({
       appId: "7j9y6m10",
       name: file.key,
       document: doc,
-      baseUrl: "wss://live.jot.dog:443",
+      baseUrl: "wss://live.jot.dog",
 
       // The onSynced callback ensures initial content is set only once using editor.setContent(), preventing repetitive content insertion on editor syncs.
       onSynced,
-    })
-  );
+    });
+  });
 
   return (
     <CollaborationContext.Provider value={{ collaborationProvider: provider }}>

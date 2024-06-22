@@ -1,7 +1,8 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import { getAdjectiveAnimal } from "./jot-one/utils/animal-name";
+import { clerkMiddleware } from "@clerk/nextjs/server";
 
-export async function middleware(request: NextRequest) {
+export default clerkMiddleware((auth, request) => {
   // Ignore files and images.
   const url = new URL(request.url);
   if (url.pathname.includes(".")) {
@@ -17,11 +18,16 @@ export async function middleware(request: NextRequest) {
   }
 
   return NextResponse.next();
-}
+});
 
 /*
   This config is global for both Jot One and Jot Two.
  */
 export const config = {
-  matcher: ["/((?!_next|ably|static|favicon.ico).*)"],
+  matcher: [
+    "/((?!_next|ably|static|favicon.ico).*)",
+    "/((?!.*\\..*|_next).*)",
+    "/",
+    "/(api|trpc)(.*)",
+  ],
 };

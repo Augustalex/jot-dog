@@ -1,4 +1,12 @@
-import { createContext, ReactNode, useContext, useState } from "react";
+import {
+  createContext,
+  ReactNode,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
+import { useUser } from "@clerk/nextjs";
+import { UserResource } from "@clerk/types";
 
 export interface ColorSet {
   primaryColor: string;
@@ -55,7 +63,7 @@ function getRandomColor(): ColorSet {
   return getRandomElement(colorSets);
 }
 
-function getInitialUser(localId: string): LocalUser {
+function createLocalUser(localId: string): LocalUser {
   const currentUser = localStorage.getItem("currentUser");
   if (currentUser) {
     return JSON.parse(currentUser);
@@ -63,6 +71,7 @@ function getInitialUser(localId: string): LocalUser {
 
   const newUser = {
     name: localId,
+    avatar: null,
     ...getRandomColor(),
   };
   localStorage.setItem("currentUser", JSON.stringify(newUser));
@@ -70,8 +79,22 @@ function getInitialUser(localId: string): LocalUser {
   return newUser;
 }
 
+function createFromUser(user: UserResource, localId: string): LocalUser {
+  const latestUserData = {
+    name: user.fullName ?? user.username ?? localId,
+    avatar: user.imageUrl,
+    primaryColor: getRandomColor().primaryColor,
+    secondaryColor: getRandomColor().secondaryColor,
+    tertiaryColor: getRandomColor().tertiaryColor,
+  };
+  localStorage.setItem("currentUser", JSON.stringify(latestUserData));
+
+  return latestUserData;
+}
+
 export interface LocalUser {
   name: string;
+  avatar: string | null;
   primaryColor: string;
   secondaryColor: string;
   tertiaryColor: string;
@@ -100,7 +123,10 @@ export function LocalUserProvider({
   localId: string;
   children: ReactNode;
 }) {
-  const [localUser, setLocalUser] = useState(getInitialUser(localId));
+  const { user } = useUser();
+  const [localUser, setLocalUser] = useState(
+    user ? createFromUser(user, localId) : createLocalUser(localId)
+  );
 
   return (
     <LocalUserContext.Provider value={{ localUser, setLocalUser }}>
