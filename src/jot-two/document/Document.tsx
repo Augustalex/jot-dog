@@ -35,10 +35,8 @@ export function Document({
 function DocumentInner() {
   return (
     <div className="m-auto w-[960px] px-4 py-8 min-h-[100vh] flex flex-col">
-      <div className="mb-2">
-        <DocumentTitle />
-        <PresenceRow />
-      </div>
+      <DocumentTitle />
+      <PresenceRow />
 
       <DocumentEditor />
     </div>
