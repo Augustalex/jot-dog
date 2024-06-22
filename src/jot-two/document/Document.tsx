@@ -9,6 +9,7 @@ import { LocalUserProvider } from "../local-user/LocalUserContext";
 import DocumentEditor from "../editor/DocumentEditor";
 import { DocumentTitle } from "./DocumentTitle";
 import { useRegisterView } from "../utils/useRecentlyViewed";
+import { TabBar } from "../tab-bar/TabBar";
 
 export function Document({
   file,
@@ -34,11 +35,14 @@ export function Document({
 
 function DocumentInner() {
   return (
-    <div className="m-auto w-[960px] px-4 py-8 min-h-[100vh] flex flex-col">
-      <DocumentTitle />
-      <PresenceRow />
+    <div className="">
+      <TabBar />
+      <div className="m-auto w-[635px] px-4 py-8 min-h-[100vh] flex flex-col">
+        <DocumentTitle />
+        <PresenceRow />
 
-      <DocumentEditor />
+        <DocumentEditor />
+      </div>
     </div>
   );
 }
