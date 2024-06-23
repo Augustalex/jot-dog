@@ -1,6 +1,12 @@
-export function CloseButton() {
+import React from "react";
+
+export function CloseButton({
+  onClick,
+}: {
+  onClick(e: React.MouseEvent): void;
+}) {
   return (
-    <button className="ml-3 hover:scale-125">
+    <button className="ml-3 hover:scale-125" onClick={onClick}>
       <svg
         xmlns="http://www.w3.org/2000/svg"
         height="16px"

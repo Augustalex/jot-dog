@@ -4,13 +4,13 @@ import { useFileContext } from "../file/FileContext";
 
 export function FileBar() {
   const { file } = useFileContext();
-  const { recentlyViewed, isReady } = useRecentlyViewed();
+  const { recentlyViewed, isReady, removeFileFromRecent } = useRecentlyViewed();
 
-  const tabs = recentlyViewed
+  const recentTabs = recentlyViewed
     .sort((a, b) => a.file.name.localeCompare(b.file.name))
     .map((recentFile) => {
       const selected = file.key === recentFile.file.key;
-      console.log("secleted", selected, file.key, recentFile.file.key);
+
       return (
         <a
           key={recentFile.file.key}
@@ -30,7 +30,14 @@ export function FileBar() {
        `}
         >
           <div className="text-sm">{recentFile.file.name}</div>
-          <CloseButton />
+          <CloseButton
+            onClick={(e) => {
+              e.stopPropagation();
+              e.preventDefault();
+
+              removeFileFromRecent(recentFile.file);
+            }}
+          />
         </a>
       );
     });
@@ -44,7 +51,7 @@ export function FileBar() {
         gap-2
     "
     >
-      {tabs}
+      {recentTabs}
     </div>
   );
 }

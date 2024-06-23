@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useCallback, useEffect } from "react";
 import { NoteFile } from "../../jot-one/utils/file-utils";
 import { useLocalState } from "../../jot-one/utils/hooks/useLocalState";
 
@@ -10,12 +10,20 @@ export interface RecentView {
 const LOCAL_STORAGE_KEY = "recently-viewed";
 
 export const useRecentlyViewed = () => {
-  const { localState, isReady } = useLocalState<RecentView[]>(
+  const { localState, setLocalState, isReady } = useLocalState<RecentView[]>(
     LOCAL_STORAGE_KEY,
     []
   );
 
-  return { recentlyViewed: localState, isReady };
+  const removeFileFromRecent = useCallback(
+    (file: NoteFile) => {
+      const newState = localState.filter((view) => view.file.key !== file.key);
+      setLocalState(newState);
+    },
+    [localState, setLocalState]
+  );
+
+  return { recentlyViewed: localState, isReady, removeFileFromRecent };
 };
 
 export const useRegisterView = (file: NoteFile) => {

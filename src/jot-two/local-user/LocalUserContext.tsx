@@ -7,6 +7,7 @@ import {
 } from "react";
 import { useUser } from "@clerk/nextjs";
 import { UserResource } from "@clerk/types";
+import { getUsername } from "../../app/(two)/files/user-helpers";
 
 export interface ColorSet {
   primaryColor: string;
@@ -71,6 +72,7 @@ function createLocalUser(localId: string): LocalUser {
 
   const newUser = {
     name: localId,
+    username: localId,
     avatar: null,
     ...getRandomColor(),
   };
@@ -82,6 +84,12 @@ function createLocalUser(localId: string): LocalUser {
 function createFromUser(user: UserResource, localId: string): LocalUser {
   const latestUserData = {
     name: user.fullName ?? user.username ?? localId,
+    username: getUsername({
+      id: user.id,
+      primaryEmailAddress: user.primaryEmailAddress?.emailAddress ?? null,
+      username: user.username,
+      fullName: user.fullName,
+    }),
     avatar: user.imageUrl,
     primaryColor: getRandomColor().primaryColor,
     secondaryColor: getRandomColor().secondaryColor,
@@ -94,6 +102,7 @@ function createFromUser(user: UserResource, localId: string): LocalUser {
 
 export interface LocalUser {
   name: string;
+  username: string;
   avatar: string | null;
   primaryColor: string;
   secondaryColor: string;

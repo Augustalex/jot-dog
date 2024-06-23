@@ -13,9 +13,11 @@ import { TabBar } from "../tab-bar/TabBar";
 import { UserLoader } from "../user/UserLoader";
 
 export function Document({
+  userFiles,
   file,
   localId,
 }: {
+  userFiles: NoteFile[];
   file: NoteFile;
   localId: string;
 }) {
@@ -23,7 +25,7 @@ export function Document({
 
   return (
     <UserLoader>
-      <FileProvider file={file}>
+      <FileProvider file={file} userFiles={userFiles}>
         <LocalUserProvider localId={localId}>
           <CollaborationProvider>
             <DocumentEditorProvider>

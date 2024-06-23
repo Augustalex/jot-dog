@@ -4,12 +4,17 @@ import Image from "next/image";
 import React from "react";
 import { Home } from "../../jot-two/home/Home";
 import { cookies } from "next/headers";
+import { FileTester } from "../../jot-two/FileTester";
+import { getUserFiles } from "./files/user-file-actions";
 
-export default function HomePage() {
+export default async function HomePage() {
   if (!Features.jot_two) redirect("/one");
 
   const localId = cookies().get("local-id")?.value;
   if (!localId) throw new Error("No local id");
+
+  const files = await getUserFiles();
+  console.log("FILES: ", files);
 
   return (
     <>
@@ -29,8 +34,9 @@ export default function HomePage() {
             height={1280 / 4}
           />
         </div>
+        {/*<FileTester />*/}
         <div className="home-wrapper">
-          <Home localId={localId} />
+          <Home files={files} localId={localId} />
         </div>
       </main>
     </>

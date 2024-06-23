@@ -9,13 +9,15 @@ const Document = dynamic(() => import("./Document").then((m) => m.Document), {
 });
 
 export function DocumentLoader({
+  userFiles,
   file,
   localId,
 }: {
+  userFiles: NoteFile[];
   file: NoteFile;
   localId: string;
 }) {
   useRegisterView(file);
 
-  return <Document file={file} localId={localId} />;
+  return <Document userFiles={userFiles} file={file} localId={localId} />;
 }

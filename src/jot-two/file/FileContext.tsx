@@ -4,6 +4,7 @@ import * as Y from "yjs";
 
 const FileContext = createContext<{
   file: NoteFile;
+  userFiles: NoteFile[];
   doc: Y.Doc;
 } | null>(null);
 
@@ -18,15 +19,17 @@ export function useFileContext() {
 
 export function FileProvider({
   file,
+  userFiles,
   children,
 }: {
   file: NoteFile;
+  userFiles: NoteFile[];
   children: ReactNode;
 }) {
   const [doc] = useState(new Y.Doc());
 
   return (
-    <FileContext.Provider value={{ file, doc }}>
+    <FileContext.Provider value={{ userFiles, file, doc }}>
       {children}
     </FileContext.Provider>
   );
