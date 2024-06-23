@@ -35,7 +35,6 @@ export function FileTester() {
         title: name,
         key,
       });
-      console.log("Created file", file);
     } catch (err) {
       console.log(err);
     }

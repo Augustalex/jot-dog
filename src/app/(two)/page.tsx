@@ -14,7 +14,6 @@ export default async function HomePage() {
   if (!localId) throw new Error("No local id");
 
   const files = await getUserFiles();
-  console.log("FILES: ", files);
 
   return (
     <>

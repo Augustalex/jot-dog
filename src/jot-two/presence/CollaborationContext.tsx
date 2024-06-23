@@ -42,9 +42,7 @@ export function CollaborationProvider({ children }: { children: ReactNode }) {
     }
   }, [doc, editorContext]);
 
-  console.log("run");
   const [provider] = useState<TiptapCollabProvider>(() => {
-    console.log("GENERATE----");
     return new TiptapCollabProvider({
       appId: "7j9y6m10",
       name: file.key,
