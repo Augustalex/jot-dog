@@ -11,6 +11,7 @@ import {
 import { UserLoader } from "../user/UserLoader";
 import { UserBubble } from "../user/UserBubble";
 import { NoteFile } from "../../jot-one/utils/file-utils";
+import { CreateFileModal } from "../create-file/CreateFileModal";
 
 const ibmPlexMono = IBM_Plex_Mono({
   weight: ["100", "200", "300", "400", "500", "600", "700"],
@@ -68,6 +69,11 @@ export function HomeInner({ files }: { files: NoteFile[] }) {
             {myFiles.length > 0 && (
               <div className="mb-4">
                 <h3 className="text-xl text-gray-800">My files</h3>
+                <CreateFileModal>
+                  <button className="p-4 my-2 border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition-transform transform-gpu hover:-translate-y-0.5 cursor-pointer">
+                    <span>Create new file</span>
+                  </button>
+                </CreateFileModal>
                 <div className="w-full">
                   {myFiles.map((file) => {
                     return (
