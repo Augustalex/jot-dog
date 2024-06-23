@@ -46,7 +46,7 @@ export function HomeInner({ files }: { files: NoteFile[] }) {
   }));
   const recentlyViewed = allRecentlyViewed
     .filter(
-      (recentFile) => !recentFile.file.key.includes(`${localUser.username}/`)
+      (recentFile) => !recentFile.file.key.includes(`${localUser.username}/`),
     )
     .map(({ file }) => ({
       key: file.key,
@@ -58,29 +58,36 @@ export function HomeInner({ files }: { files: NoteFile[] }) {
     <div className={ibmPlexMono.className}>
       <div className="relative">
         <div className="ml-8 mt-8">
-          <div className="flex gap-2 mb-4">
-            <UserBubble />
-            <h2 className="text-2xl font-bold text-gray-800">
-              Welcome, {localUser.name}!
-            </h2>
+          <div className="mb-8">
+            <div className="mb-4 flex gap-2">
+              <UserBubble />
+              <h2 className="text-2xl font-bold text-gray-800">
+                Welcome, {localUser.name}!
+              </h2>
+            </div>
+            <div>
+              <CreateFileModal>
+                <button
+                  // className="my-2 cursor-pointer rounded-lg border border-gray-200 p-4 shadow-sm transition-transform hover:-translate-y-0.5 hover:shadow-md"
+                  className={`floating-shadow flex min-w-[96px] cursor-pointer items-center justify-between rounded-lg bg-indigo-100 p-2 text-blue-950 hover:bg-indigo-50`}
+                >
+                  <span>Create new file</span>
+                </button>
+              </CreateFileModal>
+            </div>
           </div>
 
           <div className="w-[600px] max-w-[80vw]">
             {myFiles.length > 0 && (
               <div className="mb-4">
                 <h3 className="text-xl text-gray-800">My files</h3>
-                <CreateFileModal>
-                  <button className="p-4 my-2 border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition-transform transform-gpu hover:-translate-y-0.5 cursor-pointer">
-                    <span>Create new file</span>
-                  </button>
-                </CreateFileModal>
                 <div className="w-full">
                   {myFiles.map((file) => {
                     return (
                       <a
                         key={file.key}
                         href={`/${file.key}`}
-                        className="flex p-4 my-2 border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition-transform transform-gpu hover:-translate-y-0.5 cursor-pointer"
+                        className="my-2 flex transform-gpu cursor-pointer rounded-lg border border-gray-200 p-4 shadow-sm transition-transform hover:-translate-y-0.5 hover:shadow-md"
                       >
                         <span>{capitalize(file.name)}</span>
                       </a>
@@ -98,7 +105,7 @@ export function HomeInner({ files }: { files: NoteFile[] }) {
                       <a
                         key={file.key}
                         href={`/${file.key}`}
-                        className="flex p-4 my-2 border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition-transform transform-gpu hover:-translate-y-0.5 cursor-pointer"
+                        className="my-2 flex transform-gpu cursor-pointer rounded-lg border border-gray-200 p-4 shadow-sm transition-transform hover:-translate-y-0.5 hover:shadow-md"
                       >
                         <span>{capitalize(file.name)}</span>
                         {file.owner && (
@@ -113,7 +120,7 @@ export function HomeInner({ files }: { files: NoteFile[] }) {
               </div>
             )}
           </div>
-          <div className="mt-4 ml-2 mb-8">
+          <div className="mb-8 ml-2 mt-4">
             <span>Any address can be a new note: jot.dog/my-note</span>
           </div>
         </div>
