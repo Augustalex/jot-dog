@@ -1,6 +1,7 @@
 import { CloseButton } from "../tab-bar/CloseButton";
 import { useSideBarState } from "./SideBarState";
 import { useFileContext } from "../file/FileContext";
+import { UserBubble } from "../user/UserBubble";
 
 export function SideBar() {
   const { userFiles } = useFileContext();
@@ -15,7 +16,8 @@ export function SideBar() {
       }}
     >
       <div className="flex flex-col">
-        <div className="ml-auto">
+        <div className="mb-4 flex justify-between">
+          <UserBubble />
           <CloseButton onClick={toggleSideBar} />
         </div>
         <div>

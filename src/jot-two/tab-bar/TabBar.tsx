@@ -1,5 +1,4 @@
 import { FileBar } from "./FileBar";
-import { UserBubble } from "../user/UserBubble";
 import { HomeButton } from "./HomeButton";
 import { ToggleSidebar } from "../side-bar/ToggleSidebar";
 import { useSideBarState } from "../side-bar/SideBarState";
@@ -14,7 +13,6 @@ export function TabBar() {
         <HomeButton />
         <FileBar />
       </div>
-      <UserBubble />
     </>
   );
 }
