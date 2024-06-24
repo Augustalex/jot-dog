@@ -20,6 +20,7 @@
     "@tiptap/extension-collaboration": "^2.4.0",
     "@tiptap/extension-collaboration-cursor": "^2.4.0",
     "@tiptap/extension-highlight": "^2.4.0",
+    "@tiptap/extension-link": "^2.4.0",
     "@tiptap/extension-typography": "^2.4.0",
     "@tiptap/pm": "^2.4.0",
     "@tiptap/react": "^2.4.0",
@@ -48,7 +49,7 @@
     "y-protocols": "^1.0.5",
     "y-webrtc": "^10.2.5",
     "yjs": "^13.6.6",
-    "zustand": "^4.3.8"
+    "zustand": "^4.5.2"
   },
   "devDependencies": {
     "@types/lodash": "^4.17.5",

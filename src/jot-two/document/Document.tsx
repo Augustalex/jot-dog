@@ -11,6 +11,11 @@ import { DocumentTitle } from "./DocumentTitle";
 import { useRegisterView } from "../utils/useRecentlyViewed";
 import { TabBar } from "../tab-bar/TabBar";
 import { UserLoader } from "../user/UserLoader";
+import { SideBar } from "../side-bar/SideBar";
+import { SIDEBAR_WIDTH, useSideBarState } from "../side-bar/SideBarState";
+import { useEffect, useState } from "react";
+import { DocumentActions } from "./DocumentActions";
+import { Features } from "../../features";
 
 export function Document({
   userFiles,
@@ -39,14 +44,52 @@ export function Document({
 }
 
 function DocumentInner() {
-  return (
-    <div className="">
-      <TabBar />
-      <div className="m-auto w-[635px] px-4 py-8 min-h-[100vh] flex flex-col">
-        <DocumentTitle />
-        <PresenceRow />
+  const sideBarIsOpen = useSideBarState((state) => state.open);
 
-        <DocumentEditor />
+  const [leftMargin, setLeftMargin] = useState(0);
+
+  // get required left margin for the document editor to be centered based on its width (635px) and the windows height, also listen to window resize events.
+  useEffect(() => {
+    const updateLeftMargin = () => {
+      const windowWidth = window.innerWidth;
+      const documentWidth = 635;
+      const margin = (windowWidth - documentWidth) / 2;
+      setLeftMargin(margin);
+    };
+    updateLeftMargin();
+    window.addEventListener("resize", updateLeftMargin);
+    return () => window.removeEventListener("resize", updateLeftMargin);
+  }, []);
+
+  return (
+    <div>
+      <div className="relative z-10">
+        <SideBar />
+        <div
+          className="w-full transition-transform duration-200 ease-in-out"
+          style={{
+            transform: sideBarIsOpen
+              ? `translateX(${SIDEBAR_WIDTH}px)`
+              : "translateX(0)",
+          }}
+        >
+          <div className="mb-4 flex items-center justify-between p-4">
+            <TabBar />
+          </div>
+          <div
+            className="flex min-h-[100vh] w-[635px] flex-col px-4 transition-[margin] duration-200 ease-in-out"
+            style={{
+              marginLeft: sideBarIsOpen ? "4px" : `${leftMargin}px`,
+            }}
+          >
+            <DocumentTitle />
+            <div className="my-4 flex items-center gap-4 border-b-[1px] border-gray-200 pb-4">
+              {Features.document_actions && <DocumentActions />}
+              <PresenceRow />
+            </div>
+            <DocumentEditor />
+          </div>
+        </div>
       </div>
     </div>
   );

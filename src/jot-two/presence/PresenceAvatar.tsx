@@ -36,7 +36,7 @@ function AvatarTooltip({
         <TooltipTrigger>{children}</TooltipTrigger>
         <TooltipPortal>
           <TooltipContent
-            className="bg-white text-gray-800 text-sm rounded-lg py-2 px-3 border border-gray-200 shadow-md"
+            className="z-10 rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm text-gray-800 shadow-md"
             sideOffset={5}
           >
             {user.name}
@@ -56,20 +56,17 @@ export function UserAvatar({
 }) {
   return (
     <RadixAvatar.Root
-      className={`
-            flex w-[32px] h-[32px] rounded-full overflow-hidden items-center justify-center
-            ${isLocalUser ? " border-2 border-indigo-500" : ""}
-      `}
+      className={`flex h-[32px] w-[32px] items-center justify-center overflow-hidden rounded-full ${isLocalUser ? "border-2 border-indigo-500" : ""} `}
     >
       {user.avatar && (
         <RadixAvatar.Image
-          className="w-full h-full object-cover"
+          className="h-full w-full object-cover"
           src={user.avatar}
           alt={user.name}
         />
       )}
       <RadixAvatar.Fallback
-        className="w-full h-full flex items-center justify-center text-sm text-white font-bold"
+        className="flex h-full w-full items-center justify-center text-sm font-bold text-white"
         style={{
           backgroundColor: user.primaryColor,
         }}

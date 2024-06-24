@@ -117,6 +117,24 @@
   strong {
     font-weight: 600;
   }
+
+  a {
+    cursor: pointer;
+    color: #828282; // Subtle dark grey
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.2s ease, color 0.2s ease;
+
+    &:hover {
+      color: #2c3e50; // Slightly darker grey on hover
+      border-bottom: 1px solid #2c3e50; // Underline on hover
+    }
+
+    &:focus {
+      outline: none;
+      border-bottom: 1px solid #2c3e50; // Consistent underline on focus
+    }
+  }
 }
 
 /* Give a remote user a caret */

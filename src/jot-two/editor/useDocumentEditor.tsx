@@ -8,6 +8,7 @@ import CharacterCount from "@tiptap/extension-character-count";
 import Collaboration from "@tiptap/extension-collaboration";
 import CollaborationCursor from "@tiptap/extension-collaboration-cursor";
 import { useLocalUserContext } from "../local-user/LocalUserContext";
+import Link from "@tiptap/extension-link";
 
 export function useDocumentEditor() {
   const { localUser } = useLocalUserContext();
@@ -21,6 +22,11 @@ export function useDocumentEditor() {
       }),
       Highlight,
       Typography,
+      Link.configure({
+        openOnClick: true,
+        autolink: true,
+        linkOnPaste: true,
+      }),
       CharacterCount.configure({
         limit: 10000,
       }),
