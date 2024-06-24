@@ -15,7 +15,7 @@ export function DocumentTitle() {
 
   return (
     <div className={ibmPlexMono.className}>
-      <h1 className="spacing mb-2 text-5xl font-semibold tracking-tight text-zinc-900">
+      <h1 className="spacing text-5xl font-semibold tracking-tight text-zinc-900">
         {title}
       </h1>
     </div>
