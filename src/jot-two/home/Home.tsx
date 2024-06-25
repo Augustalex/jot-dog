@@ -68,7 +68,6 @@ export function HomeInner({ files }: { files: NoteFile[] }) {
             <div>
               <CreateFileModal>
                 <button
-                  // className="my-2 cursor-pointer rounded-lg border border-gray-200 p-4 shadow-sm transition-transform hover:-translate-y-0.5 hover:shadow-md"
                   className={`floating-shadow flex min-w-[96px] cursor-pointer items-center justify-between rounded-lg bg-indigo-100 p-2 text-blue-950 hover:bg-indigo-50`}
                 >
                   <span>Create new file</span>

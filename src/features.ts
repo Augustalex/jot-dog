@@ -1,4 +1,4 @@
 export const Features = {
   jot_two: true,
-  document_actions: false,
+  document_actions: true,
 };

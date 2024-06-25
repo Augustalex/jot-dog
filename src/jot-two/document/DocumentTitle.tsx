@@ -1,5 +1,6 @@
 import { useFileContext } from "../file/FileContext";
 import { IBM_Plex_Mono } from "next/font/google";
+import { DocumentSettingsModal } from "../editor/DocumentSettingsModal";
 
 const ibmPlexMono = IBM_Plex_Mono({
   weight: ["100", "200", "300", "400", "500", "600", "700"],
@@ -14,10 +15,14 @@ export function DocumentTitle() {
     .join(" ");
 
   return (
-    <div className={ibmPlexMono.className}>
-      <h1 className="spacing text-5xl font-semibold tracking-tight text-zinc-900">
-        {title}
-      </h1>
-    </div>
+    <DocumentSettingsModal>
+      <div className={ibmPlexMono.className}>
+        <button className="-ml-2 rounded-lg p-2 outline-gray-200 hover:outline">
+          <h1 className="spacing text-left text-5xl font-semibold tracking-tight text-zinc-900">
+            {title}
+          </h1>
+        </button>
+      </div>
+    </DocumentSettingsModal>
   );
 }
