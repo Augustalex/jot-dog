@@ -1,21 +1,22 @@
 import React, { ReactNode, useTransition } from "react";
 import * as Dialog from "@radix-ui/react-dialog";
 import * as Form from "@radix-ui/react-form";
-import { updateUserFile } from "../../app/(two)/files/user-file-actions";
+import { createUserFile } from "../../app/(two)/files/user-file-actions";
 import { useRouter } from "next/navigation";
 import { useLocalUserContext } from "../local-user/LocalUserContext";
+import { isAddressChanged } from "../utils/isAddressChanged";
+import { matchesExistingAddress } from "../editor/matchesExistingAddress";
 import { useFileContext } from "../file/FileContext";
 import { useRecentlyViewed } from "../utils/useRecentlyViewed";
-import { isAddressChanged } from "../utils/isAddressChanged";
 import { getAddress } from "../utils/getAddress";
-import { matchesExistingAddress } from "./matchesExistingAddress";
+import { FileType } from "../../jot-one/utils/file-utils";
 
 type FormDataType = {
-  title: string;
+  url: string;
   address: string;
 };
 
-export function DocumentSettingsModal({ children }: { children: ReactNode }) {
+export function LinkFileModal({ children }: { children: ReactNode }) {
   const { file, userFiles } = useFileContext();
   const { removeFileFromRecent } = useRecentlyViewed();
   const [open, setOpen] = React.useState(false);
@@ -30,17 +31,17 @@ export function DocumentSettingsModal({ children }: { children: ReactNode }) {
         <Dialog.Overlay className="fixed inset-0 z-10 bg-black bg-opacity-50 transition-opacity duration-150" />
         <Dialog.Content className="fixed left-1/2 top-1/2 z-10 max-h-[85vh] w-[90vw] max-w-lg -translate-x-1/2 -translate-y-1/2 transform rounded-lg bg-white p-6 shadow-lg focus:outline-none focus:ring-2 focus:ring-indigo-500">
           <Dialog.Title className="mb-4 text-xl font-medium text-gray-900">
-            Edit document settings
+            Link to a file
           </Dialog.Title>
           <Dialog.Description className="hidden">
-            Update the title and address of your document.
+            Link a file to be accessible within Jot.
           </Dialog.Description>
 
           <Form.Root className="flex flex-1 flex-col gap-4" onSubmit={onSubmit}>
-            <Form.Field name="title" className="space-y-2">
+            <Form.Field name="url" className="space-y-2">
               <div className="flex items-baseline justify-between">
-                <Form.Label htmlFor="title" className="text-sm text-gray-700">
-                  Title
+                <Form.Label htmlFor="url" className="text-sm text-gray-700">
+                  URL
                 </Form.Label>
               </div>
               <Form.Control asChild>
@@ -48,15 +49,15 @@ export function DocumentSettingsModal({ children }: { children: ReactNode }) {
                   required
                   className="inline-flex w-80 flex-1 items-center justify-center rounded-md border border-gray-300 px-3 py-2 text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
                   type="text"
-                  id="title"
-                  name="title"
+                  id="url"
+                  name="url"
                   defaultValue={file.name}
                   inputMode="text"
                 />
               </Form.Control>
               <div className="ml-1 mt-1 flex flex-col items-baseline justify-between gap-1 text-sm text-red-500">
                 <Form.Message match="valueMissing">
-                  Please enter a title
+                  Please enter a URL
                 </Form.Message>
               </div>
             </Form.Field>
@@ -121,7 +122,7 @@ export function DocumentSettingsModal({ children }: { children: ReactNode }) {
     const formData = new FormData(form);
     const data = Object.fromEntries(formData.entries()) as FormDataType;
 
-    if (!data.title || !data.address) return;
+    if (!data.url || !data.address) return;
     if (
       isAddressChanged(file, data.address) &&
       matchesExistingAddress(data.address, userFiles)
@@ -129,16 +130,17 @@ export function DocumentSettingsModal({ children }: { children: ReactNode }) {
       return;
 
     startSubmit(async () => {
-      await updateUserFile(file.key, {
-        title: data.title ?? "Untitled",
-        key: data.address ?? "untitled",
+      await createUserFile({
+        title: data.url,
+        key: data.address,
+        fileType: FileType.Link,
       });
       setOpen(false);
 
       if (isAddressChanged(file, data.address)) {
         removeFileFromRecent(file);
         router.push(`/${localUser.username}/${data.address}`);
-      } else if (data.title !== file.name) {
+      } else if (data.url !== file.name) {
         window.location.reload();
       }
     });

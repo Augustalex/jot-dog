@@ -1,8 +1,8 @@
 "use client";
 
-import { NoteFile } from "../../jot-one/utils/file-utils";
+import { FileType, NoteFile } from "../../jot-one/utils/file-utils";
 import { CollaborationProvider } from "../presence/CollaborationContext";
-import { FileProvider } from "../file/FileContext";
+import { FileProvider, useFileContext } from "../file/FileContext";
 import { PresenceRow } from "../presence/PresenceRow";
 import { DocumentEditorProvider } from "../editor/DocumentEditorProvider";
 import { LocalUserProvider } from "../local-user/LocalUserContext";
@@ -54,6 +54,39 @@ export function Document({
 const EDITOR_MAX_WIDTH = 620;
 
 function DocumentInner() {
+  const { file } = useFileContext();
+  const sideBarIsOpen = useSideBarState((state) => state.open);
+
+  return (
+    <div className="relative">
+      <div className="hidden md:block">
+        <DesktopSideBar />
+      </div>
+      <div className="md:hidden">
+        <MobileSideBar />
+      </div>
+      <div
+        className={`${TRANSITION_TRANSFORM} ${TRANSITION_DURATION} ${TRANSITION_EASE} z-0 flex h-svh flex-col`}
+        style={{
+          width: `calc(100% - ${sideBarIsOpen ? SIDEBAR_WIDTH : 0}px)`,
+          transform: sideBarIsOpen
+            ? `translateX(${SIDEBAR_WIDTH}px)`
+            : "translateX(0)",
+        }}
+      >
+        <div className="mb-4 flex w-full max-w-full items-center gap-2 overflow-x-auto p-4">
+          <TabBar />
+        </div>
+        {file.fileType === FileType.YDoc && <DocumentEditorWindow />}
+        {file.fileType === FileType.Link && (
+          <iframe className="h-full w-full" src={file.name} />
+        )}
+      </div>
+    </div>
+  );
+}
+
+function DocumentEditorWindow() {
   const sideBarIsOpen = useSideBarState((state) => state.open);
 
   const [documentWidth, setDocumentWidth] = useState(0);
@@ -68,44 +101,24 @@ function DocumentInner() {
   }, [sideBarIsOpen]);
 
   const sideBarOffset = sideBarIsOpen ? SIDEBAR_WIDTH : 0;
+
   const editorWindowWidth = documentWidth - sideBarOffset;
   const editorWidth = Math.min(EDITOR_MAX_WIDTH, documentWidth);
 
   return (
-    <div className="relative">
-      <div className="hidden md:block">
-        <DesktopSideBar />
+    <div
+      className={`flex min-h-[100vh] flex-col px-4 ${TRANSITION_TRANSFORM} ${TRANSITION_DURATION} ${TRANSITION_EASE}`}
+      style={{
+        transform: `translateX(${editorWindowWidth / 2 - editorWidth / 2}px)`,
+        width: `${editorWidth}px`,
+      }}
+    >
+      <DocumentTitle />
+      <div className="my-4 flex items-center gap-4 border-b-[1px] border-gray-200 pb-4">
+        {Features.document_actions && <DocumentActions />}
+        <PresenceRow />
       </div>
-      <div className="md:hidden">
-        <MobileSideBar />
-      </div>
-      <div
-        className={`${TRANSITION_TRANSFORM} ${TRANSITION_DURATION} ${TRANSITION_EASE} z-0`}
-        style={{
-          width: `calc(100% - ${sideBarIsOpen ? SIDEBAR_WIDTH : 0}px)`,
-          transform: sideBarIsOpen
-            ? `translateX(${SIDEBAR_WIDTH}px)`
-            : "translateX(0)",
-        }}
-      >
-        <div className="mb-4 flex w-full max-w-full items-center gap-2 overflow-x-auto p-4">
-          <TabBar />
-        </div>
-        <div
-          className={`flex min-h-[100vh] flex-col px-4 ${TRANSITION_TRANSFORM} ${TRANSITION_DURATION} ${TRANSITION_EASE}`}
-          style={{
-            transform: `translateX(${editorWindowWidth / 2 - editorWidth / 2}px)`,
-            width: `${editorWidth}px`,
-          }}
-        >
-          <DocumentTitle />
-          <div className="my-4 flex items-center gap-4 border-b-[1px] border-gray-200 pb-4">
-            {Features.document_actions && <DocumentActions />}
-            <PresenceRow />
-          </div>
-          <DocumentEditor />
-        </div>
-      </div>
+      <DocumentEditor />
     </div>
   );
 }

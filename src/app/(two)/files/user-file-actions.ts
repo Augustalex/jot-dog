@@ -8,9 +8,11 @@ import { getUsername } from "./user-helpers";
 export async function createUserFile({
   title,
   key,
+  fileType = FileType.YDoc,
 }: {
   title: string;
   key: string;
+  fileType?: FileType;
 }) {
   auth().protect();
   const user = await currentUser();
@@ -25,7 +27,7 @@ export async function createUserFile({
   return await createFile(username, {
     name: title,
     key: `${username}/${key}`,
-    fileType: FileType.YDoc,
+    fileType,
   });
 }
 
@@ -34,9 +36,11 @@ export async function updateUserFile(
   {
     title,
     key,
+    fileType = FileType.YDoc,
   }: {
     title: string;
     key: string;
+    fileType?: FileType;
   },
 ) {
   auth().protect();
@@ -52,7 +56,7 @@ export async function updateUserFile(
   return await updateFile(username, currentFileKey, {
     name: title,
     key: `${username}/${key}`,
-    fileType: FileType.YDoc,
+    fileType,
   });
 }
 
