@@ -23,6 +23,7 @@ import {
 } from "./animation";
 import { useRegisterOpenFile } from "../utils/useOpenFiles";
 import { MobileSideBar } from "../side-bar/MobileSideBar";
+import { LinkWindow } from "./LinkWindow";
 
 export function Document({
   userFiles,
@@ -78,12 +79,7 @@ function DocumentInner() {
           <TabBar />
         </div>
         {file.fileType === FileType.YDoc && <DocumentEditorWindow />}
-        {file.fileType === FileType.Link && (
-          <iframe
-            className="mx-4 mb-4 flex-grow rounded-lg border-2 border-gray-200"
-            src={file.name}
-          />
-        )}
+        {file.fileType === FileType.Link && <LinkWindow />}
       </div>
     </div>
   );

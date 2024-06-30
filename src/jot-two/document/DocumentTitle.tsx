@@ -1,6 +1,8 @@
 import { useFileContext } from "../file/FileContext";
 import { IBM_Plex_Mono } from "next/font/google";
 import { DocumentSettingsModal } from "../editor/DocumentSettingsModal";
+import { FileType } from "../../jot-one/utils/file-utils";
+import { getAddress } from "../utils/getAddress";
 
 const ibmPlexMono = IBM_Plex_Mono({
   weight: ["100", "200", "300", "400", "500", "600", "700"],
@@ -9,7 +11,9 @@ const ibmPlexMono = IBM_Plex_Mono({
 export function DocumentTitle() {
   const { file } = useFileContext();
 
-  const title = file.name
+  const title = (
+    file.fileType === FileType.Link ? getAddress(file.key) : file.name
+  )
     .split("-")
     .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
     .join(" ");
