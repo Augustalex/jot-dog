@@ -7,9 +7,11 @@ import {
   TRANSITION_TRANSFORM,
 } from "../document/animation";
 import { useRecentlyViewed } from "../utils/useRecentlyViewed";
+import { CreateFileModal } from "../create-file/CreateFileModal";
+import React from "react";
 
 export function SideBar() {
-  const { userFiles } = useFileContext();
+  const { userFiles, file: openFile } = useFileContext();
   const { recentlyViewed } = useRecentlyViewed();
   const sideBarIsOpen = useSideBarState((state) => state.open);
 
@@ -26,8 +28,17 @@ export function SideBar() {
       }}
     >
       <div className="flex flex-col">
-        <div className="mb-4 flex justify-between">
+        <div className="mb-6 flex justify-between">
           <UserBubble />
+        </div>
+        <div className="mb-6 flex justify-between">
+          <CreateFileModal>
+            <button
+              className={`floating-shadow w-full cursor-pointer rounded-lg p-2 text-blue-950 hover:bg-indigo-50`}
+            >
+              <span>Create new file</span>
+            </button>
+          </CreateFileModal>
         </div>
         <div>
           <h3 className="text-lg text-gray-800">My files</h3>
@@ -37,7 +48,7 @@ export function SideBar() {
                 <a
                   key={file.key}
                   href={`/${file.key}`}
-                  className="my-2 flex transform-gpu cursor-pointer rounded-lg border border-gray-200 p-4 shadow-sm transition-transform hover:-translate-y-0.5 hover:shadow-md"
+                  className={`my-2 flex transform-gpu cursor-pointer rounded-lg border border-gray-200 p-4 hover:bg-indigo-50 ${file.key === openFile.key ? "bg-indigo-100" : ""}`}
                 >
                   <span>{file.name}</span>
                 </a>
@@ -54,7 +65,7 @@ export function SideBar() {
                   <a
                     key={file.key}
                     href={`/${file.key}`}
-                    className="my-2 flex transform-gpu cursor-pointer rounded-lg border border-gray-200 p-4 shadow-sm transition-transform hover:-translate-y-0.5 hover:shadow-md"
+                    className={`my-2 flex transform-gpu cursor-pointer rounded-lg border border-gray-200 p-4 hover:bg-indigo-50 ${file.key === openFile.key ? "bg-indigo-100" : ""}`}
                   >
                     <span>{file.name}</span>
                   </a>

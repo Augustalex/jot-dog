@@ -55,7 +55,7 @@ export function HomeInner({ files }: { files: NoteFile[] }) {
     }));
 
   return (
-    <div className={ibmPlexMono.className}>
+    <div>
       <div className="relative">
         <div className="ml-8 mt-8">
           <div className="mb-8">
@@ -86,7 +86,7 @@ export function HomeInner({ files }: { files: NoteFile[] }) {
                       <a
                         key={file.key}
                         href={`/${file.key}`}
-                        className="my-2 flex transform-gpu cursor-pointer rounded-lg border border-gray-200 p-4 shadow-sm transition-transform hover:-translate-y-0.5 hover:shadow-md"
+                        className="my-2 flex transform-gpu cursor-pointer rounded-lg border border-gray-200 p-4 hover:bg-indigo-50"
                       >
                         <span>{capitalize(file.name)}</span>
                       </a>
@@ -104,7 +104,7 @@ export function HomeInner({ files }: { files: NoteFile[] }) {
                       <a
                         key={file.key}
                         href={`/${file.key}`}
-                        className="my-2 flex transform-gpu cursor-pointer rounded-lg border border-gray-200 p-4 shadow-sm transition-transform hover:-translate-y-0.5 hover:shadow-md"
+                        className="my-2 flex transform-gpu cursor-pointer rounded-lg border border-gray-200 p-4 hover:bg-indigo-50"
                       >
                         <span>{capitalize(file.name)}</span>
                         {file.owner && (
