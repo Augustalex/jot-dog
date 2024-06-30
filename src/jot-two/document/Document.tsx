@@ -22,6 +22,7 @@ import {
   TRANSITION_EASE,
   TRANSITION_TRANSFORM,
 } from "./animation";
+import { useRegisterOpenFile } from "../utils/useOpenFiles";
 
 export function Document({
   userFiles,
@@ -33,6 +34,7 @@ export function Document({
   localId: string;
 }) {
   useRegisterView(file);
+  useRegisterOpenFile(file);
 
   return (
     <UserLoader>

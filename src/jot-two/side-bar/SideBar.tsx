@@ -6,10 +6,17 @@ import {
   TRANSITION_EASE,
   TRANSITION_TRANSFORM,
 } from "../document/animation";
+import { useRecentlyViewed } from "../utils/useRecentlyViewed";
 
 export function SideBar() {
   const { userFiles } = useFileContext();
+  const { recentlyViewed } = useRecentlyViewed();
   const sideBarIsOpen = useSideBarState((state) => state.open);
+
+  const recentlyViewedOthersFiles = recentlyViewed.filter(
+    ({ file }) =>
+      userFiles.findIndex((userFile) => userFile.key === file.key) === -1,
+  );
 
   return (
     <div
@@ -38,6 +45,24 @@ export function SideBar() {
             })}
           </div>
         </div>
+        {recentlyViewedOthersFiles.length > 0 && (
+          <div className="mt-2">
+            <h3 className="text-lg text-gray-800">Viewed files</h3>
+            <div className="w-full">
+              {recentlyViewedOthersFiles.map(({ file }) => {
+                return (
+                  <a
+                    key={file.key}
+                    href={`/${file.key}`}
+                    className="my-2 flex transform-gpu cursor-pointer rounded-lg border border-gray-200 p-4 shadow-sm transition-transform hover:-translate-y-0.5 hover:shadow-md"
+                  >
+                    <span>{file.name}</span>
+                  </a>
+                );
+              })}
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
