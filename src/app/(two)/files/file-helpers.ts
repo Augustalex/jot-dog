@@ -48,6 +48,13 @@ export async function updateFile(
   return mergeFile;
 }
 
+export async function deleteFile(fileKey: string, username: string) {
+  const currentFiles = await getFiles(username);
+  console.log("key", fileKey);
+  const newFiles = currentFiles.filter((f) => f.key !== fileKey);
+  await setFiles(username, newFiles);
+}
+
 function getFileStorageKey(username: string) {
   return `${username}:${FILES_STORAGE_KEY}`;
 }

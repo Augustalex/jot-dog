@@ -1,6 +1,6 @@
 "use server";
 
-import { createFile, getFiles, updateFile } from "./file-helpers";
+import { createFile, deleteFile, getFiles, updateFile } from "./file-helpers";
 import { auth, currentUser } from "@clerk/nextjs/server";
 import { FileType } from "../../../jot-one/utils/file-utils";
 import { getUsername } from "./user-helpers";
@@ -105,4 +105,18 @@ export async function getOrCreateUserFile({
   }
 
   return file;
+}
+
+export async function deleteUserFile(fileKey: string) {
+  auth().protect();
+  const user = await currentUser();
+  if (!user) throw new Error("User not found");
+
+  const username = getUsername({
+    id: user.id,
+    primaryEmailAddress: user.primaryEmailAddress?.emailAddress ?? null,
+    username: user.username,
+    fullName: user.fullName,
+  });
+  return await deleteFile(fileKey, username);
 }

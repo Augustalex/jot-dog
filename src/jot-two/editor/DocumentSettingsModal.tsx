@@ -1,7 +1,10 @@
 import React, { ReactNode, useTransition } from "react";
 import * as Dialog from "@radix-ui/react-dialog";
 import * as Form from "@radix-ui/react-form";
-import { updateUserFile } from "../../app/(two)/files/user-file-actions";
+import {
+  deleteUserFile,
+  updateUserFile,
+} from "../../app/(two)/files/user-file-actions";
 import { useRouter } from "next/navigation";
 import { useLocalUserContext } from "../local-user/LocalUserContext";
 import { useFileContext } from "../file/FileContext";
@@ -9,6 +12,7 @@ import { useRecentlyViewed } from "../utils/useRecentlyViewed";
 import { isAddressChanged } from "../utils/isAddressChanged";
 import { getAddress } from "../utils/getAddress";
 import { matchesExistingAddress } from "./matchesExistingAddress";
+import { useOpenFiles } from "../utils/useOpenFiles";
 
 type FormDataType = {
   title: string;
@@ -17,9 +21,15 @@ type FormDataType = {
 
 export function DocumentSettingsModal({ children }: { children: ReactNode }) {
   const { file, userFiles } = useFileContext();
+  const { closeFile } = useOpenFiles();
   const { removeFileFromRecent } = useRecentlyViewed();
   const [open, setOpen] = React.useState(false);
   const [submitPending, startSubmit] = useTransition();
+
+  const [pressedDelete, setPressedDelete] = React.useState<number | null>(null);
+  const [tryingToDelete, tryToDelete] = useTransition();
+  const [deletingFile, deleteFile] = useTransition();
+
   const router = useRouter();
   const { localUser } = useLocalUserContext();
 
@@ -30,10 +40,10 @@ export function DocumentSettingsModal({ children }: { children: ReactNode }) {
         <Dialog.Overlay className="fixed inset-0 z-10 bg-black bg-opacity-50 transition-opacity duration-150" />
         <Dialog.Content className="fixed left-1/2 top-1/2 z-10 max-h-[85vh] w-[90vw] max-w-lg -translate-x-1/2 -translate-y-1/2 transform rounded-lg bg-white p-6 shadow-lg focus:outline-none focus:ring-2 focus:ring-indigo-500">
           <Dialog.Title className="mb-4 text-xl font-medium text-gray-900">
-            Edit document settings
+            Edit jot settings
           </Dialog.Title>
           <Dialog.Description className="hidden">
-            Update the title and address of your document.
+            Update the title and address of your jot.
           </Dialog.Description>
 
           <Form.Root className="flex flex-1 flex-col gap-4" onSubmit={onSubmit}>
@@ -96,9 +106,21 @@ export function DocumentSettingsModal({ children }: { children: ReactNode }) {
               </div>
             </Form.Field>
 
-            <div className="mt-6 flex justify-end">
+            <div className="mt-6 flex items-end justify-end">
+              <button
+                disabled={deletingFile}
+                onClick={tryingToDelete ? reallyDeleteJot : deleteJot}
+                className="mr-2 rounded-md bg-red-500 px-4 py-2 text-white shadow hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-600"
+              >
+                {deletingFile
+                  ? "Deleting"
+                  : tryingToDelete
+                    ? "Are you sure?"
+                    : "Delete jot"}
+              </button>
+
               <Form.Submit
-                disabled={submitPending}
+                disabled={submitPending || deletingFile}
                 onSubmit={onSubmit}
                 className="mt-4 rounded-md bg-green-500 px-4 py-2 text-white shadow hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-600 disabled:cursor-not-allowed disabled:bg-gray-300 disabled:disabled:bg-gray-300 disabled:disabled:text-gray-700 disabled:text-gray-700 disabled:disabled:shadow-none disabled:shadow-none disabled:disabled:ring-gray-300 disabled:disabled:hover:bg-gray-300 disabled:hover:bg-gray-300 disabled:disabled:focus:ring-gray-300 disabled:focus:ring-gray-300"
               >
@@ -113,6 +135,38 @@ export function DocumentSettingsModal({ children }: { children: ReactNode }) {
       </Dialog.Portal>
     </Dialog.Root>
   );
+
+  function deleteJot(e: React.MouseEvent) {
+    e.preventDefault();
+    e.stopPropagation();
+
+    setPressedDelete(Date.now());
+    tryToDelete(() => {
+      return new Promise((resolve) =>
+        setTimeout(() => {
+          setPressedDelete(null);
+          resolve();
+        }, 2500),
+      );
+    });
+  }
+
+  async function reallyDeleteJot(e: React.MouseEvent) {
+    e.preventDefault();
+    e.stopPropagation();
+
+    if (!pressedDelete) return;
+    const timeSincePressedDelete = Date.now() - pressedDelete;
+    if (timeSincePressedDelete < 250) return;
+
+    deleteFile(async () => {
+      setPressedDelete(null);
+      removeFileFromRecent(file);
+      closeFile(file);
+      await deleteUserFile(file.key);
+      router.push(`/${localUser.username}`);
+    });
+  }
 
   async function onSubmit(event: React.FormEvent) {
     event.preventDefault();
@@ -137,6 +191,7 @@ export function DocumentSettingsModal({ children }: { children: ReactNode }) {
 
       if (isAddressChanged(file, data.address)) {
         removeFileFromRecent(file);
+        closeFile(file);
         router.push(`/${localUser.username}/${data.address}`);
       } else if (data.title !== file.name) {
         window.location.reload();
