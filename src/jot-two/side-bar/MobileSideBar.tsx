@@ -1,19 +1,16 @@
 import { useSideBarState } from "./SideBarState";
 import { useFileContext } from "../file/FileContext";
 import { UserBubble } from "../user/UserBubble";
-import {
-  TRANSITION_DURATION,
-  TRANSITION_EASE,
-  TRANSITION_TRANSFORM,
-} from "../document/animation";
+import { CloseButton } from "../tab-bar/CloseButton";
 
-export function SideBar() {
+export function MobileSideBar() {
   const { userFiles } = useFileContext();
   const sideBarIsOpen = useSideBarState((state) => state.open);
+  const toggleSideBar = useSideBarState((state) => state.toggle);
 
   return (
     <div
-      className={`w-max-[90vw] fixed min-h-svh transform-gpu border-r-[1px] border-gray-200 bg-white p-4 shadow-lg sm:w-[40vw] md:w-[240px] ${TRANSITION_TRANSFORM} ${TRANSITION_DURATION} ${TRANSITION_EASE}`}
+      className={`fixed left-0 top-0 z-10 min-h-svh w-svw transform-gpu border-r-2 border-gray-200 bg-white p-4 transition-transform duration-200 ease-in-out`}
       style={{
         transform: sideBarIsOpen ? "translateX(0)" : "translateX(-100%)",
       }}
@@ -21,6 +18,7 @@ export function SideBar() {
       <div className="flex flex-col">
         <div className="mb-4 flex justify-between">
           <UserBubble />
+          <CloseButton onClick={toggleSideBar} />
         </div>
         <div>
           <h3 className="text-lg text-gray-800">My files</h3>

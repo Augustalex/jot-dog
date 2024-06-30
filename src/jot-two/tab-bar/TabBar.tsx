@@ -5,11 +5,9 @@ import { ToggleSidebar } from "../side-bar/ToggleSidebar";
 export function TabBar() {
   return (
     <>
-      <div className="flex gap-2">
-        <ToggleSidebar />
-        <HomeButton />
-        <FileBar />
-      </div>
+      <ToggleSidebar />
+      <HomeButton />
+      <FileBar />
     </>
   );
 }
