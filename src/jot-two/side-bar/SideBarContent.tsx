@@ -3,6 +3,8 @@ import { useRecentlyViewed } from "../utils/useRecentlyViewed";
 import { CreateFileModal } from "../create-file/CreateFileModal";
 import React from "react";
 import { LinkFileModal } from "../link-file/LinkFileModal";
+import { FileType } from "../../jot-one/utils/file-utils";
+import { getAddress } from "../utils/getAddress";
 
 export function SideBarContent() {
   const { userFiles, file: openFile } = useFileContext();
@@ -41,7 +43,11 @@ export function SideBarContent() {
                 href={`/${file.key}`}
                 className={`my-2 flex transform-gpu cursor-pointer rounded-lg border border-gray-200 p-4 hover:bg-indigo-50 ${file.key === openFile.key ? "bg-indigo-100" : ""}`}
               >
-                <span>{file.name}</span>
+                <span>
+                  {file.fileType === FileType.YDoc
+                    ? file.name
+                    : getAddress(file.key)}
+                </span>
               </a>
             );
           })}

@@ -74,12 +74,15 @@ function DocumentInner() {
             : "translateX(0)",
         }}
       >
-        <div className="mb-4 flex w-full max-w-full items-center gap-2 overflow-x-auto p-4">
+        <div className="flex w-full max-w-full flex-auto flex-shrink-0 flex-grow-0 items-center gap-2 overflow-x-auto p-4">
           <TabBar />
         </div>
         {file.fileType === FileType.YDoc && <DocumentEditorWindow />}
         {file.fileType === FileType.Link && (
-          <iframe className="h-full w-full" src={file.name} />
+          <iframe
+            className="mx-4 mb-4 flex-grow rounded-lg border-2 border-gray-200"
+            src={file.name}
+          />
         )}
       </div>
     </div>
@@ -107,7 +110,7 @@ function DocumentEditorWindow() {
 
   return (
     <div
-      className={`flex min-h-[100vh] flex-col px-4 ${TRANSITION_TRANSFORM} ${TRANSITION_DURATION} ${TRANSITION_EASE}`}
+      className={`mx-4 mt-4 flex flex-grow flex-col ${TRANSITION_TRANSFORM} ${TRANSITION_DURATION} ${TRANSITION_EASE}`}
       style={{
         transform: `translateX(${editorWindowWidth / 2 - editorWidth / 2}px)`,
         width: `${editorWidth}px`,
