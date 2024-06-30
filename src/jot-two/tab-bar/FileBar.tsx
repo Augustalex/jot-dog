@@ -11,7 +11,6 @@ export function FileBar() {
   if (!isReady) return null;
 
   const sortedFiles = openFiles.toSorted((a, b) =>
-    // a.file.name.localeCompare(b.file.name),
     a.firstOpenedTime.localeCompare(b.firstOpenedTime),
   );
 
@@ -35,9 +34,10 @@ export function FileBar() {
                 closeFile(openFile.file);
 
                 if (selected) {
-                  const anotherOpenFile = openFiles.find(
-                    (recent) => recent.file.key !== file.key,
-                  );
+                  const anotherOpenFile = sortedFiles
+                    .slice()
+                    .reverse()
+                    .find((recent) => recent.file.key !== file.key);
                   if (anotherOpenFile) {
                     router.push(`/${anotherOpenFile.file.key}`);
                   } else {
