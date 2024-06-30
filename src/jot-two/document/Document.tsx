@@ -11,18 +11,18 @@ import { DocumentTitle } from "./DocumentTitle";
 import { useRegisterView } from "../utils/useRecentlyViewed";
 import { TabBar } from "../tab-bar/TabBar";
 import { UserLoader } from "../user/UserLoader";
-import { SideBar } from "../side-bar/SideBar";
+import { DesktopSideBar } from "../side-bar/DesktopSideBar";
 import { SIDEBAR_WIDTH, useSideBarState } from "../side-bar/SideBarState";
 import { useLayoutEffect, useState } from "react";
 import { DocumentActions } from "./DocumentActions";
 import { Features } from "../../features";
-import { MobileSideBar } from "../side-bar/MobileSideBar";
 import {
   TRANSITION_DURATION,
   TRANSITION_EASE,
   TRANSITION_TRANSFORM,
 } from "./animation";
 import { useRegisterOpenFile } from "../utils/useOpenFiles";
+import { MobileSideBar } from "../side-bar/MobileSideBar";
 
 export function Document({
   userFiles,
@@ -72,42 +72,38 @@ function DocumentInner() {
   const editorWidth = Math.min(EDITOR_MAX_WIDTH, documentWidth);
 
   return (
-    <div>
-      <div className="relative z-10">
-        <div className="fixed left-0 top-0">
-          <div className="hidden md:block">
-            <SideBar />
-          </div>
-          <div className="md:hidden">
-            <MobileSideBar />
-          </div>
+    <div className="relative">
+      <div className="hidden md:block">
+        <DesktopSideBar />
+      </div>
+      <div className="md:hidden">
+        <MobileSideBar />
+      </div>
+      <div
+        className={`${TRANSITION_TRANSFORM} ${TRANSITION_DURATION} ${TRANSITION_EASE} z-0`}
+        style={{
+          width: `calc(100% - ${sideBarIsOpen ? SIDEBAR_WIDTH : 0}px)`,
+          transform: sideBarIsOpen
+            ? `translateX(${SIDEBAR_WIDTH}px)`
+            : "translateX(0)",
+        }}
+      >
+        <div className="mb-4 flex w-full max-w-full items-center gap-2 overflow-x-auto p-4">
+          <TabBar />
         </div>
         <div
-          className={`${TRANSITION_TRANSFORM} ${TRANSITION_DURATION} ${TRANSITION_EASE}`}
+          className={`flex min-h-[100vh] flex-col px-4 ${TRANSITION_TRANSFORM} ${TRANSITION_DURATION} ${TRANSITION_EASE}`}
           style={{
-            width: `calc(100% - ${sideBarIsOpen ? SIDEBAR_WIDTH : 0}px)`,
-            transform: sideBarIsOpen
-              ? `translateX(${SIDEBAR_WIDTH}px)`
-              : "translateX(0)",
+            transform: `translateX(${editorWindowWidth / 2 - editorWidth / 2}px)`,
+            width: `${editorWidth}px`,
           }}
         >
-          <div className="mb-4 flex w-full max-w-full items-center gap-2 overflow-x-auto p-4">
-            <TabBar />
+          <DocumentTitle />
+          <div className="my-4 flex items-center gap-4 border-b-[1px] border-gray-200 pb-4">
+            {Features.document_actions && <DocumentActions />}
+            <PresenceRow />
           </div>
-          <div
-            className={`flex min-h-[100vh] flex-col px-4 ${TRANSITION_TRANSFORM} ${TRANSITION_DURATION} ${TRANSITION_EASE}`}
-            style={{
-              transform: `translateX(${editorWindowWidth / 2 - editorWidth / 2}px)`,
-              width: `${editorWidth}px`,
-            }}
-          >
-            <DocumentTitle />
-            <div className="my-4 flex items-center gap-4 border-b-[1px] border-gray-200 pb-4">
-              {Features.document_actions && <DocumentActions />}
-              <PresenceRow />
-            </div>
-            <DocumentEditor />
-          </div>
+          <DocumentEditor />
         </div>
       </div>
     </div>

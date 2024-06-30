@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
-export const SIDEBAR_WIDTH = 240;
+export const SIDEBAR_WIDTH = 320;
 
 interface State {
   open: boolean;
