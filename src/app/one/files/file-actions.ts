@@ -5,17 +5,12 @@ import {
   FileType,
   generateFileDetails,
   NoteFile,
-} from "../../jot-one/utils/file-utils";
+} from "../../../jot-one/utils/file-utils";
 
 const FILES_STORAGE_KEY = "files";
 
-export async function getFiles(): Promise<NoteFile[]> {
-  const filesRaw = await kv.get<NoteFile[] | null>(FILES_STORAGE_KEY);
-  return filesRaw ?? [];
-}
-
 export async function createFile(
-  files: NoteFile[] | null = null
+  files: NoteFile[] | null = null,
 ): Promise<NoteFile> {
   files = files || (await getFiles());
   const newFile = generateFileDetails(files);
@@ -23,21 +18,9 @@ export async function createFile(
   return await forceCreateFile(newFile, files);
 }
 
-export async function forceCreateFile(
-  file: NoteFile,
-  files: NoteFile[] | null = null
-) {
-  files = files ?? (await getFiles());
-  files.push(file);
-
-  await kv.set(FILES_STORAGE_KEY, files);
-
-  return file;
-}
-
 export async function getOrCreateFile(
   fileKey: string,
-  files: NoteFile[] | null = null
+  files: NoteFile[] | null = null,
 ) {
   files = files || (await getFiles());
   const file = files.find((file) => file.key === fileKey);
@@ -55,4 +38,21 @@ export async function getOrCreateFile(
     file.fileType = FileType.YDoc;
     return file;
   }
+}
+
+async function forceCreateFile(
+  file: NoteFile,
+  files: NoteFile[] | null = null,
+) {
+  files = files ?? (await getFiles());
+  files.push(file);
+
+  await kv.set(FILES_STORAGE_KEY, files);
+
+  return file;
+}
+
+async function getFiles(): Promise<NoteFile[]> {
+  const filesRaw = await kv.get<NoteFile[] | null>(FILES_STORAGE_KEY);
+  return filesRaw ?? [];
 }

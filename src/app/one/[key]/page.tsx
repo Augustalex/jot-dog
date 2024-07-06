@@ -1,9 +1,9 @@
 import React from "react";
 import NotesEntry from "../../../jot-one/features/notes-entry/NotesEntry";
-import { createFile, getOrCreateFile } from "../../files/file-actions";
+import { createFile, getOrCreateFile } from "../files/file-actions";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
-import { fileClient } from "../../files/file-client";
+import { fileClient } from "../files/file-client";
 
 import { Metadata } from "next";
 
@@ -21,14 +21,14 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     icons: ["pug", "kirby"].includes(key)
       ? ["kirby.webp"]
       : ["crabs", "payments"].includes(key)
-      ? ["crab.png"]
-      : ["mango", "mangos"].includes(key)
-      ? ["mango.png"]
-      : ["diego", "hair"].includes(key)
-      ? ["diego.png"]
-      : ["sad", "cat"].includes(key)
-      ? ["sad.png"]
-      : undefined,
+        ? ["crab.png"]
+        : ["mango", "mangos"].includes(key)
+          ? ["mango.png"]
+          : ["diego", "hair"].includes(key)
+            ? ["diego.png"]
+            : ["sad", "cat"].includes(key)
+              ? ["sad.png"]
+              : undefined,
   };
 }
 

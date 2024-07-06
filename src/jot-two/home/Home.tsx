@@ -39,6 +39,7 @@ export function HomeInner({ files }: { files: NoteFile[] }) {
   const { recentlyViewed: allRecentlyViewed, isReady } = useRecentlyViewed();
   if (!isReady) return <div>Loading...</div>;
 
+  console.log("files", files);
   const myFiles = files.map((file) => ({
     key: file.key,
     name: file.name,

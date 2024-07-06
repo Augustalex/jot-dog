@@ -1,13 +1,13 @@
 "use server";
 
 import { kv } from "@vercel/kv";
-import { FileType, NoteFile } from "../../jot-one/utils/file-utils";
+import { NoteFile } from "../../../jot-one/utils/file-utils";
 
 const FILE_CONTENT_STORAGE_PREFIX = "file_content:";
 
 export async function saveFileContent(
   file: NoteFile,
-  content: string
+  content: string,
 ): Promise<void> {
   const key = FILE_CONTENT_STORAGE_PREFIX + file.fileType + file.key;
   await kv.set(key, content);

@@ -1,13 +1,8 @@
-import {
-  createContext,
-  ReactNode,
-  useContext,
-  useEffect,
-  useState,
-} from "react";
+import { createContext, ReactNode, useContext, useState } from "react";
 import { useUser } from "@clerk/nextjs";
 import { UserResource } from "@clerk/types";
-import { getUsername } from "../../app/(two)/files/user-helpers";
+
+import { getUsername } from "../utils/getUsername";
 
 export interface ColorSet {
   primaryColor: string;
@@ -118,7 +113,7 @@ export function useLocalUserContext() {
   const context = useContext(LocalUserContext);
   if (!context) {
     throw new Error(
-      "useLocalUserContext must be used within a LocalUserProvider"
+      "useLocalUserContext must be used within a LocalUserProvider",
     );
   }
 
@@ -134,7 +129,7 @@ export function LocalUserProvider({
 }) {
   const { user } = useUser();
   const [localUser, setLocalUser] = useState(
-    user ? createFromUser(user, localId) : createLocalUser(localId)
+    user ? createFromUser(user, localId) : createLocalUser(localId),
   );
 
   return (

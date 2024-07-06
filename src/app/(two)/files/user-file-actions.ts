@@ -3,7 +3,8 @@
 import { createFile, deleteFile, getFiles, updateFile } from "./file-helpers";
 import { auth, currentUser } from "@clerk/nextjs/server";
 import { FileType } from "../../../jot-one/utils/file-utils";
-import { getUsername } from "./user-helpers";
+
+import { getUsername } from "../../../jot-two/utils/getUsername";
 
 export async function createUserFile({
   title,

@@ -4,7 +4,7 @@ import React, { useMemo } from "react";
 import styles from "./notes-entry.module.css";
 import { NoteFile } from "../../utils/file-utils";
 import dynamic from "next/dynamic";
-import { fileClient } from "../../../app/files/file-client";
+import { fileClient } from "../../../app/one/files/file-client";
 import { useRegisterView } from "../../utils/hooks/useRecentlyViewed";
 
 const Editor = dynamic(() => import("../editor/Editor"), {
@@ -26,7 +26,7 @@ export default function NotesEntry({
   const persist = useMemo(
     () => (file: NoteFile, content: Uint8Array) =>
       fileClient.saveBinaryData(file, content),
-    []
+    [],
   );
 
   return (

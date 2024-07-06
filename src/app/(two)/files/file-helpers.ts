@@ -1,11 +1,13 @@
-import { kv } from "@vercel/kv";
 import { NoteFile } from "../../../jot-one/utils/file-utils";
+import { jkv } from "../../../jot-two/jkv/jkv";
 
 const FILES_STORAGE_KEY = "files";
 
 export async function getFiles(username: string): Promise<NoteFile[]> {
   // await DANGEROUS_DELETE(username); // Use this for development to clear corrupt data
-  const filesRaw = await kv.get<NoteFile[] | null>(getFileStorageKey(username));
+  const filesRaw = await jkv.getJson<NoteFile[] | null>(
+    getFileStorageKey(username),
+  );
   return filesRaw ?? [];
 }
 
@@ -60,9 +62,9 @@ function getFileStorageKey(username: string) {
 }
 
 function setFiles(username: string, files: NoteFile[]) {
-  return kv.set(getFileStorageKey(username), files);
+  return jkv.setJson(getFileStorageKey(username), files);
 }
 
 function DANGEROUS_DELETE(username: string) {
-  return kv.del(getFileStorageKey(username));
+  return jkv.del(getFileStorageKey(username));
 }
