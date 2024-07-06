@@ -1,10 +1,7 @@
 import React, { ReactNode, useTransition } from "react";
 import * as Dialog from "@radix-ui/react-dialog";
 import * as Form from "@radix-ui/react-form";
-import {
-  deleteUserFile,
-  updateUserFile,
-} from "../../app/(two)/files/user-file-actions";
+import { updateUserFile } from "../../app/(two)/files/user-file-actions";
 import { useRouter } from "next/navigation";
 import { useLocalUserContext } from "../local-user/LocalUserContext";
 import { useRecentlyViewed } from "../utils/useRecentlyViewed";
@@ -23,11 +20,13 @@ export function DocumentSettingsModal({
   creating = false,
   file,
   userFiles,
+  onDelete = async () => {},
   children,
 }: {
   creating?: boolean;
   file: NoteFile;
   userFiles: NoteFile[];
+  onDelete?(): Promise<void>;
   children: ReactNode;
 }) {
   const { closeFile } = useOpenFiles();
@@ -186,10 +185,7 @@ export function DocumentSettingsModal({
 
     deleteFile(async () => {
       setPressedDelete(null);
-      removeFileFromRecent(file);
-      closeFile(file);
-      await deleteUserFile(file.key);
-      router.push(`/${localUser.username}`);
+      await onDelete();
     });
   }
 
