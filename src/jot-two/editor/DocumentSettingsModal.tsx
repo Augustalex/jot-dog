@@ -19,7 +19,13 @@ type FormDataType = {
   address: string;
 };
 
-export function DocumentSettingsModal({ children }: { children: ReactNode }) {
+export function DocumentSettingsModal({
+  mode = "edit",
+  children,
+}: {
+  mode?: "edit" | "create";
+  children: ReactNode;
+}) {
   const { file, userFiles } = useFileContext();
   const { closeFile } = useOpenFiles();
   const { removeFileFromRecent } = useRecentlyViewed();
@@ -107,17 +113,19 @@ export function DocumentSettingsModal({ children }: { children: ReactNode }) {
             </Form.Field>
 
             <div className="mt-6 flex items-end justify-end">
-              <button
-                disabled={deletingFile}
-                onClick={tryingToDelete ? reallyDeleteJot : deleteJot}
-                className="mr-2 rounded-md bg-red-500 px-4 py-2 text-white shadow hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-600"
-              >
-                {deletingFile
-                  ? "Deleting"
-                  : tryingToDelete
-                    ? "Are you sure?"
-                    : "Delete jot"}
-              </button>
+              {mode === "edit" && (
+                <button
+                  disabled={deletingFile}
+                  onClick={tryingToDelete ? reallyDeleteJot : deleteJot}
+                  className="mr-2 rounded-md bg-red-500 px-4 py-2 text-white shadow hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-600"
+                >
+                  {deletingFile
+                    ? "Deleting"
+                    : tryingToDelete
+                      ? "Are you sure?"
+                      : "Delete jot"}
+                </button>
+              )}
 
               <Form.Submit
                 disabled={submitPending || deletingFile}
