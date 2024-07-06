@@ -1,5 +1,4 @@
-// const JOT_DOCS_URL = "https://live.jot.dog/docs";
-const JOT_DOCS_URL = "http://localhost:3124/docs";
+const JOT_DOCS_URL = "https://live.jot.dog/docs";
 
 export const jkv = {
   getJson,
