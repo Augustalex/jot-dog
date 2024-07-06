@@ -7,12 +7,12 @@ import {
 } from "../../app/(two)/files/user-file-actions";
 import { useRouter } from "next/navigation";
 import { useLocalUserContext } from "../local-user/LocalUserContext";
-import { useFileContext } from "../file/FileContext";
 import { useRecentlyViewed } from "../utils/useRecentlyViewed";
 import { isAddressChanged } from "../utils/isAddressChanged";
 import { getAddress } from "../utils/getAddress";
 import { matchesExistingAddress } from "./matchesExistingAddress";
 import { useOpenFiles } from "../utils/useOpenFiles";
+import { NoteFile } from "../../jot-one/utils/file-utils";
 
 type FormDataType = {
   title: string;
@@ -20,13 +20,16 @@ type FormDataType = {
 };
 
 export function DocumentSettingsModal({
-  mode = "edit",
+  creating = false,
+  file,
+  userFiles,
   children,
 }: {
-  mode?: "edit" | "create";
+  creating?: boolean;
+  file: NoteFile;
+  userFiles: NoteFile[];
   children: ReactNode;
 }) {
-  const { file, userFiles } = useFileContext();
   const { closeFile } = useOpenFiles();
   const { removeFileFromRecent } = useRecentlyViewed();
   const [open, setOpen] = React.useState(false);
@@ -45,7 +48,7 @@ export function DocumentSettingsModal({
       <Dialog.Portal>
         <Dialog.Overlay className="fixed inset-0 z-10 bg-black bg-opacity-50 transition-opacity duration-150" />
         <Dialog.Content className="fixed left-1/2 top-1/2 z-10 max-h-[85vh] w-[90vw] max-w-lg -translate-x-1/2 -translate-y-1/2 transform rounded-lg bg-white p-6 shadow-lg focus:outline-none focus:ring-2 focus:ring-indigo-500">
-          {mode === "create" && (
+          {creating ? (
             <>
               <Dialog.Title className="text-xl font-medium text-gray-900">
                 Make new Jot
@@ -55,8 +58,7 @@ export function DocumentSettingsModal({
                 remember and to type into a browser.
               </Dialog.Description>
             </>
-          )}
-          {mode === "edit" && (
+          ) : (
             <>
               <Dialog.Title className="mb-4 text-xl font-medium text-gray-900">
                 Edit jot settings
@@ -128,7 +130,7 @@ export function DocumentSettingsModal({
             </Form.Field>
 
             <div className="mt-6 flex items-end justify-end">
-              {mode === "edit" && (
+              {!creating && (
                 <button
                   disabled={deletingFile}
                   onClick={tryingToDelete ? reallyDeleteJot : deleteJot}
@@ -147,7 +149,7 @@ export function DocumentSettingsModal({
                 onSubmit={onSubmit}
                 className="mt-4 rounded-md bg-green-500 px-4 py-2 text-white shadow hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-600 disabled:cursor-not-allowed disabled:bg-gray-300 disabled:disabled:bg-gray-300 disabled:disabled:text-gray-700 disabled:text-gray-700 disabled:disabled:shadow-none disabled:shadow-none disabled:disabled:ring-gray-300 disabled:disabled:hover:bg-gray-300 disabled:hover:bg-gray-300 disabled:disabled:focus:ring-gray-300 disabled:focus:ring-gray-300"
               >
-                {mode === "create" ? "Create Jot" : "Save changes"}
+                {creating ? "Create Jot" : "Save changes"}
               </Form.Submit>
             </div>
           </Form.Root>
