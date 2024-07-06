@@ -1,14 +1,9 @@
 import React, { ReactNode, useTransition } from "react";
 import * as Dialog from "@radix-ui/react-dialog";
 import * as Form from "@radix-ui/react-form";
-import { updateUserFile } from "../../app/(two)/files/user-file-actions";
-import { useRouter } from "next/navigation";
-import { useLocalUserContext } from "../local-user/LocalUserContext";
-import { useRecentlyViewed } from "../utils/useRecentlyViewed";
 import { isAddressChanged } from "../utils/isAddressChanged";
 import { getAddress } from "../utils/getAddress";
 import { matchesExistingAddress } from "./matchesExistingAddress";
-import { useOpenFiles } from "../utils/useOpenFiles";
 import { NoteFile } from "../../jot-one/utils/file-utils";
 
 type FormDataType = {
@@ -20,26 +15,28 @@ export function DocumentSettingsModal({
   creating = false,
   file,
   userFiles,
-  onDelete = async () => {},
+  onSubmit,
+  onDelete,
   children,
 }: {
   creating?: boolean;
-  file: NoteFile;
+  file?: NoteFile;
   userFiles: NoteFile[];
+  onSubmit({
+    title,
+    address,
+  }: {
+    title: string;
+    address: string;
+  }): Promise<void>;
   onDelete?(): Promise<void>;
   children: ReactNode;
 }) {
-  const { closeFile } = useOpenFiles();
-  const { removeFileFromRecent } = useRecentlyViewed();
   const [open, setOpen] = React.useState(false);
   const [submitPending, startSubmit] = useTransition();
-
   const [pressedDelete, setPressedDelete] = React.useState<number | null>(null);
   const [tryingToDelete, tryToDelete] = useTransition();
   const [deletingFile, deleteFile] = useTransition();
-
-  const router = useRouter();
-  const { localUser } = useLocalUserContext();
 
   return (
     <Dialog.Root onOpenChange={setOpen} open={open}>
@@ -68,7 +65,7 @@ export function DocumentSettingsModal({
             </>
           )}
 
-          <Form.Root className="flex flex-1 flex-col gap-4" onSubmit={onSubmit}>
+          <Form.Root className="flex flex-1 flex-col gap-4" onSubmit={submit}>
             <Form.Field name="title" className="space-y-2">
               <div className="flex items-baseline justify-between">
                 <Form.Label htmlFor="title" className="text-sm text-gray-700">
@@ -82,7 +79,8 @@ export function DocumentSettingsModal({
                   type="text"
                   id="title"
                   name="title"
-                  defaultValue={file.name}
+                  placeholder="Meeting notes"
+                  defaultValue={file?.name}
                   inputMode="text"
                 />
               </Form.Control>
@@ -106,7 +104,8 @@ export function DocumentSettingsModal({
                   id="address"
                   name="address"
                   required
-                  defaultValue={getAddress(file.key)}
+                  placeholder="meeting-notes"
+                  defaultValue={file ? getAddress(file.key) : undefined}
                 />
               </Form.Control>
               <div className="ml-1 mt-1 flex flex-col items-baseline justify-between gap-1 text-sm text-red-500">
@@ -115,7 +114,7 @@ export function DocumentSettingsModal({
                 </Form.Message>
                 <Form.Message
                   match={(value) =>
-                    isAddressChanged(file, value) &&
+                    (!file || isAddressChanged(file, value)) &&
                     matchesExistingAddress(value, userFiles)
                   }
                 >
@@ -129,7 +128,7 @@ export function DocumentSettingsModal({
             </Form.Field>
 
             <div className="mt-6 flex items-end justify-end">
-              {!creating && (
+              {onDelete && (
                 <button
                   disabled={deletingFile}
                   onClick={tryingToDelete ? reallyDeleteJot : deleteJot}
@@ -145,7 +144,7 @@ export function DocumentSettingsModal({
 
               <Form.Submit
                 disabled={submitPending || deletingFile}
-                onSubmit={onSubmit}
+                onSubmit={submit}
                 className="mt-4 rounded-md bg-green-500 px-4 py-2 text-white shadow hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-600 disabled:cursor-not-allowed disabled:bg-gray-300 disabled:disabled:bg-gray-300 disabled:disabled:text-gray-700 disabled:text-gray-700 disabled:disabled:shadow-none disabled:shadow-none disabled:disabled:ring-gray-300 disabled:disabled:hover:bg-gray-300 disabled:hover:bg-gray-300 disabled:disabled:focus:ring-gray-300 disabled:focus:ring-gray-300"
               >
                 {creating ? "Create Jot" : "Save changes"}
@@ -179,7 +178,7 @@ export function DocumentSettingsModal({
     e.preventDefault();
     e.stopPropagation();
 
-    if (!pressedDelete) return;
+    if (!onDelete || !pressedDelete) return;
     const timeSincePressedDelete = Date.now() - pressedDelete;
     if (timeSincePressedDelete < 250) return;
 
@@ -189,7 +188,7 @@ export function DocumentSettingsModal({
     });
   }
 
-  async function onSubmit(event: React.FormEvent) {
+  async function submit(event: React.FormEvent) {
     event.preventDefault();
 
     const form = event.currentTarget as HTMLFormElement;
@@ -197,26 +196,19 @@ export function DocumentSettingsModal({
     const data = Object.fromEntries(formData.entries()) as FormDataType;
 
     if (!data.title || !data.address) return;
+
     if (
-      isAddressChanged(file, data.address) &&
+      (!file || isAddressChanged(file, data.address)) &&
       matchesExistingAddress(data.address, userFiles)
     )
       return;
 
     startSubmit(async () => {
-      await updateUserFile(file.key, {
-        title: data.title ?? "Untitled",
-        key: data.address ?? "untitled",
+      await onSubmit({
+        title: data.title,
+        address: data.address,
       });
       setOpen(false);
-
-      if (isAddressChanged(file, data.address)) {
-        removeFileFromRecent(file);
-        closeFile(file);
-        router.push(`/${localUser.username}/${data.address}`);
-      } else if (data.title !== file.name) {
-        window.location.reload();
-      }
     });
   }
 }

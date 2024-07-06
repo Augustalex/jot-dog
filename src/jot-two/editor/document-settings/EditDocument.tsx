@@ -3,9 +3,13 @@ import { ReactNode } from "react";
 import { useFileContext } from "../../file/FileContext";
 import { useOpenFiles } from "../../utils/useOpenFiles";
 import { useRecentlyViewed } from "../../utils/useRecentlyViewed";
-import { deleteUserFile } from "../../../app/(two)/files/user-file-actions";
+import {
+  deleteUserFile,
+  updateUserFile,
+} from "../../../app/(two)/files/user-file-actions";
 import { useRouter } from "next/navigation";
 import { useLocalUserContext } from "../../local-user/LocalUserContext";
+import { isAddressChanged } from "../../utils/isAddressChanged";
 
 export function EditDocument({ children }: { children: ReactNode }) {
   const { file, userFiles } = useFileContext();
@@ -19,10 +23,32 @@ export function EditDocument({ children }: { children: ReactNode }) {
       file={file}
       userFiles={userFiles}
       onDelete={onDelete}
+      onSubmit={onSubmit}
     >
       {children}
     </DocumentSettingsModal>
   );
+
+  async function onSubmit({
+    title,
+    address,
+  }: {
+    title: string;
+    address: string;
+  }) {
+    await updateUserFile(file.key, {
+      title: title ?? "Untitled",
+      key: address ?? "untitled",
+    });
+
+    if (isAddressChanged(file, address)) {
+      removeFileFromRecent(file);
+      closeFile(file);
+      router.push(`/${localUser.username}/${address}`);
+    } else if (title !== file.name) {
+      window.location.reload();
+    }
+  }
 
   async function onDelete() {
     removeFileFromRecent(file);

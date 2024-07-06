@@ -1,10 +1,10 @@
 import { useFileContext } from "../file/FileContext";
 import { useRecentlyViewed } from "../utils/useRecentlyViewed";
-import { CreateFileModal } from "../create-file/CreateFileModal";
 import React from "react";
 import { LinkFileModal } from "../link-file/LinkFileModal";
 import { FileType } from "../../jot-one/utils/file-utils";
 import { getAddress } from "../utils/getAddress";
+import { CreateDocument } from "../editor/document-settings/CreateDocument";
 
 export function SideBarContent() {
   const { userFiles, file: openFile } = useFileContext();
@@ -18,13 +18,13 @@ export function SideBarContent() {
   return (
     <>
       <div className="mb-6 flex flex-col justify-between gap-2">
-        <CreateFileModal>
+        <CreateDocument userFiles={userFiles}>
           <button
             className={`floating-shadow w-full cursor-pointer rounded-lg p-2 text-blue-950 hover:bg-indigo-50`}
           >
             <span>Create new file</span>
           </button>
-        </CreateFileModal>
+        </CreateDocument>
         <LinkFileModal>
           <button
             className={`floating-shadow w-full cursor-pointer rounded-lg p-2 text-blue-950 hover:bg-indigo-50`}
