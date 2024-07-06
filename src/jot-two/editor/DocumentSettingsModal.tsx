@@ -45,12 +45,27 @@ export function DocumentSettingsModal({
       <Dialog.Portal>
         <Dialog.Overlay className="fixed inset-0 z-10 bg-black bg-opacity-50 transition-opacity duration-150" />
         <Dialog.Content className="fixed left-1/2 top-1/2 z-10 max-h-[85vh] w-[90vw] max-w-lg -translate-x-1/2 -translate-y-1/2 transform rounded-lg bg-white p-6 shadow-lg focus:outline-none focus:ring-2 focus:ring-indigo-500">
-          <Dialog.Title className="mb-4 text-xl font-medium text-gray-900">
-            Edit jot settings
-          </Dialog.Title>
-          <Dialog.Description className="hidden">
-            Update the title and address of your jot.
-          </Dialog.Description>
+          {mode === "create" && (
+            <>
+              <Dialog.Title className="text-xl font-medium text-gray-900">
+                Make new Jot
+              </Dialog.Title>
+              <Dialog.Description className="mb-5 mt-2 text-gray-600">
+                Give your note a nice title, but also an address that is easy to
+                remember and to type into a browser.
+              </Dialog.Description>
+            </>
+          )}
+          {mode === "edit" && (
+            <>
+              <Dialog.Title className="mb-4 text-xl font-medium text-gray-900">
+                Edit jot settings
+              </Dialog.Title>
+              <Dialog.Description className="hidden">
+                Update the title and address of your jot.
+              </Dialog.Description>
+            </>
+          )}
 
           <Form.Root className="flex flex-1 flex-col gap-4" onSubmit={onSubmit}>
             <Form.Field name="title" className="space-y-2">
