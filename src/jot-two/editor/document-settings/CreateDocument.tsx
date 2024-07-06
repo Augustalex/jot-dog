@@ -1,4 +1,4 @@
-import { DocumentSettingsModal } from "../DocumentSettingsModal";
+import { DocumentSettingsModal } from "./DocumentSettingsModal";
 import { ReactNode } from "react";
 import { NoteFile } from "../../../jot-one/utils/file-utils";
 import { createUserFile } from "../../../app/(two)/files/user-file-actions";

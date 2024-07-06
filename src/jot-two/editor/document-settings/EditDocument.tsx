@@ -1,4 +1,4 @@
-import { DocumentSettingsModal } from "../DocumentSettingsModal";
+import { DocumentSettingsModal } from "./DocumentSettingsModal";
 import { ReactNode } from "react";
 import { useFileContext } from "../../file/FileContext";
 import { useOpenFiles } from "../../utils/useOpenFiles";

@@ -1,10 +1,10 @@
 import React, { ReactNode, useTransition } from "react";
 import * as Dialog from "@radix-ui/react-dialog";
 import * as Form from "@radix-ui/react-form";
-import { isAddressChanged } from "../utils/isAddressChanged";
-import { getAddress } from "../utils/getAddress";
-import { matchesExistingAddress } from "./matchesExistingAddress";
-import { NoteFile } from "../../jot-one/utils/file-utils";
+import { isAddressChanged } from "../../utils/isAddressChanged";
+import { getAddress } from "../../utils/getAddress";
+import { matchesExistingAddress } from "../matchesExistingAddress";
+import { NoteFile } from "../../../jot-one/utils/file-utils";
 
 type FormDataType = {
   title: string;
