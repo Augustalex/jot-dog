@@ -132,7 +132,7 @@ export function DocumentSettingsModal({
                 onSubmit={onSubmit}
                 className="mt-4 rounded-md bg-green-500 px-4 py-2 text-white shadow hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-600 disabled:cursor-not-allowed disabled:bg-gray-300 disabled:disabled:bg-gray-300 disabled:disabled:text-gray-700 disabled:text-gray-700 disabled:disabled:shadow-none disabled:shadow-none disabled:disabled:ring-gray-300 disabled:disabled:hover:bg-gray-300 disabled:hover:bg-gray-300 disabled:disabled:focus:ring-gray-300 disabled:focus:ring-gray-300"
               >
-                Save changes
+                {mode === "create" ? "Create Jot" : "Save changes"}
               </Form.Submit>
             </div>
           </Form.Root>
