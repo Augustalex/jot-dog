@@ -1,4 +1,4 @@
-import React, { ReactNode, useTransition } from "react";
+import React, { ReactNode, useCallback, useTransition } from "react";
 import * as Dialog from "@radix-ui/react-dialog";
 import * as Form from "@radix-ui/react-form";
 import { isAddressChanged } from "../../utils/isAddressChanged";
@@ -37,6 +37,26 @@ export function DocumentSettingsModal({
   const [pressedDelete, setPressedDelete] = React.useState<number | null>(null);
   const [tryingToDelete, tryToDelete] = useTransition();
   const [deletingFile, deleteFile] = useTransition();
+
+  const [title, setTitle] = React.useState<string | undefined>(file?.name);
+  const [defaultAddress, setDefaultAddress] = React.useState<
+    string | undefined
+  >(file ? getAddress(file.key) : undefined);
+
+  const updateDefaultAddress = useCallback(
+    (title: string) => {
+      if (!creating) return;
+
+      if (!title) setDefaultAddress(undefined);
+      const suggestedAddress = title.toLowerCase().replace(/\s+/g, "-");
+      if (matchesExistingAddress(suggestedAddress, userFiles)) {
+        setDefaultAddress(undefined);
+      } else {
+        setDefaultAddress(suggestedAddress);
+      }
+    },
+    [userFiles],
+  );
 
   return (
     <Dialog.Root onOpenChange={setOpen} open={open}>
@@ -82,6 +102,11 @@ export function DocumentSettingsModal({
                   placeholder="Meeting notes"
                   defaultValue={file?.name}
                   inputMode="text"
+                  value={title}
+                  onChange={(e) => {
+                    setTitle(e.target.value);
+                    updateDefaultAddress(e.target.value);
+                  }}
                 />
               </Form.Control>
               <div className="ml-1 mt-1 flex flex-col items-baseline justify-between gap-1 text-sm text-red-500">
@@ -105,7 +130,7 @@ export function DocumentSettingsModal({
                   name="address"
                   required
                   placeholder="meeting-notes"
-                  defaultValue={file ? getAddress(file.key) : undefined}
+                  defaultValue={defaultAddress}
                 />
               </Form.Control>
               <div className="ml-1 mt-1 flex flex-col items-baseline justify-between gap-1 text-sm text-red-500">
