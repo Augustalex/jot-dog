@@ -78,7 +78,7 @@ export function HomeInner({ files }: { files: NoteFile[] }) {
 
               <LinkFileModal userFiles={files}>
                 <button
-                  className={`floating-shadow flex min-w-[160px] cursor-pointer items-center justify-center rounded-lg bg-indigo-100 p-2 text-blue-950 hover:bg-indigo-50`}
+                  className={`floating-shadow flex min-w-[160px] cursor-pointer items-center justify-center rounded-lg p-2 text-blue-950 hover:bg-indigo-50`}
                 >
                   <span>Link file</span>
                 </button>
