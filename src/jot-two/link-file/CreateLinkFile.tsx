@@ -3,13 +3,13 @@ import { createUserFile } from "../../app/(two)/files/user-file-actions";
 import { useRouter } from "next/navigation";
 import { useLocalUserContext } from "../local-user/LocalUserContext";
 import { LinkFileModal } from "./LinkFileModal";
-import { FileType, NoteFile } from "../file/file-utils";
+import { FileType, JotTwoFile } from "../file/file-utils";
 
 export function CreateLinkFile({
   userFiles,
   children,
 }: {
-  userFiles: NoteFile[];
+  userFiles: JotTwoFile[];
   children: ReactNode;
 }) {
   const router = useRouter();

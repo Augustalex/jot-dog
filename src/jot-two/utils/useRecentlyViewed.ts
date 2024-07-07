@@ -1,9 +1,9 @@
 import { useCallback, useEffect } from "react";
-import { NoteFile } from "../file/file-utils";
+import { JotTwoFile } from "../file/file-utils";
 import { useLocalState } from "./useLocalState";
 
 export interface RecentView {
-  file: NoteFile;
+  file: JotTwoFile;
   viewedDate: string;
 }
 
@@ -16,7 +16,7 @@ export const useRecentlyViewed = () => {
   );
 
   const removeFileFromRecent = useCallback(
-    (file: NoteFile) => {
+    (file: JotTwoFile) => {
       const newState = localState.filter((view) => view.file.key !== file.key);
       setLocalState(newState);
     },
@@ -26,7 +26,7 @@ export const useRecentlyViewed = () => {
   return { recentlyViewed: localState, isReady, removeFileFromRecent };
 };
 
-export const useRegisterView = (file: NoteFile) => {
+export const useRegisterView = (file: JotTwoFile) => {
   useEffect(() => {
     const state = localStorage.getItem(LOCAL_STORAGE_KEY) ?? "[]";
     const recentViews: RecentView[] = JSON.parse(state);

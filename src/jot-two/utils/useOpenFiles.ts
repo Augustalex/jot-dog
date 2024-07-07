@@ -1,9 +1,9 @@
 import { useCallback, useEffect } from "react";
-import { NoteFile } from "../file/file-utils";
+import { JotTwoFile } from "../file/file-utils";
 import { useLocalState } from "./useLocalState";
 
 export interface OpenFile {
-  file: NoteFile;
+  file: JotTwoFile;
   firstOpenedTime: string;
 }
 
@@ -16,7 +16,7 @@ export const useOpenFiles = () => {
   );
 
   const closeFile = useCallback(
-    (file: NoteFile) => {
+    (file: JotTwoFile) => {
       const newState = localState.filter((view) => view.file.key !== file.key);
       setLocalState(newState);
     },
@@ -26,7 +26,7 @@ export const useOpenFiles = () => {
   return { openFiles: localState, isReady, closeFile };
 };
 
-export const useRegisterOpenFile = (file: NoteFile) => {
+export const useRegisterOpenFile = (file: JotTwoFile) => {
   useEffect(() => {
     const state = localStorage.getItem(LOCAL_STORAGE_KEY) ?? "[]";
     const recentViews: OpenFile[] = JSON.parse(state);

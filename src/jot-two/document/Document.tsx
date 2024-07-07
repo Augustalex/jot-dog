@@ -23,15 +23,15 @@ import {
 import { useRegisterOpenFile } from "../utils/useOpenFiles";
 import { MobileSideBar } from "../side-bar/MobileSideBar";
 import { LinkWindow } from "./LinkWindow";
-import { FileType, NoteFile } from "../file/file-utils";
+import { FileType, JotTwoFile } from "../file/file-utils";
 
 export function Document({
   userFiles,
   file,
   localId,
 }: {
-  userFiles: NoteFile[];
-  file: NoteFile;
+  userFiles: JotTwoFile[];
+  file: JotTwoFile;
   localId: string;
 }) {
   useRegisterView(file);

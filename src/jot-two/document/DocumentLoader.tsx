@@ -2,7 +2,7 @@
 
 import dynamic from "next/dynamic";
 import { useRegisterView } from "../utils/useRecentlyViewed";
-import { NoteFile } from "../file/file-utils";
+import { JotTwoFile } from "../file/file-utils";
 
 const Document = dynamic(() => import("./Document").then((m) => m.Document), {
   ssr: false,
@@ -13,8 +13,8 @@ export function DocumentLoader({
   file,
   localId,
 }: {
-  userFiles: NoteFile[];
-  file: NoteFile;
+  userFiles: JotTwoFile[];
+  file: JotTwoFile;
   localId: string;
 }) {
   useRegisterView(file);

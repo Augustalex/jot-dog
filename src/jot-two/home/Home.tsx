@@ -12,7 +12,7 @@ import { UserLoader } from "../user/UserLoader";
 import { UserBubble } from "../user/UserBubble";
 import { CreateDocument } from "../editor/document-settings/CreateDocument";
 import { CreateLinkFile } from "../link-file/CreateLinkFile";
-import { NoteFile } from "../file/file-utils";
+import { JotTwoFile } from "../file/file-utils";
 
 const ibmPlexMono = IBM_Plex_Mono({
   weight: ["100", "200", "300", "400", "500", "600", "700"],
@@ -23,7 +23,7 @@ export function Home({
   files,
   localId,
 }: {
-  files: NoteFile[];
+  files: JotTwoFile[];
   localId: string;
 }) {
   return (
@@ -35,7 +35,7 @@ export function Home({
   );
 }
 
-export function HomeInner({ files }: { files: NoteFile[] }) {
+export function HomeInner({ files }: { files: JotTwoFile[] }) {
   const { localUser } = useLocalUserContext();
   const { recentlyViewed: allRecentlyViewed, isReady } = useRecentlyViewed();
   if (!isReady) return <div>Loading...</div>;

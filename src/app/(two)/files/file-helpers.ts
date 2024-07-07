@@ -1,11 +1,11 @@
 import { jkv } from "../../../jot-two/jkv/jkv";
-import { NoteFile } from "../../../jot-two/file/file-utils";
+import { JotTwoFile } from "../../../jot-two/file/file-utils";
 
 const FILES_STORAGE_KEY = "files";
 
-export async function getFiles(username: string): Promise<NoteFile[]> {
+export async function getFiles(username: string): Promise<JotTwoFile[]> {
   // await DANGEROUS_DELETE(username); // Use this for development to clear corrupt data
-  const filesRaw = await jkv.getJson<NoteFile[] | null>(
+  const filesRaw = await jkv.getJson<JotTwoFile[] | null>(
     getFileStorageKey(username),
   );
   return filesRaw ?? [];
@@ -13,8 +13,8 @@ export async function getFiles(username: string): Promise<NoteFile[]> {
 
 export async function createFile(
   username: string,
-  file: NoteFile,
-  files: NoteFile[] | null = null, // Used to not call getFiles() twice
+  file: JotTwoFile,
+  files: JotTwoFile[] | null = null, // Used to not call getFiles() twice
 ) {
   files = files ?? (await getFiles(username));
 
@@ -31,7 +31,7 @@ export async function createFile(
 export async function updateFile(
   username: string,
   currentFileKey: string,
-  mergeFile: NoteFile,
+  mergeFile: JotTwoFile,
 ) {
   const currentFiles = await getFiles(username);
   const currentFile = currentFiles.find((f) => f.key === currentFileKey);
@@ -61,7 +61,7 @@ function getFileStorageKey(username: string) {
   return `${username}:${FILES_STORAGE_KEY}`;
 }
 
-function setFiles(username: string, files: NoteFile[]) {
+function setFiles(username: string, files: JotTwoFile[]) {
   return jkv.setJson(getFileStorageKey(username), files);
 }
 

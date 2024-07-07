@@ -1,10 +1,10 @@
 import { createContext, ReactNode, useContext, useState } from "react";
 import * as Y from "yjs";
-import { NoteFile } from "./file-utils";
+import { JotTwoFile } from "./file-utils";
 
 const FileContext = createContext<{
-  file: NoteFile;
-  userFiles: NoteFile[];
+  file: JotTwoFile;
+  userFiles: JotTwoFile[];
   doc: Y.Doc;
 } | null>(null);
 
@@ -22,8 +22,8 @@ export function FileProvider({
   userFiles,
   children,
 }: {
-  file: NoteFile;
-  userFiles: NoteFile[];
+  file: JotTwoFile;
+  userFiles: JotTwoFile[];
   children: ReactNode;
 }) {
   const [doc] = useState(new Y.Doc());

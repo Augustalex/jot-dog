@@ -4,7 +4,7 @@ import * as Form from "@radix-ui/react-form";
 import { matchesExistingAddress } from "../editor/matchesExistingAddress";
 import { getAddress } from "../utils/getAddress";
 import { isAddressChanged } from "../utils/isAddressChanged";
-import { NoteFile } from "../file/file-utils";
+import { JotTwoFile } from "../file/file-utils";
 
 type FormDataType = {
   url: string;
@@ -17,8 +17,8 @@ export function LinkFileModal({
   onSubmit,
   children,
 }: {
-  file?: NoteFile;
-  userFiles: NoteFile[];
+  file?: JotTwoFile;
+  userFiles: JotTwoFile[];
   onSubmit({ url, key }: { url: string; key: string }): Promise<void>;
   children: ReactNode;
 }) {

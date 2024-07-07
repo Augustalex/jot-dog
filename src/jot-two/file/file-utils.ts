@@ -6,13 +6,13 @@ export enum FileType {
   Link = ":link:",
 }
 
-export interface NoteFile {
+export interface JotTwoFile {
   name: string;
   key: string;
   fileType: FileType;
 }
 
-export function generateFileDetails(files: NoteFile[]) {
+export function generateFileDetails(files: JotTwoFile[]) {
   const isoDate = new Date().toISOString();
   const dateString = isoDate.substring(0, isoDate.indexOf("T"));
   const newNameTemplate = `Note ${dateString}`;
@@ -25,7 +25,7 @@ export function generateFileDetails(files: NoteFile[]) {
       : newNameTemplate;
 
   const newKey = slugify(Date.now().toString(), { lower: true });
-  const newFile: NoteFile = {
+  const newFile: JotTwoFile = {
     name: newName,
     key: newKey,
     fileType: FileType.YDoc,

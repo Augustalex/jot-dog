@@ -1,6 +1,6 @@
 import { getAddress } from "./getAddress";
-import { NoteFile } from "../file/file-utils";
+import { JotTwoFile } from "../file/file-utils";
 
-export function isAddressChanged(file: NoteFile, address: string) {
+export function isAddressChanged(file: JotTwoFile, address: string) {
   return getAddress(file.key) !== address;
 }
