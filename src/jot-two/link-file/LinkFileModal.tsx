@@ -7,6 +7,7 @@ import { isAddressChanged } from "../utils/isAddressChanged";
 import { JotTwoFile, LinkFile } from "../file/file-utils";
 
 type FormDataType = {
+  title: string;
   url: string;
   address: string;
 };
@@ -19,7 +20,15 @@ export function LinkFileModal({
 }: {
   file?: LinkFile;
   userFiles: JotTwoFile[];
-  onSubmit({ url, key }: { url: string; key: string }): Promise<void>;
+  onSubmit({
+    title,
+    url,
+    key,
+  }: {
+    title: string;
+    url: string;
+    key: string;
+  }): Promise<void>;
   children: ReactNode;
 }) {
   const [open, setOpen] = React.useState(false);
@@ -103,7 +112,7 @@ export function LinkFileModal({
                   id="url"
                   name="url"
                   placeholder="https://whiteboard.com/shared/1234"
-                  defaultValue={file?.name}
+                  defaultValue={file?.url}
                   inputMode="text"
                 />
               </Form.Control>
@@ -172,11 +181,12 @@ export function LinkFileModal({
     const formData = new FormData(form);
     const data = Object.fromEntries(formData.entries()) as FormDataType;
 
-    if (!data.url || !data.address) return;
+    if (!data.url || !data.address || !data.title) return;
     if (
       file &&
       !isAddressChanged(file, data.address) &&
-      file.name === data.url
+      file.name === data.title &&
+      file.url === data.url
     ) {
       setOpen(false);
       return;
@@ -185,6 +195,7 @@ export function LinkFileModal({
 
     startSubmit(async () => {
       await onSubmit({
+        title: data.title,
         url: data.url,
         key: data.address,
       });
