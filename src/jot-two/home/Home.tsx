@@ -12,7 +12,7 @@ import { UserLoader } from "../user/UserLoader";
 import { UserBubble } from "../user/UserBubble";
 import { NoteFile } from "../../jot-one/utils/file-utils";
 import { CreateDocument } from "../editor/document-settings/CreateDocument";
-import { LinkFileModal } from "../link-file/LinkFileModal";
+import { CreateLinkFile } from "../link-file/CreateLinkFile";
 
 const ibmPlexMono = IBM_Plex_Mono({
   weight: ["100", "200", "300", "400", "500", "600", "700"],
@@ -76,13 +76,13 @@ export function HomeInner({ files }: { files: NoteFile[] }) {
                 </button>
               </CreateDocument>
 
-              <LinkFileModal userFiles={files}>
+              <CreateLinkFile userFiles={files}>
                 <button
                   className={`floating-shadow flex min-w-[160px] cursor-pointer items-center justify-center rounded-lg p-2 text-blue-950 hover:bg-indigo-50`}
                 >
                   <span>Link file</span>
                 </button>
-              </LinkFileModal>
+              </CreateLinkFile>
             </div>
           </div>
 

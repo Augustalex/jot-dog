@@ -1,10 +1,10 @@
 import { useFileContext } from "../file/FileContext";
 import { useRecentlyViewed } from "../utils/useRecentlyViewed";
 import React from "react";
-import { LinkFileModal } from "../link-file/LinkFileModal";
 import { FileType } from "../../jot-one/utils/file-utils";
 import { getAddress } from "../utils/getAddress";
 import { CreateDocument } from "../editor/document-settings/CreateDocument";
+import { CreateLinkFile } from "../link-file/CreateLinkFile";
 
 export function SideBarContent() {
   const { userFiles, file: openFile } = useFileContext();
@@ -25,13 +25,13 @@ export function SideBarContent() {
             <span>Create new file</span>
           </button>
         </CreateDocument>
-        <LinkFileModal userFiles={userFiles}>
+        <CreateLinkFile userFiles={userFiles}>
           <button
             className={`floating-shadow w-full cursor-pointer rounded-lg p-2 text-blue-950 hover:bg-indigo-50`}
           >
             <span>Link file</span>
           </button>
-        </LinkFileModal>
+        </CreateLinkFile>
       </div>
       <div>
         <h3 className="text-lg text-gray-800">My files</h3>

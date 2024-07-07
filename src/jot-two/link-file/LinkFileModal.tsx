@@ -1,11 +1,9 @@
 import React, { ReactNode, useTransition } from "react";
 import * as Dialog from "@radix-ui/react-dialog";
 import * as Form from "@radix-ui/react-form";
-import { createUserFile } from "../../app/(two)/files/user-file-actions";
-import { useRouter } from "next/navigation";
-import { useLocalUserContext } from "../local-user/LocalUserContext";
 import { matchesExistingAddress } from "../editor/matchesExistingAddress";
-import { FileType, NoteFile } from "../../jot-one/utils/file-utils";
+import { NoteFile } from "../../jot-one/utils/file-utils";
+import { getAddress } from "../utils/getAddress";
 
 type FormDataType = {
   url: string;
@@ -13,16 +11,18 @@ type FormDataType = {
 };
 
 export function LinkFileModal({
+  file,
   userFiles,
+  onSubmit,
   children,
 }: {
+  file?: NoteFile;
   userFiles: NoteFile[];
+  onSubmit({ url, key }: { url: string; key: string }): Promise<void>;
   children: ReactNode;
 }) {
   const [open, setOpen] = React.useState(false);
   const [submitPending, startSubmit] = useTransition();
-  const router = useRouter();
-  const { localUser } = useLocalUserContext();
 
   return (
     <Dialog.Root onOpenChange={setOpen} open={open}>
@@ -37,7 +37,7 @@ export function LinkFileModal({
             Link a file to be accessible within Jot.
           </Dialog.Description>
 
-          <Form.Root className="flex flex-1 flex-col gap-4" onSubmit={onSubmit}>
+          <Form.Root className="flex flex-1 flex-col gap-4" onSubmit={submit}>
             <Form.Field name="url" className="space-y-2">
               <div className="flex items-baseline justify-between">
                 <Form.Label htmlFor="url" className="text-sm text-gray-700">
@@ -52,6 +52,7 @@ export function LinkFileModal({
                   id="url"
                   name="url"
                   placeholder="https://whiteboard.com/shared/1234"
+                  defaultValue={file?.name}
                   inputMode="text"
                 />
               </Form.Control>
@@ -76,6 +77,7 @@ export function LinkFileModal({
                   name="address"
                   required
                   placeholder="team-whiteboard"
+                  defaultValue={file ? getAddress(file.key) : undefined}
                 />
               </Form.Control>
               <div className="ml-1 mt-1 flex flex-col items-baseline justify-between gap-1 text-sm text-red-500">
@@ -97,7 +99,7 @@ export function LinkFileModal({
             <div className="mt-6 flex justify-end">
               <Form.Submit
                 disabled={submitPending}
-                onSubmit={onSubmit}
+                onSubmit={submit}
                 className="mt-4 rounded-md bg-green-500 px-4 py-2 text-white shadow hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-600 disabled:cursor-not-allowed disabled:bg-gray-300 disabled:disabled:bg-gray-300 disabled:disabled:text-gray-700 disabled:text-gray-700 disabled:disabled:shadow-none disabled:shadow-none disabled:disabled:ring-gray-300 disabled:disabled:hover:bg-gray-300 disabled:hover:bg-gray-300 disabled:disabled:focus:ring-gray-300 disabled:focus:ring-gray-300"
               >
                 Save changes
@@ -112,7 +114,7 @@ export function LinkFileModal({
     </Dialog.Root>
   );
 
-  async function onSubmit(event: React.FormEvent) {
+  async function submit(event: React.FormEvent) {
     event.preventDefault();
 
     const form = event.currentTarget as HTMLFormElement;
@@ -123,13 +125,11 @@ export function LinkFileModal({
     if (matchesExistingAddress(data.address, userFiles)) return;
 
     startSubmit(async () => {
-      await createUserFile({
-        title: data.url,
+      await onSubmit({
+        url: data.url,
         key: data.address,
-        fileType: FileType.Link,
       });
       setOpen(false);
-      router.push(`/${localUser.username}/${data.address}`);
     });
   }
 }
