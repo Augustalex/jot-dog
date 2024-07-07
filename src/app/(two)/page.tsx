@@ -4,7 +4,6 @@ import Image from "next/image";
 import React from "react";
 import { Home } from "../../jot-two/home/Home";
 import { cookies } from "next/headers";
-import { FileTester } from "../../jot-two/FileTester";
 import { getUserFiles } from "./files/user-file-actions";
 
 export default async function HomePage() {

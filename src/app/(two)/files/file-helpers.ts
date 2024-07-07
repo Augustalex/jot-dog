@@ -3,9 +3,11 @@ import { JotTwoFile } from "../../../jot-two/file/file-utils";
 
 const FILES_STORAGE_KEY = "files";
 
-export async function getFiles(username: string): Promise<JotTwoFile[]> {
+export async function getFiles<File extends JotTwoFile>(
+  username: string,
+): Promise<File[]> {
   // await DANGEROUS_DELETE(username); // Use this for development to clear corrupt data
-  const filesRaw = await jkv.getJson<JotTwoFile[] | null>(
+  const filesRaw = await jkv.getJson<File[] | null>(
     getFileStorageKey(username),
   );
   return filesRaw ?? [];
@@ -28,22 +30,18 @@ export async function createFile(
   return file;
 }
 
-export async function updateFile(
+export async function updateFile<File extends JotTwoFile>(
   username: string,
   currentFileKey: string,
-  mergeFile: JotTwoFile,
+  mergeFile: File,
 ) {
-  const currentFiles = await getFiles(username);
+  const currentFiles: File[] = await getFiles(username);
   const currentFile = currentFiles.find((f) => f.key === currentFileKey);
   if (!currentFile) throw new Error("File not found");
 
-  const newFiles = [
+  const newFiles: File[] = [
     ...currentFiles.filter((f) => f !== currentFile),
-    {
-      key: mergeFile.key,
-      name: mergeFile.name,
-      fileType: mergeFile.fileType,
-    },
+    { ...mergeFile },
   ];
   await setFiles(username, newFiles);
 
@@ -52,7 +50,6 @@ export async function updateFile(
 
 export async function deleteFile(fileKey: string, username: string) {
   const currentFiles = await getFiles(username);
-  console.log("key", fileKey);
   const newFiles = currentFiles.filter((f) => f.key !== fileKey);
   await setFiles(username, newFiles);
 }
@@ -61,7 +58,7 @@ function getFileStorageKey(username: string) {
   return `${username}:${FILES_STORAGE_KEY}`;
 }
 
-function setFiles(username: string, files: JotTwoFile[]) {
+function setFiles<File extends JotTwoFile>(username: string, files: File[]) {
   return jkv.setJson(getFileStorageKey(username), files);
 }
 

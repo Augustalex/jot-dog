@@ -39,7 +39,7 @@ async function setJson(key: string, data: any) {
 
 async function del(key: string) {
   const response = await fetch(
-    `${JOT_DOCS_URL}/del?key=${encodeURIComponent(key)}`,
+    `${JOT_DOCS_URL}/delete?key=${encodeURIComponent(key)}`,
     {
       method: "DELETE",
     },

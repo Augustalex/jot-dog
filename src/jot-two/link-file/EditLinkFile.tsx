@@ -5,6 +5,7 @@ import { useLocalUserContext } from "../local-user/LocalUserContext";
 import { LinkFileModal } from "./LinkFileModal";
 import { useFileContext } from "../file/FileContext";
 import { FileType, LinkFile } from "../file/file-utils";
+import { isAddressChanged } from "../utils/isAddressChanged";
 
 export function EditLinkFile({
   linkFile,
@@ -23,12 +24,25 @@ export function EditLinkFile({
     </LinkFileModal>
   );
 
-  async function onSubmit({ url, key }: { url: string; key: string }) {
+  async function onSubmit({
+    title,
+    url,
+    key,
+  }: {
+    title: string;
+    url: string;
+    key: string;
+  }) {
     await updateUserFile(linkFile.key, {
-      title: url,
-      key: key,
+      name: title,
+      key,
+      url,
       fileType: FileType.Link,
     });
-    router.push(`/${localUser.username}/${key}`);
+    if (isAddressChanged(linkFile, key)) {
+      router.push(`/${localUser.username}/${key}`);
+    } else {
+      window.location.reload();
+    }
   }
 }

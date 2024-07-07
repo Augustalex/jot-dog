@@ -21,10 +21,19 @@ export function CreateLinkFile({
     </LinkFileModal>
   );
 
-  async function onSubmit({ url, key }: { url: string; key: string }) {
+  async function onSubmit({
+    title,
+    url,
+    key,
+  }: {
+    title: string;
+    url: string;
+    key: string;
+  }) {
     await createUserFile({
-      title: url,
+      name: title,
       key: key,
+      url,
       fileType: FileType.Link,
     });
     router.push(`/${localUser.username}/${key}`);

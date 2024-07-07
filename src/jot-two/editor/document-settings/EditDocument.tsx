@@ -10,6 +10,7 @@ import { useRouter } from "next/navigation";
 import { useLocalUserContext } from "../../local-user/LocalUserContext";
 import { isAddressChanged } from "../../utils/isAddressChanged";
 import { useRecentlyViewed } from "../../utils/useRecentlyViewed";
+import { FileType } from "../../file/file-utils";
 
 export function EditDocument({ children }: { children: ReactNode }) {
   const { file, userFiles } = useFileContext();
@@ -37,8 +38,9 @@ export function EditDocument({ children }: { children: ReactNode }) {
     address: string;
   }) {
     await updateUserFile(file.key, {
-      title: title ?? "Untitled",
+      name: title ?? "Untitled",
       key: address ?? "untitled",
+      fileType: FileType.YDoc,
     });
 
     if (isAddressChanged(file, address)) {

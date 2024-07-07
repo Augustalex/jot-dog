@@ -145,7 +145,10 @@ export function LinkFileModal({
                   Please enter an address
                 </Form.Message>
                 <Form.Message
-                  match={(value) => matchesExistingAddress(value, userFiles)}
+                  match={(value) =>
+                    (!file || isAddressChanged(file, value)) &&
+                    matchesExistingAddress(value, userFiles)
+                  }
                 >
                   Address is already taken
                 </Form.Message>
@@ -191,7 +194,11 @@ export function LinkFileModal({
       setOpen(false);
       return;
     }
-    if (matchesExistingAddress(data.address, userFiles)) return;
+    if (
+      (!file || isAddressChanged(file, data.address)) &&
+      matchesExistingAddress(data.address, userFiles)
+    )
+      return;
 
     startSubmit(async () => {
       await onSubmit({

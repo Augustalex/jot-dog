@@ -3,7 +3,7 @@ import { ReactNode } from "react";
 import { createUserFile } from "../../../app/(two)/files/user-file-actions";
 import { useRouter } from "next/navigation";
 import { useLocalUserContext } from "../../local-user/LocalUserContext";
-import { JotTwoFile } from "../../file/file-utils";
+import { FileType, JotTwoFile } from "../../file/file-utils";
 
 export function CreateDocument({
   userFiles,
@@ -29,8 +29,9 @@ export function CreateDocument({
     address: string;
   }) {
     await createUserFile({
-      title: title ?? "Untitled",
+      name: title ?? "Untitled",
       key: address ?? "untitled",
+      fileType: FileType.YDoc,
     });
     router.push(`/${localUser.username}/${address}`);
   }

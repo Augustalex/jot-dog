@@ -4,17 +4,10 @@ import { createFile, deleteFile, getFiles, updateFile } from "./file-helpers";
 import { auth, currentUser } from "@clerk/nextjs/server";
 
 import { getUsername } from "../../../jot-two/utils/getUsername";
-import { FileType } from "../../../jot-two/file/file-utils";
+import { FileType, JotTwoFile } from "../../../jot-two/file/file-utils";
+import { getAddress } from "../../../jot-two/utils/getAddress";
 
-export async function createUserFile({
-  title,
-  key,
-  fileType = FileType.YDoc,
-}: {
-  title: string;
-  key: string;
-  fileType?: FileType;
-}) {
+export async function createUserFile<File extends JotTwoFile>(file: File) {
   auth().protect();
   const user = await currentUser();
   if (!user) throw new Error("User not found");
@@ -25,24 +18,16 @@ export async function createUserFile({
     username: user.username,
     fullName: user.fullName,
   });
+  const { key, ...misc } = file;
   return await createFile(username, {
-    name: title,
     key: `${username}/${key}`,
-    fileType,
+    ...misc,
   });
 }
 
-export async function updateUserFile(
+export async function updateUserFile<File extends JotTwoFile>(
   currentFileKey: string,
-  {
-    title,
-    key,
-    fileType = FileType.YDoc,
-  }: {
-    title: string;
-    key: string;
-    fileType?: FileType;
-  },
+  newFile: File,
 ) {
   auth().protect();
   const user = await currentUser();
@@ -54,10 +39,11 @@ export async function updateUserFile(
     username: user.username,
     fullName: user.fullName,
   });
+
+  const { key, ...misc } = newFile;
   return await updateFile(username, currentFileKey, {
-    name: title,
-    key: `${username}/${key}`,
-    fileType,
+    key: `${username}/${getAddress(newFile.key)}`,
+    ...misc,
   });
 }
 
