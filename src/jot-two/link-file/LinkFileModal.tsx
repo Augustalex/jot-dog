@@ -1,10 +1,10 @@
-import React, { ReactNode, useTransition } from "react";
+import React, { ReactNode, useCallback, useTransition } from "react";
 import * as Dialog from "@radix-ui/react-dialog";
 import * as Form from "@radix-ui/react-form";
 import { matchesExistingAddress } from "../editor/matchesExistingAddress";
-import { NoteFile } from "../../jot-one/utils/file-utils";
 import { getAddress } from "../utils/getAddress";
 import { isAddressChanged } from "../utils/isAddressChanged";
+import { NoteFile } from "../file/file-utils";
 
 type FormDataType = {
   url: string;
@@ -24,6 +24,26 @@ export function LinkFileModal({
 }) {
   const [open, setOpen] = React.useState(false);
   const [submitPending, startSubmit] = useTransition();
+  const [title, setTitle] = React.useState<string | undefined>(file?.name);
+
+  const [defaultAddress, setDefaultAddress] = React.useState<
+    string | undefined
+  >(file ? getAddress(file.key) : undefined);
+
+  const updateDefaultAddress = useCallback(
+    (title: string) => {
+      if (!!file) return;
+
+      if (!title) setDefaultAddress(undefined);
+      const suggestedAddress = title.toLowerCase().replace(/\s+/g, "-");
+      if (matchesExistingAddress(suggestedAddress, userFiles)) {
+        setDefaultAddress(undefined);
+      } else {
+        setDefaultAddress(suggestedAddress);
+      }
+    },
+    [file, userFiles],
+  );
 
   return (
     <Dialog.Root onOpenChange={setOpen} open={open}>
@@ -39,6 +59,36 @@ export function LinkFileModal({
           </Dialog.Description>
 
           <Form.Root className="flex flex-1 flex-col gap-4" onSubmit={submit}>
+            <Form.Field name="title" className="space-y-2">
+              <div className="flex items-baseline justify-between">
+                <Form.Label htmlFor="title" className="text-sm text-gray-700">
+                  Title
+                </Form.Label>
+              </div>
+              <Form.Control asChild>
+                <input
+                  required
+                  className="inline-flex w-80 flex-1 items-center justify-center rounded-md border border-gray-300 px-3 py-2 text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  type="text"
+                  id="title"
+                  name="title"
+                  placeholder="Meeting notes"
+                  defaultValue={file?.name}
+                  inputMode="text"
+                  value={title}
+                  onChange={(e) => {
+                    setTitle(e.target.value);
+                    updateDefaultAddress(e.target.value);
+                  }}
+                />
+              </Form.Control>
+              <div className="ml-1 mt-1 flex flex-col items-baseline justify-between gap-1 text-sm text-red-500">
+                <Form.Message match="valueMissing">
+                  Please enter a title
+                </Form.Message>
+              </div>
+            </Form.Field>
+
             <Form.Field name="url" className="space-y-2">
               <div className="flex items-baseline justify-between">
                 <Form.Label htmlFor="url" className="text-sm text-gray-700">
@@ -78,7 +128,7 @@ export function LinkFileModal({
                   name="address"
                   required
                   placeholder="team-whiteboard"
-                  defaultValue={file ? getAddress(file.key) : undefined}
+                  defaultValue={defaultAddress}
                 />
               </Form.Control>
               <div className="ml-1 mt-1 flex flex-col items-baseline justify-between gap-1 text-sm text-red-500">

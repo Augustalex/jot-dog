@@ -1,6 +1,5 @@
 "use client";
 
-import { FileType, NoteFile } from "../../jot-one/utils/file-utils";
 import { CollaborationProvider } from "../presence/CollaborationContext";
 import { FileProvider, useFileContext } from "../file/FileContext";
 import { PresenceRow } from "../presence/PresenceRow";
@@ -24,6 +23,7 @@ import {
 import { useRegisterOpenFile } from "../utils/useOpenFiles";
 import { MobileSideBar } from "../side-bar/MobileSideBar";
 import { LinkWindow } from "./LinkWindow";
+import { FileType, NoteFile } from "../file/file-utils";
 
 export function Document({
   userFiles,

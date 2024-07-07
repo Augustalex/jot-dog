@@ -4,7 +4,7 @@ import * as Form from "@radix-ui/react-form";
 import { isAddressChanged } from "../../utils/isAddressChanged";
 import { getAddress } from "../../utils/getAddress";
 import { matchesExistingAddress } from "../matchesExistingAddress";
-import { NoteFile } from "../../../jot-one/utils/file-utils";
+import { NoteFile } from "../../file/file-utils";
 
 type FormDataType = {
   title: string;

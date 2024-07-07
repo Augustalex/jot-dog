@@ -1,5 +1,5 @@
-import { NoteFile } from "../../jot-one/utils/file-utils";
 import { getAddress } from "../utils/getAddress";
+import { NoteFile } from "../file/file-utils";
 
 export function matchesExistingAddress(
   address: string,

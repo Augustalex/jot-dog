@@ -1,6 +1,6 @@
 import { createContext, ReactNode, useContext, useState } from "react";
-import { NoteFile } from "../../jot-one/utils/file-utils";
 import * as Y from "yjs";
+import { NoteFile } from "./file-utils";
 
 const FileContext = createContext<{
   file: NoteFile;

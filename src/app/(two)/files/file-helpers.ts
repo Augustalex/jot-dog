@@ -1,5 +1,5 @@
-import { NoteFile } from "../../../jot-one/utils/file-utils";
 import { jkv } from "../../../jot-two/jkv/jkv";
+import { NoteFile } from "../../../jot-two/file/file-utils";
 
 const FILES_STORAGE_KEY = "files";
 

@@ -1,10 +1,10 @@
 import { useFileContext } from "../file/FileContext";
 import { useRecentlyViewed } from "../utils/useRecentlyViewed";
 import React from "react";
-import { FileType } from "../../jot-one/utils/file-utils";
 import { getAddress } from "../utils/getAddress";
 import { CreateDocument } from "../editor/document-settings/CreateDocument";
 import { CreateLinkFile } from "../link-file/CreateLinkFile";
+import { FileType } from "../file/file-utils";
 
 export function SideBarContent() {
   const { userFiles, file: openFile } = useFileContext();

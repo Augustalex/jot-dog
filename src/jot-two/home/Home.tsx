@@ -10,9 +10,9 @@ import {
 } from "../local-user/LocalUserContext";
 import { UserLoader } from "../user/UserLoader";
 import { UserBubble } from "../user/UserBubble";
-import { NoteFile } from "../../jot-one/utils/file-utils";
 import { CreateDocument } from "../editor/document-settings/CreateDocument";
 import { CreateLinkFile } from "../link-file/CreateLinkFile";
+import { NoteFile } from "../file/file-utils";
 
 const ibmPlexMono = IBM_Plex_Mono({
   weight: ["100", "200", "300", "400", "500", "600", "700"],

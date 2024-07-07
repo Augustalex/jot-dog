@@ -2,8 +2,8 @@ import React, { ReactNode } from "react";
 import { createUserFile } from "../../app/(two)/files/user-file-actions";
 import { useRouter } from "next/navigation";
 import { useLocalUserContext } from "../local-user/LocalUserContext";
-import { FileType, NoteFile } from "../../jot-one/utils/file-utils";
 import { LinkFileModal } from "./LinkFileModal";
+import { FileType, NoteFile } from "../file/file-utils";
 
 export function CreateLinkFile({
   userFiles,

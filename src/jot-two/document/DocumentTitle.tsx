@@ -1,9 +1,9 @@
 import { useFileContext } from "../file/FileContext";
 import { IBM_Plex_Mono } from "next/font/google";
-import { FileType } from "../../jot-one/utils/file-utils";
 import { getAddress } from "../utils/getAddress";
 import { EditDocument } from "../editor/document-settings/EditDocument";
 import { EditLinkFile } from "../link-file/EditLinkFile";
+import { FileType } from "../file/file-utils";
 
 const ibmPlexMono = IBM_Plex_Mono({
   weight: ["100", "200", "300", "400", "500", "600", "700"],

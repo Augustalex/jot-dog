@@ -1,8 +1,8 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import { NoteFile } from "../../jot-one/utils/file-utils";
 import { useRegisterView } from "../utils/useRecentlyViewed";
+import { NoteFile } from "../file/file-utils";
 
 const Document = dynamic(() => import("./Document").then((m) => m.Document), {
   ssr: false,

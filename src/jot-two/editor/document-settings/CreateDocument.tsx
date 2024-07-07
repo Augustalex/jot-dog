@@ -1,9 +1,9 @@
 import { DocumentSettingsModal } from "./DocumentSettingsModal";
 import { ReactNode } from "react";
-import { NoteFile } from "../../../jot-one/utils/file-utils";
 import { createUserFile } from "../../../app/(two)/files/user-file-actions";
 import { useRouter } from "next/navigation";
 import { useLocalUserContext } from "../../local-user/LocalUserContext";
+import { NoteFile } from "../../file/file-utils";
 
 export function CreateDocument({
   userFiles,
