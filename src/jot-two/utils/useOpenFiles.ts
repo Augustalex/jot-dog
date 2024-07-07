@@ -1,6 +1,6 @@
 import { useCallback, useEffect } from "react";
-import { useLocalState } from "../../jot-one/utils/hooks/useLocalState";
 import { NoteFile } from "../file/file-utils";
+import { useLocalState } from "./useLocalState";
 
 export interface OpenFile {
   file: NoteFile;

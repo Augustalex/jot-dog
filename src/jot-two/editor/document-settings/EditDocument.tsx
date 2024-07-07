@@ -2,7 +2,6 @@ import { DocumentSettingsModal } from "./DocumentSettingsModal";
 import { ReactNode } from "react";
 import { useFileContext } from "../../file/FileContext";
 import { useOpenFiles } from "../../utils/useOpenFiles";
-import { useRecentlyViewed } from "../../utils/useRecentlyViewed";
 import {
   deleteUserFile,
   updateUserFile,
@@ -10,6 +9,7 @@ import {
 import { useRouter } from "next/navigation";
 import { useLocalUserContext } from "../../local-user/LocalUserContext";
 import { isAddressChanged } from "../../utils/isAddressChanged";
+import { useRecentlyViewed } from "../../utils/useRecentlyViewed";
 
 export function EditDocument({ children }: { children: ReactNode }) {
   const { file, userFiles } = useFileContext();

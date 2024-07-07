@@ -1,6 +1,6 @@
 "use client";
 
-import { useRecentlyViewed } from "../../utils/hooks/useRecentlyViewed";
+import { useJotOneRecentlyViewed } from "../../utils/hooks/useJotOneRecentlyViewed";
 import React from "react";
 import { LinkCard } from "../../design/LinkCard";
 import { Grid } from "../../design/Grid";
@@ -14,7 +14,7 @@ const ibmPlexMono = IBM_Plex_Mono({
 });
 
 export function Home() {
-  const { recentlyViewed, isReady } = useRecentlyViewed();
+  const { recentlyViewed, isReady } = useJotOneRecentlyViewed();
 
   if (!isReady) return <div>Loading...</div>;
 

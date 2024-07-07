@@ -1,13 +1,13 @@
 import { useCallback, useEffect } from "react";
-import { useLocalState } from "../../jot-one/utils/hooks/useLocalState";
 import { NoteFile } from "../file/file-utils";
+import { useLocalState } from "./useLocalState";
 
 export interface RecentView {
   file: NoteFile;
   viewedDate: string;
 }
 
-const LOCAL_STORAGE_KEY = "recently-viewed";
+const LOCAL_STORAGE_KEY = "jot-two-recently-viewed";
 
 export const useRecentlyViewed = () => {
   const { localState, setLocalState, isReady } = useLocalState<RecentView[]>(

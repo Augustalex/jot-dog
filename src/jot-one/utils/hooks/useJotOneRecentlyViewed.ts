@@ -9,21 +9,21 @@ export interface RecentView {
 
 const LOCAL_STORAGE_KEY = "recent-views";
 
-export const useRecentlyViewed = () => {
+export const useJotOneRecentlyViewed = () => {
   const { localState, isReady } = useLocalState<RecentView[]>(
     LOCAL_STORAGE_KEY,
-    []
+    [],
   );
 
   return { recentlyViewed: localState, isReady };
 };
 
-export const useRegisterView = (file: NoteFile) => {
+export const useJotOneRegisterView = (file: NoteFile) => {
   useEffect(() => {
     const state = localStorage.getItem(LOCAL_STORAGE_KEY) ?? "[]";
     const recentViews: RecentView[] = JSON.parse(state);
     const viewsWithoutFile = recentViews.filter(
-      (view) => view.file.key !== file.key
+      (view) => view.file.key !== file.key,
     );
     const latest7Entries = viewsWithoutFile.slice(0, 7);
     const newState = [
