@@ -6,9 +6,11 @@ import { DocumentActions } from "./DocumentActions";
 import { PresenceRow } from "../presence/PresenceRow";
 import { useState } from "react";
 import { CloseIcon } from "../icons/CloseIcon";
+import { useSideBarState } from "../side-bar/SideBarState";
 
 export function LinkWindow() {
   const { file } = useFileContext();
+  const closeSideBar = useSideBarState((state) => state.close);
   const [isFullscreen, setIsFullscreen] = useState(false);
 
   return (
@@ -47,6 +49,7 @@ export function LinkWindow() {
   );
 
   function toggleFullscreen() {
+    closeSideBar();
     setIsFullscreen((fullscreen) => !fullscreen);
   }
 }
