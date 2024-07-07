@@ -55,7 +55,7 @@ export function DocumentSettingsModal({
         setDefaultAddress(suggestedAddress);
       }
     },
-    [userFiles],
+    [creating, userFiles],
   );
 
   return (
@@ -221,7 +221,14 @@ export function DocumentSettingsModal({
     const data = Object.fromEntries(formData.entries()) as FormDataType;
 
     if (!data.title || !data.address) return;
-
+    if (
+      file &&
+      !isAddressChanged(file, data.address) &&
+      file.name === data.title
+    ) {
+      setOpen(false);
+      return;
+    }
     if (
       (!file || isAddressChanged(file, data.address)) &&
       matchesExistingAddress(data.address, userFiles)

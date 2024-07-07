@@ -4,6 +4,7 @@ import * as Form from "@radix-ui/react-form";
 import { matchesExistingAddress } from "../editor/matchesExistingAddress";
 import { NoteFile } from "../../jot-one/utils/file-utils";
 import { getAddress } from "../utils/getAddress";
+import { isAddressChanged } from "../utils/isAddressChanged";
 
 type FormDataType = {
   url: string;
@@ -122,6 +123,14 @@ export function LinkFileModal({
     const data = Object.fromEntries(formData.entries()) as FormDataType;
 
     if (!data.url || !data.address) return;
+    if (
+      file &&
+      !isAddressChanged(file, data.address) &&
+      file.name === data.url
+    ) {
+      setOpen(false);
+      return;
+    }
     if (matchesExistingAddress(data.address, userFiles)) return;
 
     startSubmit(async () => {
