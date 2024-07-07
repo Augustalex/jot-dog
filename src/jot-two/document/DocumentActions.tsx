@@ -18,6 +18,6 @@ export function DocumentActions() {
   async function share() {
     await navigator.clipboard.writeText(window.location.href);
     setStatus("copied");
-    setTimeout(() => setStatus("ready"), 5000);
+    setTimeout(() => setStatus("ready"), 3000);
   }
 }
