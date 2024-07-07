@@ -4,17 +4,19 @@ import { persist } from "zustand/middleware";
 export const SIDEBAR_WIDTH = 320;
 
 interface State {
-  open: boolean;
+  isOpen: boolean;
   toggle: () => void;
   close: () => void;
+  open: () => void;
 }
 
 export const useSideBarState = create(
   persist<State>(
     (set) => ({
-      open: false,
-      toggle: () => set((state) => ({ open: !state.open })),
-      close: () => set({ open: false }),
+      isOpen: false,
+      toggle: () => set((state) => ({ isOpen: !state.isOpen })),
+      close: () => set({ isOpen: false }),
+      open: () => set({ isOpen: true }),
     }),
     {
       name: "jot-dog-side-bar-state",

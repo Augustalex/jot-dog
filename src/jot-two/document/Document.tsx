@@ -56,7 +56,7 @@ const EDITOR_MAX_WIDTH = 620;
 
 function DocumentInner() {
   const { file } = useFileContext();
-  const sideBarIsOpen = useSideBarState((state) => state.open);
+  const sideBarIsOpen = useSideBarState((state) => state.isOpen);
 
   return (
     <div className="relative">
@@ -86,7 +86,7 @@ function DocumentInner() {
 }
 
 function DocumentEditorWindow() {
-  const sideBarIsOpen = useSideBarState((state) => state.open);
+  const sideBarIsOpen = useSideBarState((state) => state.isOpen);
 
   const [documentWidth, setDocumentWidth] = useState(0);
   useLayoutEffect(() => {

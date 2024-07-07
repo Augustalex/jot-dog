@@ -8,7 +8,7 @@ import {
 import { UserBubble } from "../user/UserBubble";
 
 export function DesktopSideBarWrapper({ children }: { children: ReactNode }) {
-  const sideBarIsOpen = useSideBarState((state) => state.open);
+  const sideBarIsOpen = useSideBarState((state) => state.isOpen);
 
   return (
     <div

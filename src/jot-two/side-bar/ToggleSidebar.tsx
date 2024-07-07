@@ -1,7 +1,7 @@
 import { useSideBarState } from "./SideBarState";
 
 export function ToggleSidebar() {
-  const sideBarIsOpen = useSideBarState((state) => state.open);
+  const sideBarIsOpen = useSideBarState((state) => state.isOpen);
   const toggleSideBar = useSideBarState((state) => state.toggle);
   const off = "#18181b";
   const on = "#6366f1";

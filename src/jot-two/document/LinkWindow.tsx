@@ -10,7 +10,10 @@ import { useSideBarState } from "../side-bar/SideBarState";
 
 export function LinkWindow() {
   const { file } = useFileContext();
+  const sideBarIsOpen = useSideBarState((state) => state.isOpen);
   const closeSideBar = useSideBarState((state) => state.close);
+  const openSideBar = useSideBarState((state) => state.open);
+  const [sideBarWasOpen, setSideBarWasOpen] = useState(sideBarIsOpen);
   const [isFullscreen, setIsFullscreen] = useState(false);
 
   return (
@@ -49,8 +52,14 @@ export function LinkWindow() {
   );
 
   function toggleFullscreen() {
-    closeSideBar();
-    setIsFullscreen((fullscreen) => !fullscreen);
+    if (isFullscreen) {
+      if (sideBarWasOpen) openSideBar();
+      setIsFullscreen(false);
+    } else {
+      setSideBarWasOpen(sideBarIsOpen);
+      closeSideBar();
+      setIsFullscreen(true);
+    }
   }
 }
 

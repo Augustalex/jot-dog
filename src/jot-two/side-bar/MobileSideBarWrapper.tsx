@@ -4,7 +4,7 @@ import { UserBubble } from "../user/UserBubble";
 import { CloseButton } from "../tab-bar/CloseButton";
 
 export function MobileSideBarWrapper({ children }: { children: ReactNode }) {
-  const sideBarIsOpen = useSideBarState((state) => state.open);
+  const sideBarIsOpen = useSideBarState((state) => state.isOpen);
   const toggleSideBar = useSideBarState((state) => state.toggle);
 
   return (
