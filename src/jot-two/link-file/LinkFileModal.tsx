@@ -4,21 +4,21 @@ import * as Form from "@radix-ui/react-form";
 import { createUserFile } from "../../app/(two)/files/user-file-actions";
 import { useRouter } from "next/navigation";
 import { useLocalUserContext } from "../local-user/LocalUserContext";
-import { isAddressChanged } from "../utils/isAddressChanged";
 import { matchesExistingAddress } from "../editor/matchesExistingAddress";
-import { useFileContext } from "../file/FileContext";
-import { useRecentlyViewed } from "../utils/useRecentlyViewed";
-import { getAddress } from "../utils/getAddress";
-import { FileType } from "../../jot-one/utils/file-utils";
+import { FileType, NoteFile } from "../../jot-one/utils/file-utils";
 
 type FormDataType = {
   url: string;
   address: string;
 };
 
-export function LinkFileModal({ children }: { children: ReactNode }) {
-  const { file, userFiles } = useFileContext();
-  const { removeFileFromRecent } = useRecentlyViewed();
+export function LinkFileModal({
+  userFiles,
+  children,
+}: {
+  userFiles: NoteFile[];
+  children: ReactNode;
+}) {
   const [open, setOpen] = React.useState(false);
   const [submitPending, startSubmit] = useTransition();
   const router = useRouter();
@@ -51,7 +51,7 @@ export function LinkFileModal({ children }: { children: ReactNode }) {
                   type="text"
                   id="url"
                   name="url"
-                  defaultValue={file.name}
+                  placeholder="https://whiteboard.com/shared/1234"
                   inputMode="text"
                 />
               </Form.Control>
@@ -75,7 +75,7 @@ export function LinkFileModal({ children }: { children: ReactNode }) {
                   id="address"
                   name="address"
                   required
-                  defaultValue={getAddress(file.key)}
+                  placeholder="team-whiteboard"
                 />
               </Form.Control>
               <div className="ml-1 mt-1 flex flex-col items-baseline justify-between gap-1 text-sm text-red-500">
@@ -83,10 +83,7 @@ export function LinkFileModal({ children }: { children: ReactNode }) {
                   Please enter an address
                 </Form.Message>
                 <Form.Message
-                  match={(value) =>
-                    isAddressChanged(file, value) &&
-                    matchesExistingAddress(value, userFiles)
-                  }
+                  match={(value) => matchesExistingAddress(value, userFiles)}
                 >
                   Address is already taken
                 </Form.Message>
@@ -123,11 +120,7 @@ export function LinkFileModal({ children }: { children: ReactNode }) {
     const data = Object.fromEntries(formData.entries()) as FormDataType;
 
     if (!data.url || !data.address) return;
-    if (
-      isAddressChanged(file, data.address) &&
-      matchesExistingAddress(data.address, userFiles)
-    )
-      return;
+    if (matchesExistingAddress(data.address, userFiles)) return;
 
     startSubmit(async () => {
       await createUserFile({
@@ -136,13 +129,7 @@ export function LinkFileModal({ children }: { children: ReactNode }) {
         fileType: FileType.Link,
       });
       setOpen(false);
-
-      if (isAddressChanged(file, data.address)) {
-        removeFileFromRecent(file);
-        router.push(`/${localUser.username}/${data.address}`);
-      } else if (data.url !== file.name) {
-        window.location.reload();
-      }
+      router.push(`/${localUser.username}/${data.address}`);
     });
   }
 }

@@ -25,7 +25,7 @@ export function SideBarContent() {
             <span>Create new file</span>
           </button>
         </CreateDocument>
-        <LinkFileModal>
+        <LinkFileModal userFiles={userFiles}>
           <button
             className={`floating-shadow w-full cursor-pointer rounded-lg p-2 text-blue-950 hover:bg-indigo-50`}
           >
