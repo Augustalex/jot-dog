@@ -17,3 +17,7 @@ export interface LinkFile extends JotTwoFile {
   fileType: FileType.Link;
   url: string;
 }
+
+export function isLinkFile(file: JotTwoFile): file is LinkFile {
+  return file.fileType === FileType.Link;
+}
