@@ -16,6 +16,7 @@ export function LinkFileModal({
   file,
   userFiles,
   onSubmit,
+  onDelete,
   children,
 }: {
   file?: LinkFile;
@@ -29,12 +30,17 @@ export function LinkFileModal({
     url: string;
     key: string;
   }): Promise<void>;
+  onDelete?(): Promise<void>;
   children: ReactNode;
 }) {
   const [open, setOpen] = React.useState(false);
   const [submitPending, startSubmit] = useTransition();
-  const [title, setTitle] = React.useState<string | undefined>(file?.name);
 
+  const [pressedDelete, setPressedDelete] = React.useState<number | null>(null);
+  const [tryingToDelete, tryToDelete] = useTransition();
+  const [deletingFile, deleteFile] = useTransition();
+
+  const [title, setTitle] = React.useState<string | undefined>(file?.name);
   const [defaultAddress, setDefaultAddress] = React.useState<
     string | undefined
   >(file ? getAddress(file.key) : undefined);
@@ -159,7 +165,21 @@ export function LinkFileModal({
               </div>
             </Form.Field>
 
-            <div className="mt-6 flex justify-end">
+            <div className="mt-6 flex items-end justify-end">
+              {onDelete && (
+                <button
+                  disabled={deletingFile}
+                  onClick={tryingToDelete ? reallyDeleteJot : deleteJot}
+                  className="mr-2 rounded-md bg-red-500 px-4 py-2 text-white shadow hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-600"
+                >
+                  {deletingFile
+                    ? "Deleting"
+                    : tryingToDelete
+                      ? "Are you sure?"
+                      : "Delete jot"}
+                </button>
+              )}
+
               <Form.Submit
                 disabled={submitPending}
                 onSubmit={submit}
@@ -176,6 +196,35 @@ export function LinkFileModal({
       </Dialog.Portal>
     </Dialog.Root>
   );
+
+  function deleteJot(e: React.MouseEvent) {
+    e.preventDefault();
+    e.stopPropagation();
+
+    setPressedDelete(Date.now());
+    tryToDelete(() => {
+      return new Promise((resolve) =>
+        setTimeout(() => {
+          setPressedDelete(null);
+          resolve();
+        }, 2500),
+      );
+    });
+  }
+
+  async function reallyDeleteJot(e: React.MouseEvent) {
+    e.preventDefault();
+    e.stopPropagation();
+
+    if (!onDelete || !pressedDelete) return;
+    const timeSincePressedDelete = Date.now() - pressedDelete;
+    if (timeSincePressedDelete < 250) return;
+
+    deleteFile(async () => {
+      setPressedDelete(null);
+      await onDelete();
+    });
+  }
 
   async function submit(event: React.FormEvent) {
     event.preventDefault();

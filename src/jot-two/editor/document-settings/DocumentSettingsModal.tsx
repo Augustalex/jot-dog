@@ -34,6 +34,7 @@ export function DocumentSettingsModal({
 }) {
   const [open, setOpen] = React.useState(false);
   const [submitPending, startSubmit] = useTransition();
+
   const [pressedDelete, setPressedDelete] = React.useState<number | null>(null);
   const [tryingToDelete, tryToDelete] = useTransition();
   const [deletingFile, deleteFile] = useTransition();
