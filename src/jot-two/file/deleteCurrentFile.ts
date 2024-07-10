@@ -20,13 +20,17 @@ export function useDeleteCurrentFile(file: JotTwoFile) {
 
     const recentlyViewedOwnedFile = recentlyViewed
       .toSorted((a, b) => b.viewedDate.localeCompare(a.viewedDate))
-      .find((recent) => recent.file.key.startsWith(localUser.username));
+      .find(
+        (recent) =>
+          recent.file.key.startsWith(localUser.username) &&
+          recent.file.key !== file.key,
+      );
 
     if (recentlyViewedOwnedFile) {
       router.push(`/${recentlyViewedOwnedFile?.file.key}`);
     }
 
-    const firstOwnedFile = userFiles[0];
+    const firstOwnedFile = userFiles.find((file) => file.key !== file.key);
     if (firstOwnedFile) {
       router.push(`/${firstOwnedFile.key}`);
     }
