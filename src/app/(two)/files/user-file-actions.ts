@@ -5,7 +5,10 @@ import { auth, currentUser } from "@clerk/nextjs/server";
 
 import { getUsername } from "../../../jot-two/utils/getUsername";
 import { FileType, JotTwoFile } from "../../../jot-two/file/file-utils";
-import { getAddress } from "../../../jot-two/utils/getAddress";
+import {
+  getAddress,
+  getUsernameFromKey,
+} from "../../../jot-two/utils/getAddress";
 
 export async function createUserFile<File extends JotTwoFile>(file: File) {
   auth().protect();
@@ -59,6 +62,13 @@ export async function getUserFiles() {
       fullName: user.fullName,
     }),
   );
+}
+
+export async function checkIfUserFileExists(fileKey: string) {
+  const username = getUsernameFromKey(fileKey);
+
+  const files = await getFiles(username);
+  return files.some((f) => f.key === fileKey);
 }
 
 export async function getOrCreateUserFile({
