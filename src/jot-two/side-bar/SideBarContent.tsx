@@ -1,5 +1,8 @@
 import { useFileContext } from "../file/FileContext";
-import { useRecentlyViewed } from "../utils/useRecentlyViewed";
+import {
+  RecentlyViewedChecker,
+  useRecentlyViewed,
+} from "../utils/useRecentlyViewed";
 import React from "react";
 import { getAddress } from "../utils/getAddress";
 import { CreateDocument } from "../editor/document-settings/CreateDocument";
@@ -59,13 +62,14 @@ export function SideBarContent() {
           <div className="w-full">
             {recentlyViewedOthersFiles.map(({ file }) => {
               return (
-                <a
-                  key={file.key}
-                  href={`/${file.key}`}
-                  className={`my-2 flex transform-gpu cursor-pointer rounded-lg border border-gray-200 p-4 hover:bg-indigo-50 ${file.key === openFile.key ? "bg-indigo-100" : ""}`}
-                >
-                  <span>{file.name}</span>
-                </a>
+                <RecentlyViewedChecker key={file.key} file={file}>
+                  <a
+                    href={`/${file.key}`}
+                    className={`my-2 flex transform-gpu cursor-pointer rounded-lg border border-gray-200 p-4 hover:bg-indigo-50 ${file.key === openFile.key ? "bg-indigo-100" : ""}`}
+                  >
+                    <span>{file.name}</span>
+                  </a>
+                </RecentlyViewedChecker>
               );
             })}
           </div>
