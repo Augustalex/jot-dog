@@ -32,7 +32,6 @@ export default async function HomePage() {
             height={1280 / 4}
           />
         </div>
-        {/*<FileTester />*/}
         <div className="home-wrapper">
           <Home files={files} localId={localId} />
         </div>
