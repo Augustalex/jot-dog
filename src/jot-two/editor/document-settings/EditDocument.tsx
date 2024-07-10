@@ -15,7 +15,7 @@ import { FileType } from "../../file/file-utils";
 export function EditDocument({ children }: { children: ReactNode }) {
   const { file, userFiles } = useFileContext();
   const { closeFile } = useOpenFiles();
-  const { removeFileFromRecent } = useRecentlyViewed();
+  const { recentlyViewed, removeFileFromRecent } = useRecentlyViewed();
   const router = useRouter();
   const { localUser } = useLocalUserContext();
 
@@ -56,6 +56,11 @@ export function EditDocument({ children }: { children: ReactNode }) {
     removeFileFromRecent(file);
     closeFile(file);
     await deleteUserFile(file.key);
-    router.push(`/${localUser.username}`);
+    // router.push("/");
+
+    const recentlyViewedOwnedFile = recentlyViewed
+      .toSorted((a, b) => b.viewedDate.localeCompare(a.viewedDate))
+      .find((recent) => recent.file.key.startsWith(localUser.username));
+    router.push(`/${recentlyViewedOwnedFile?.file.key}`);
   }
 }
