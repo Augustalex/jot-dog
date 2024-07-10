@@ -56,11 +56,20 @@ export function EditDocument({ children }: { children: ReactNode }) {
     removeFileFromRecent(file);
     closeFile(file);
     await deleteUserFile(file.key);
-    // router.push("/");
 
     const recentlyViewedOwnedFile = recentlyViewed
       .toSorted((a, b) => b.viewedDate.localeCompare(a.viewedDate))
       .find((recent) => recent.file.key.startsWith(localUser.username));
-    router.push(`/${recentlyViewedOwnedFile?.file.key}`);
+
+    if (recentlyViewedOwnedFile) {
+      router.push(`/${recentlyViewedOwnedFile?.file.key}`);
+    }
+
+    const firstOwnedFile = userFiles[0];
+    if (firstOwnedFile) {
+      router.push(`/${firstOwnedFile.key}`);
+    }
+
+    router.push("/");
   }
 }
