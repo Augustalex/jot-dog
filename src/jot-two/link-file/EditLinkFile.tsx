@@ -1,16 +1,12 @@
 import React, { ReactNode } from "react";
-import {
-  deleteUserFile,
-  updateUserFile,
-} from "../../app/(two)/files/user-file-actions";
+import { updateUserFile } from "../../app/(two)/files/user-file-actions";
 import { useRouter } from "next/navigation";
 import { useLocalUserContext } from "../local-user/LocalUserContext";
 import { LinkFileModal } from "./LinkFileModal";
 import { useFileContext } from "../file/FileContext";
 import { FileType, LinkFile } from "../file/file-utils";
 import { isAddressChanged } from "../utils/isAddressChanged";
-import { useOpenFiles } from "../utils/useOpenFiles";
-import { useRecentlyViewed } from "../utils/useRecentlyViewed";
+import { useDeleteCurrentFile } from "../file/deleteCurrentFile";
 
 export function EditLinkFile({
   linkFile,
@@ -22,40 +18,18 @@ export function EditLinkFile({
   const { userFiles } = useFileContext();
   const router = useRouter();
   const { localUser } = useLocalUserContext();
-  const { closeFile } = useOpenFiles();
-  const { recentlyViewed, removeFileFromRecent } = useRecentlyViewed();
+  const deleteCurrentFile = useDeleteCurrentFile(linkFile);
 
   return (
     <LinkFileModal
       file={linkFile}
       userFiles={userFiles}
       onSubmit={onSubmit}
-      onDelete={onDelete}
+      onDelete={deleteCurrentFile}
     >
       {children}
     </LinkFileModal>
   );
-
-  async function onDelete() {
-    removeFileFromRecent(linkFile);
-    closeFile(linkFile);
-    await deleteUserFile(linkFile.key);
-
-    const recentlyViewedOwnedFile = recentlyViewed
-      .toSorted((a, b) => b.viewedDate.localeCompare(a.viewedDate))
-      .find((recent) => recent.file.key.startsWith(localUser.username));
-
-    if (recentlyViewedOwnedFile) {
-      router.push(`/${recentlyViewedOwnedFile?.file.key}`);
-    }
-
-    const firstOwnedFile = userFiles[0];
-    if (firstOwnedFile) {
-      router.push(`/${firstOwnedFile.key}`);
-    }
-
-    router.push("/");
-  }
 
   async function onSubmit({
     title,
