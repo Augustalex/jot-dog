@@ -40,7 +40,6 @@ export function LinkFileModal({
   const [tryingToDelete, tryToDelete] = useTransition();
   const [deletingFile, deleteFile] = useTransition();
 
-  const [title, setTitle] = React.useState<string | undefined>(file?.name);
   const [defaultAddress, setDefaultAddress] = React.useState<
     string | undefined
   >(file ? getAddress(file.key) : undefined);
@@ -88,11 +87,9 @@ export function LinkFileModal({
                   id="title"
                   name="title"
                   placeholder="Meeting notes"
-                  defaultValue={file?.name}
                   inputMode="text"
-                  value={title}
+                  defaultValue={file?.name}
                   onChange={(e) => {
-                    setTitle(e.target.value);
                     updateDefaultAddress(e.target.value);
                   }}
                 />

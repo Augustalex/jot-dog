@@ -39,7 +39,6 @@ export function DocumentSettingsModal({
   const [tryingToDelete, tryToDelete] = useTransition();
   const [deletingFile, deleteFile] = useTransition();
 
-  const [title, setTitle] = React.useState<string | undefined>(file?.name);
   const [defaultAddress, setDefaultAddress] = React.useState<
     string | undefined
   >(file ? getAddress(file.key) : undefined);
@@ -103,9 +102,7 @@ export function DocumentSettingsModal({
                   placeholder="Meeting notes"
                   defaultValue={file?.name}
                   inputMode="text"
-                  value={title}
                   onChange={(e) => {
-                    setTitle(e.target.value);
                     updateDefaultAddress(e.target.value);
                   }}
                 />
