@@ -24,7 +24,13 @@ export default async function UserDocumentPage({
   if (!localId) throw new Error("No local id");
 
   const userFiles = await getUserFiles();
-  const file = await getOrCreateUserFile({ username, fileKey });
 
-  return <DocumentLoader userFiles={userFiles} file={file} localId={localId} />;
+  try {
+    const file = await getOrCreateUserFile({ username, fileKey });
+    return (
+      <DocumentLoader userFiles={userFiles} file={file} localId={localId} />
+    );
+  } catch (error) {
+    return redirect("/");
+  }
 }

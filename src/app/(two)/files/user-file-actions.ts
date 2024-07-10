@@ -9,6 +9,7 @@ import {
   getAddress,
   getUsernameFromKey,
 } from "../../../jot-two/utils/getAddress";
+import { FILE_NOT_FOUND_ERROR } from "../../../jot-two/utils/error-codes";
 
 export async function createUserFile<File extends JotTwoFile>(file: File) {
   auth().protect();
@@ -97,7 +98,7 @@ export async function getOrCreateUserFile({
         fileType: FileType.YDoc,
       });
     } else {
-      throw new Error("File not found");
+      throw new Error(FILE_NOT_FOUND_ERROR);
     }
   }
 
