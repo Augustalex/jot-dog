@@ -5,7 +5,7 @@ import React from "react";
 import { Home } from "../../jot-two/home/Home";
 import { cookies } from "next/headers";
 import { getUserFiles } from "./files/user-file-actions";
-import { RedirectToSignIn, SignedIn, SignedOut } from "@clerk/nextjs";
+import { SignedIn, SignedOut, SignInButton } from "@clerk/nextjs";
 
 export default async function HomePage() {
   if (!Features.jot_two) redirect("/one");
@@ -40,7 +40,15 @@ export default async function HomePage() {
         </main>
       </SignedIn>
       <SignedOut>
-        <RedirectToSignIn />
+        <div className="flex h-svh w-svw items-center justify-center">
+          <SignInButton>
+            <button
+              className={`floating-shadow flex min-w-[160px] cursor-pointer items-center justify-center rounded-lg bg-indigo-100 p-2 text-blue-950 hover:bg-indigo-50`}
+            >
+              <span>Sign In</span>
+            </button>
+          </SignInButton>
+        </div>
       </SignedOut>
     </>
   );
