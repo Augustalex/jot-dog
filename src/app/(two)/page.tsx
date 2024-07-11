@@ -41,11 +41,26 @@ export default async function HomePage() {
       </SignedIn>
       <SignedOut>
         <div className="flex h-svh w-svw items-center justify-center">
+          <div
+            style={{
+              margin: "0 auto",
+              position: "fixed",
+              bottom: "-72px",
+              right: "0px",
+            }}
+          >
+            <Image
+              src={"/jotdog.png"}
+              alt={"Jot dog"}
+              width={1152 / 2}
+              height={1280 / 2}
+            />
+          </div>
           <SignInButton>
             <button
-              className={`floating-shadow flex min-w-[160px] cursor-pointer items-center justify-center rounded-lg bg-indigo-100 p-2 text-blue-950 hover:bg-indigo-50`}
+              className={`floating-shadow flex cursor-pointer items-center justify-center rounded-lg bg-indigo-100 px-8 py-4 text-xl text-blue-950 hover:bg-indigo-50`}
             >
-              <span>Sign In</span>
+              <span>Get started</span>
             </button>
           </SignInButton>
         </div>
