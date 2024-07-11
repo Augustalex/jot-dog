@@ -5,6 +5,7 @@ import React from "react";
 import { Home } from "../../jot-two/home/Home";
 import { cookies } from "next/headers";
 import { getUserFiles } from "./files/user-file-actions";
+import { RedirectToSignIn, SignedIn, SignedOut } from "@clerk/nextjs";
 
 export default async function HomePage() {
   if (!Features.jot_two) redirect("/one");
@@ -16,26 +17,31 @@ export default async function HomePage() {
 
   return (
     <>
-      <main className={`main`}>
-        <div
-          style={{
-            margin: "0 auto",
-            position: "fixed",
-            bottom: "-72px",
-            right: "0px",
-          }}
-        >
-          <Image
-            src={"/jotdog.png"}
-            alt={"Jot dog"}
-            width={1152 / 4}
-            height={1280 / 4}
-          />
-        </div>
-        <div className="home-wrapper">
-          <Home files={files} localId={localId} />
-        </div>
-      </main>
+      <SignedIn>
+        <main className={`main`}>
+          <div
+            style={{
+              margin: "0 auto",
+              position: "fixed",
+              bottom: "-72px",
+              right: "0px",
+            }}
+          >
+            <Image
+              src={"/jotdog.png"}
+              alt={"Jot dog"}
+              width={1152 / 4}
+              height={1280 / 4}
+            />
+          </div>
+          <div className="home-wrapper">
+            <Home files={files} localId={localId} />
+          </div>
+        </main>
+      </SignedIn>
+      <SignedOut>
+        <RedirectToSignIn />
+      </SignedOut>
     </>
   );
 }
